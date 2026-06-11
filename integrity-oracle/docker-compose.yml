@@ -1,0 +1,46 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: xibalba-db-prod
+    environment:
+      - POSTGRES_USER=xibalba_admin
+      - POSTGRES_PASSWORD=integrity_secret_123
+      - POSTGRES_DB=integrity_protocol_prod
+    volumes:
+      - postgres_data_prod:/var/lib/postgresql/data
+    networks:
+      - integrity-net
+
+  api:
+    build: 
+      context: ./oracle
+    container_name: xibalba-trust-api-prod
+    depends_on:
+      - db
+    env_file:
+      - ./oracle/.env
+    networks:
+      - integrity-net
+
+  gateway:
+    build:
+      context: ./gateway
+    container_name: xibalba-gateway-prod
+    ports:
+      - "80:80"
+      - "443:443"
+    depends_on:
+      - api
+    volumes:
+      - ./gateway/certs:/etc/nginx/certs:ro
+    networks:
+      - integrity-net
+
+volumes:
+  postgres_data_prod:
+
+networks:
+  integrity-net:
+    driver: bridge

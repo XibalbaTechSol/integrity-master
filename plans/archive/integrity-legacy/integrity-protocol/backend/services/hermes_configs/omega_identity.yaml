@@ -1,0 +1,10 @@
+# Hermes Identity Configuration for Omega Witness
+agent_id: omega.intg
+alias: "Omega Witness"
+controller: "Xibalba Compliance Bureau"
+organization: "Xibalba Solutions"
+eth_address: "0xBB88b098defB751B7401B5f6FD89761B7401B5F"
+verification_tier: 2
+clearance_level: "SECURE"
+did: "did:intg:omega"
+purpose: "Auditing and Historical Verification"

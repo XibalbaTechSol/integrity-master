@@ -1,0 +1,1073 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Xibalba Solutions | The Trust Layer for Autonomous Agents</title>
+    <meta name="description" content="The open protocol that lets AI agents sign smart contracts, prove execution integrity, and transact in the new economy — with cryptographic certainty. Founded by Jacob Vickers.">
+    <link rel="icon" type="image/png" href="XibalbaSolutionsLogo.png">
+    <script>
+        if (localStorage.getItem("theme") === "light") {
+            document.documentElement.classList.add("light-mode");
+        }
+    </script>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.css" crossorigin="anonymous">
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo" style="display: flex; align-items: center; gap: 0.75rem; text-decoration: none;">
+                <img src="XibalbaSolutionsLogo.png" alt="Xibalba Solutions Logo" style="height: 48px; width: auto;">
+                <span style="font-size: 0.95rem; color: var(--text-secondary); font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Jacob Vickers</span>
+            </a>
+            <div class="nav-links" style="display: flex; gap: 2.5rem; align-items: center; margin: 0 auto;">
+                <a href="#value-prop">Company</a>
+                <a href="#how-it-works">How It Works</a>
+                <a href="#architecture">Architecture</a>
+                <a href="#about">Founder</a>
+                <a href="#faq">FAQ</a>
+                <a href="#contact">Contact</a>
+            </div>
+            <div style="display: flex; align-items: center; gap: 1rem;">
+                <button id="theme-toggle" aria-label="Toggle Theme" class="theme-toggle-btn">
+                    <span class="icon-moon">🌙</span>
+                    <span class="icon-sun">☀️</span>
+                </button>
+                <button class="hamburger" aria-label="Toggle Menu" aria-expanded="false" aria-haspopup="true" style="margin-left: 0;">
+                    <span></span><span></span><span></span>
+                </button>
+            </div>
+
+        </div>
+    </nav>
+
+    <header class="hero">
+        <div class="hero-content animate-in">
+            <img src="XibalbaSolutionsLogo.png" alt="Xibalba Solutions Logo" class="hero-logo">
+            <h1 class="hero-title">The Trust Layer for<br>Autonomous Agents.<br><span class="gradient-text">Execute. Verify. Transact On-Chain.</span></h1>
+            
+            <p class="hero-subtitle">
+                The open protocol that lets AI agents sign smart contracts, prove execution integrity, and transact in the new economy — with cryptographic certainty. Stop building trust infrastructure from scratch.
+            </p>
+
+            <div class="terminal-window">
+                <div class="terminal-header">
+                    <div class="terminal-dots">
+                        <span style="background: #FF5F56;"></span>
+                        <span style="background: #FFBD2E;"></span>
+                        <span style="background: #27C93F;"></span>
+                    </div>
+                    <div class="terminal-title">agent.py</div>
+                </div>
+                <div class="terminal-body">
+                    <div class="typewriter-line line-1"><span style="color: #F472B6;">from</span> xibalba <span style="color: #F472B6;">import</span> IntegrityAgent</div>
+                    <div class="typewriter-line line-2" style="opacity: 0;">.</div>
+                    <div class="typewriter-line line-3"><span style="color: #94A3B8;"># Agent signs & executes a smart contract</span></div>
+                    <div class="typewriter-line line-4">agent = IntegrityAgent(key=<span style="color: #A7F3D0;">"did:intg:0x..."</span>, chain=<span style="color: #A7F3D0;">"base"</span>)</div>
+                    <div class="typewriter-line line-5">tx = agent.execute(contract.swap, amount=<span style="color: #7DD3FC;">1000</span>)<span class="cursor-blink">_</span></div>
+                </div>
+            </div>
+            
+            <div class="hero-badges">
+                <a href="#contact" class="btn" style="text-decoration: none;">Join Developer Beta &rarr;</a>
+                <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn-outline" style="text-decoration: none; border-color: var(--color-brand-secondary); color: var(--color-brand-secondary); display: inline-flex; align-items: center; justify-content: center; height: 50px;">Watch Demo (1 Min) &rarr;</a>
+                <a href="https://github.com/XibalbaTechSol/integrity-wiki" target="_blank" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; height: 50px;">
+                    View Docs on GitHub
+                    <span class="github-badge" style="background: rgba(255, 255, 255, 0.08); font-size: 0.75rem; padding: 0.2rem 0.6rem; border-radius: 20px; font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 0.25rem;">★ 1.4k</span>
+                    <span class="license-badge" style="background: var(--color-brand-primary-dim); border: 1px solid var(--border-accent); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 700; color: var(--color-brand-primary); margin-left: 0.25rem; font-family: var(--font-mono);">Apache-2.0</span>
+                </a>
+            </div>
+            
+            <div class="integration-badges" style="margin-top: 3.5rem; display: flex; justify-content: center; align-items: center; gap: 2rem; flex-wrap: wrap; opacity: 0.7;">
+                <span style="font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.15em; color: var(--text-muted); font-weight: 700; width: 100%; display: block; margin-bottom: -0.5rem;">Protocol Compatibility</span>
+                <span class="int-badge" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); border: 1px solid var(--border-main); padding: 0.35rem 0.85rem; border-radius: 4px; background: rgba(0,0,0,0.15);">EVM Compatible</span>
+                <span class="int-badge" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); border: 1px solid var(--border-main); padding: 0.35rem 0.85rem; border-radius: 4px; background: rgba(0,0,0,0.15);">Base L2</span>
+                <span class="int-badge" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); border: 1px solid var(--border-main); padding: 0.35rem 0.85rem; border-radius: 4px; background: rgba(0,0,0,0.15);">Solidity / Vyper</span>
+                <span class="int-badge" style="font-family: var(--font-mono); font-size: 0.8rem; color: var(--text-secondary); border: 1px solid var(--border-main); padding: 0.35rem 0.85rem; border-radius: 4px; background: rgba(0,0,0,0.15);">OPA Policy Engine</span>
+            </div>
+        </div>
+    </header>
+
+    <section id="problem" class="container animate-in">
+        <div class="text-center" style="max-width: 800px; margin: 0 auto;">
+            <h2>Why AI Agents Can't Participate in the Economy &mdash; Yet</h2>
+            <p class="lead-text">
+                Agents can reason, plan, and execute &mdash; but they can't <strong>transact</strong>. They can't sign contracts, prove they did what they committed to, or be held accountable when they drift. Without cryptographic execution guarantees and on-chain verification, no counterparty &mdash; human or machine &mdash; will trust an agent with real economic value.
+            </p>
+        </div>
+    </section>
+
+    <section id="value-prop" class="container animate-in">
+        <div class="split" style="margin-top: 2rem;">
+            <!-- Integrity Protocol -->
+            <div class="card" style="border-top: 4px solid var(--color-brand-primary);">
+                <span class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                </span>
+                <h3 class="card-title">Integrity Protocol</h3>
+                <p style="color: var(--text-primary); font-weight: 500; margin-bottom: 1rem;">Open Source Engine</p>
+                <p>A trustless, machine-verifiable protocol for autonomous agent transactions. Pre-execution intent gating, cryptographic commitment chains, ZK-proof verification, and on-chain settlement on Base L2 &mdash; enabling any AI agent to transact with mathematical certainty.</p>
+                <a href="https://xibalbatechsol.github.io/docs/xibalba_shield_proposal.pdf" target="_blank" style="color: var(--color-brand-primary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; text-decoration: none;">Read Whitepaper &rarr;</a>
+            </div>
+
+            <!-- Xibalba Shield -->
+            <div class="card" style="border-top: 4px solid var(--color-brand-secondary);">
+                <span class="card-icon">
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"></rect><path d="M7 11V7a5 5 0 0 1 10 0v4"></path></svg>
+                </span>
+                <h3 class="card-title">Xibalba Shield</h3>
+                <p style="color: var(--text-primary); font-weight: 500; margin-bottom: 1rem;">Agent Economy Control Plane</p>
+                <p>The SaaS layer for the agent economy. Centralized policy management, on-chain settlement orchestration, agent reputation dashboards, and compliance automation across verticals &mdash; starting with healthcare (HIPAA) and DeFi.</p>
+                <a href="#contact" style="color: var(--color-brand-secondary); font-family: var(--font-mono); font-size: 0.85rem; font-weight: 700; text-decoration: none;">Contact for Enterprise Pricing &rarr;</a>
+            </div>
+        </div>
+
+        <!-- Traction Bar -->
+        <div class="traction-bar">
+            <div class="traction-stat">
+                <span class="stat-value">v2.2</span>
+                <span class="stat-label">Python SDK</span>
+            </div>
+            <div class="traction-stat">
+                <span class="stat-value">Base L2</span>
+                <span class="stat-label">On-Chain Settlement</span>
+            </div>
+            <div class="traction-stat">
+                <span class="stat-value">&lt; 15ms</span>
+                <span class="stat-label">Gating Latency</span>
+            </div>
+            <div class="traction-stat">
+                <span class="stat-value">EVM</span>
+                <span class="stat-label">Smart Contract Ready</span>
+            </div>
+        </div>
+
+        <!-- Product Screenshot -->
+        <div style="margin-top: 4rem; text-align: center;">
+            <h3 class="section-subtitle">Xibalba Shield Command Center</h3>
+            <div class="browser-mockup">
+                <div class="browser-header">
+                    <div class="browser-dots">
+                        <span></span><span></span><span></span>
+                    </div>
+                    <div class="browser-url">app.xibalba.com/dashboard</div>
+                </div>
+                <img src="dashboard.png" alt="Xibalba Shield Dashboard">
+            </div>
+        </div>
+
+        <div style="margin-top: 5rem;">
+            <h3 class="text-center" style="margin-bottom: var(--space-lg);">How Xibalba Compares</h3>
+            <div class="compare-table-wrapper">
+                <table class="compare-table">
+                    <thead>
+                        <tr>
+                            <th>Feature</th>
+                            <th>Ritual</th>
+                            <th>Autonolas / Olas</th>
+                            <th>Fetch.ai</th>
+                            <th class="highlight-header">Xibalba</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Pre-execution Intent Gating</td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-partial">Partial</span></td>
+                            <td class="highlight-col"><span class="badge-check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Cryptographic Execution Proofs (ZK)</td>
+                            <td><span class="badge-check">✓</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td class="highlight-col"><span class="badge-check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>On-Chain Smart Contract Settlement</td>
+                            <td><span class="badge-partial">Partial</span></td>
+                            <td><span class="badge-check">✓</span></td>
+                            <td><span class="badge-check">✓</span></td>
+                            <td class="highlight-col"><span class="badge-check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Agent Reputation Scoring (On-Chain)</td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-partial">Partial</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td class="highlight-col"><span class="badge-check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Hardware-bound Identity (TEE/DID)</td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td class="highlight-col"><span class="badge-check">✓</span></td>
+                        </tr>
+                        <tr>
+                            <td>Vertical Compliance (HIPAA, SOC 2)</td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td><span class="badge-cross">✗</span></td>
+                            <td class="highlight-col highlight-col-bottom"><span class="badge-check">✓</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </section>
+
+    <section id="how-it-works" style="background: var(--bg-surface); border-top: 1px solid var(--border-main);">
+        <div class="container animate-in">
+            <div class="text-center">
+                <span class="meta-label">The Validation Lifecycle</span>
+                <h2>How The Integrity Protocol Works</h2>
+                <p class="section-desc">Autonomous agents are transacting on-chain &mdash; calling smart contracts, moving funds, approving tokens. The Integrity Protocol intercepts every agent action in a local pre-execution loop, ensuring <strong style="color: var(--text-primary);">unauthorized or non-compliant transactions are blocked instantly before any on-chain state change occurs.</strong></p>
+            </div>
+            
+            <div class="enforcement-loop">
+                <!-- Step 1 -->
+                <div class="loop-step">
+                    <div class="loop-marker">
+                        <div class="loop-num">1</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-content">
+                        <h3>Agent Proposes a Transaction</h3>
+                        <p>An autonomous AI agent generates a reasoning trace and proposes an on-chain action &mdash; a smart contract call, a token transfer, a DEX swap, or a cross-protocol API request. The Integrity SDK serializes the intended state, hashes it with SHA-256, and signs it with the agent's hardware-bound DID private key (<code>did:intg:&lt;address&gt;</code>). This signed commitment is locked to a 60-second TTL. No commitment, no execution.</p>
+                        <div class="loop-tags"><span>Integrity SDK</span><span>W3C DID Signing</span><span>SHA-256</span><span>60s TTL</span><span>Base L2</span></div>
+                    </div>
+                    <div class="loop-code">
+<pre><code><span class="syn-cmt">// Agent intent commitment</span>
+<span class="syn-kw">const</span> intent <span class="syn-var">=</span> {
+  action: <span class="syn-str">"swap"</span>,
+  protocol: <span class="syn-str">"uniswap_v3"</span>,
+  params: {
+    tokenIn: <span class="syn-str">"USDC"</span>,
+    tokenOut: <span class="syn-str">"ETH"</span>,
+    amount: <span class="syn-num">5000</span>,
+    slippage: <span class="syn-num">0.005</span>
+  }
+};
+<span class="syn-kw">const</span> commitment <span class="syn-var">=</span> <span class="syn-kw">await</span> integrity.<span class="syn-fn">signCommitment</span>(intent);
+<span class="syn-fn">broadcastTx</span>(commitment);</code></pre>
+                    </div>
+                </div>
+
+                <!-- Step 2 -->
+                <div class="loop-step">
+                    <div class="loop-marker">
+                        <div class="loop-num">2</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-content">
+                        <h3>BCC Validates Against Policy + Smart Contract Pre-Conditions</h3>
+                        <p>The Behavioral Commitment Chain (BCC) middleware intercepts the request at <code>/v1/bcc/intercept</code>. It runs a 4-gate validation sequence in order:</p>
+                        <ol style="margin: 0.75rem 0 0 1.25rem; font-size: 0.9rem; color: var(--text-secondary); line-height: 2;">
+                            <li><strong style="color: var(--text-primary);">TTL Check</strong> &mdash; Has the commitment expired?</li>
+                            <li><strong style="color: var(--text-primary);">AIS Threshold</strong> &mdash; Does the agent's on-chain reputation score meet the minimum for this transaction class?</li>
+                            <li><strong style="color: var(--text-primary);">Intent Hash Match</strong> &mdash; Does the actual transaction match the cryptographic commitment? (Drift detection)</li>
+                            <li><strong style="color: var(--text-primary);">OPA Policy Evaluation</strong> &mdash; Does the transaction comply with the agent's Alignment Card (smart contract pre-conditions, spending limits, approved protocols)?</li>
+                        </ol>
+                        <p style="margin-top: 0.75rem;">If any gate fails, the transaction is killed and the failure is logged. No exceptions.</p>
+                        <div class="loop-tags"><span>BCC Middleware</span><span>FastAPI</span><span>OPA</span><span>Intent Drift Detection</span><span>Smart Contract Gating</span></div>
+                    </div>
+                    <div class="loop-code">
+<pre><code><span class="syn-cmt"># OPA Rego Policy: DeFi Swap Constraints</span>
+<span class="syn-kw">package</span> xibalba.defi
+
+<span class="syn-kw">default</span> allow <span class="syn-var">=</span> <span class="syn-num">false</span>
+
+allow {
+    input.action <span class="syn-var">==</span> <span class="syn-str">"swap"</span>
+    input.params.amount <span class="syn-var"><=</span> <span class="syn-num">10000</span>
+    input.params.slippage <span class="syn-var"><=</span> <span class="syn-num">0.01</span>
+    <span class="syn-fn">is_approved_protocol</span>(input.protocol)
+    input.agent.ais_score <span class="syn-var">>=</span> <span class="syn-num">750</span>
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Step 3 -->
+                <div class="loop-step">
+                    <div class="loop-marker">
+                        <div class="loop-num">3</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-content">
+                        <h3>ZK Proof Submitted for On-Chain Verification</h3>
+                        <p>If all four gates pass, the BCC generates a verification token and the transaction executes instantly. Asynchronously, Xibalba Shield generates a zero-knowledge proof (Aztec Noir, UltraPlonk) that cryptographically verifies the reasoning path &mdash; <em>without exposing proprietary strategies, API keys, or sensitive parameters</em>. The proof is submitted to a verification smart contract on Base L2 for immutable on-chain attestation.</p>
+                        <div class="loop-tags"><span>HMAC-SHA256</span><span>ZK-ML (Aztec Noir)</span><span>Base L2 Verification</span><span>On-Chain Attestation</span></div>
+                    </div>
+                    <div class="loop-code">
+<pre><code><span class="syn-cmt">// Aztec Noir Circuit for Execution Proof</span>
+<span class="syn-kw">fn</span> <span class="syn-fn">main</span>(
+    intent_hash: <span class="syn-kw">pub Field</span>, 
+    policy_root: <span class="syn-kw">pub Field</span>, 
+    <span class="syn-cmt">/* private reasoning trace */</span>
+    trace: <span class="syn-var">[Field; 64]</span>
+) {
+    <span class="syn-kw">let</span> is_compliant <span class="syn-var">=</span> <span class="syn-fn">verify_policy</span>(trace, policy_root);
+    <span class="syn-kw">assert</span>(is_compliant <span class="syn-var">==</span> <span class="syn-num">1</span>);
+    
+    <span class="syn-kw">let</span> computed_hash <span class="syn-var">=</span> std::hash::<span class="syn-fn">sha256</span>(trace);
+    <span class="syn-kw">assert</span>(computed_hash <span class="syn-var">==</span> intent_hash);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Step 4 -->
+                <div class="loop-step">
+                    <div class="loop-marker">
+                        <div class="loop-num">4</div>
+                        <div class="loop-line"></div>
+                    </div>
+                    <div class="loop-content">
+                        <h3>Telemetry &rarr; AIS Scoring &rarr; On-Chain Reputation Anchor</h3>
+                        <p>Every transaction outcome is streamed as telemetry to the Rust Axum engine via OTLP/gRPC. The engine recalculates the agent's <strong>Agent Integrity Score (AIS)</strong> in real-time. The updated integrity score is cryptographically anchored on Base L2 as an on-chain reputation primitive &mdash; readable by any smart contract, protocol, or counterparty agent to gate trust decisions.</p>
+                        <div class="loop-tags"><span>Rust Axum Oracle</span><span>OTLP/gRPC</span><span>Tri-Metric AIS</span><span>Base L2 Reputation</span><span>On-Chain Anchor</span></div>
+                    </div>
+                    <div class="loop-code">
+<pre><code><span class="syn-cmt">// Base L2 Smart Contract Anchoring</span>
+<span class="syn-kw">function</span> <span class="syn-fn">updateAIS</span>(
+    <span class="syn-kw">address</span> agent, 
+    <span class="syn-kw">uint256</span> newScore, 
+    <span class="syn-kw">bytes</span> calldata zkProof
+) <span class="syn-kw">external</span> {
+    <span class="syn-kw">require</span>(<span class="syn-fn">verifyProof</span>(zkProof), <span class="syn-str">"Invalid ZK proof"</span>);
+    <span class="syn-kw">require</span>(newScore <span class="syn-var"><=</span> <span class="syn-num">1000</span>, <span class="syn-str">"Score out of bounds"</span>);
+    
+    agentScores[agent] <span class="syn-var">=</span> newScore;
+    <span class="syn-kw">emit</span> <span class="syn-fn">ReputationUpdated</span>(agent, newScore);
+}</code></pre>
+                    </div>
+                </div>
+
+                <!-- Step 5: The Enforcement — Full-Width Dashboard -->
+                <div class="loop-step loop-step--penalty">
+                    <div class="loop-marker">
+                        <div class="loop-num" style="background: #EF4444;">5</div>
+                        <div class="loop-line" style="background: transparent;"></div>
+                    </div>
+                    <div class="loop-content penalty-dashboard" style="border-color: rgba(239, 68, 68, 0.3);">
+                        <div class="penalty-header">
+                            <h3 style="color: #EF4444; margin-bottom: 0.25rem;">Contract Violation? Instant Circuit Breaking.</h3>
+                            <p style="margin-bottom: 0;">If an agent drifts from its Alignment Card, attempts an unauthorized transaction, or exceeds its scope, the local middleware triggers a circuit breaker in <strong style="color: #EF4444;">&lt;15ms</strong> — revoking signing authority, isolating the session, and logging the incident on-chain before any funds move.</p>
+                        </div>
+
+                        <!-- Enforcement Metrics Bar -->
+                        <div class="penalty-metrics">
+                            <div class="penalty-metric">
+                                <span class="penalty-metric-value">&lt;15<span class="penalty-metric-unit">ms</span></span>
+                                <span class="penalty-metric-label">Intercept Latency</span>
+                            </div>
+                            <div class="penalty-metric">
+                                <span class="penalty-metric-value">0</span>
+                                <span class="penalty-metric-label">Unauthorized Transactions (Lifetime)</span>
+                            </div>
+                            <div class="penalty-metric">
+                                <span class="penalty-metric-value">100<span class="penalty-metric-unit">%</span></span>
+                                <span class="penalty-metric-label">Pre-Execution Block Rate</span>
+                            </div>
+                            <div class="penalty-metric">
+                                <span class="penalty-metric-value">4<span class="penalty-metric-unit">-gate</span></span>
+                                <span class="penalty-metric-label">Validation Pipeline</span>
+                            </div>
+                        </div>
+
+                        <!-- Scenario Grid -->
+                        <h4 class="penalty-section-title"><span class="penalty-pulse-dot"></span>Real-World Violation Scenarios &mdash; Caught &amp; Blocked</h4>
+                        <div class="scenario-grid">
+                            <div class="scenario-card scenario-critical">
+                                <div class="scenario-header">
+                                    <div class="scenario-severity">CRITICAL</div>
+                                    <h5>Unauthorized Fund Transfer <span class="scenario-chevron"></span></h5>
+                                </div>
+                                <div class="scenario-body">
+                                    <div class="scenario-body-inner">
+                                        <p>DeFi yield-farming agent attempts to transfer 50 ETH to an unwhitelisted wallet address not registered in the agent's Alignment Card approved-destinations list.</p>
+                                        <div class="scenario-response">
+                                            <span class="scenario-action">⛔ Blocked</span>
+                                            <span class="scenario-detail">OPA policy gate detected outbound transfer to non-approved address → transaction killed → signing authority revoked → on-chain incident logged in 8ms</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scenario-card scenario-critical">
+                                <div class="scenario-header">
+                                    <div class="scenario-severity">CRITICAL</div>
+                                    <h5>Smart Contract Parameter Manipulation <span class="scenario-chevron"></span></h5>
+                                </div>
+                                <div class="scenario-body">
+                                    <div class="scenario-body-inner">
+                                        <p>Trading agent receives a prompt-injected payload and attempts to modify slippage tolerance from 0.5% to 99% on a swap contract call — far outside its Alignment Card parameter bounds.</p>
+                                        <div class="scenario-response">
+                                            <span class="scenario-action">⛔ Blocked</span>
+                                            <span class="scenario-detail">Intent hash mismatch detected → contract parameter outside permitted range → signing authority revoked → human sign-off required to resume</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scenario-card scenario-high">
+                                <div class="scenario-header">
+                                    <div class="scenario-severity">HIGH</div>
+                                    <h5>Price Oracle Manipulation <span class="scenario-chevron"></span></h5>
+                                </div>
+                                <div class="scenario-body">
+                                    <div class="scenario-body-inner">
+                                        <p>Arbitrage agent commits to executing a swap at a verified oracle price but the actual transaction references a stale or manipulated price feed deviating &gt;2% from the committed value.</p>
+                                        <div class="scenario-response">
+                                            <span class="scenario-action">⛔ Blocked</span>
+                                            <span class="scenario-detail">SHA-256 commitment hash ≠ execution hash → price drift detected → transaction rolled back → incident logged with full reasoning trace diff</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scenario-card scenario-high">
+                                <div class="scenario-header">
+                                    <div class="scenario-severity">HIGH</div>
+                                    <h5>Unauthorized Token Approval <span class="scenario-chevron"></span></h5>
+                                </div>
+                                <div class="scenario-body">
+                                    <div class="scenario-body-inner">
+                                        <p>Portfolio management agent attempts to grant unlimited ERC-20 token approval to an unvetted spender contract — a common vector for wallet-draining exploits.</p>
+                                        <div class="scenario-response">
+                                            <span class="scenario-action">⛔ Blocked</span>
+                                            <span class="scenario-detail">OPA policy detected unlimited approval to non-whitelisted spender → approval capped to transaction amount → agent flagged for security review</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scenario-card scenario-medium">
+                                <div class="scenario-header">
+                                    <div class="scenario-severity">MEDIUM</div>
+                                    <h5>Rate Limit Breach on DEX <span class="scenario-chevron"></span></h5>
+                                </div>
+                                <div class="scenario-body">
+                                    <div class="scenario-body-inner">
+                                        <p>High-frequency trading agent with degraded integrity score (AIS: 0.62) attempts to exceed its 50 tx/minute rate cap on a DEX aggregator — a limit requiring minimum AIS of 0.85.</p>
+                                        <div class="scenario-response">
+                                            <span class="scenario-action">⛔ Blocked</span>
+                                            <span class="scenario-detail">AIS threshold gate failed → agent downgraded to low-frequency mode → must complete verification ladder (10 supervised transactions) to restore full throughput</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="scenario-card scenario-medium">
+                                <div class="scenario-header">
+                                    <div class="scenario-severity">MEDIUM</div>
+                                    <h5>Cross-Protocol Data Leak <span class="scenario-chevron"></span></h5>
+                                </div>
+                                <div class="scenario-body">
+                                    <div class="scenario-body-inner">
+                                        <p>Multi-protocol agent attempts to leak proprietary trading strategy parameters from Protocol A's context into a public mempool transaction on Protocol B — a strategy isolation boundary violation.</p>
+                                        <div class="scenario-response">
+                                            <span class="scenario-action">⛔ Blocked</span>
+                                            <span class="scenario-detail">OPA protocol-scope policy rejected cross-context data exposure → session terminated → full forensic audit log anchored on Base L2 for review</span>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Response Timeline -->
+                        <h4 class="penalty-section-title" style="margin-top: 2.5rem;"><span class="penalty-pulse-dot"></span>Circuit Breaker Response Timeline</h4>
+                        <div class="response-timeline">
+                            <div class="timeline-event">
+                                <span class="timeline-time">T+0ms</span>
+                                <div class="timeline-bar timeline-bar-1"></div>
+                                <span class="timeline-label">Agent submits signed transaction commitment</span>
+                            </div>
+                            <div class="timeline-event">
+                                <span class="timeline-time">T+2ms</span>
+                                <div class="timeline-bar timeline-bar-2"></div>
+                                <span class="timeline-label">BCC middleware intercepts — TTL + AIS gates pass</span>
+                            </div>
+                            <div class="timeline-event">
+                                <span class="timeline-time">T+5ms</span>
+                                <div class="timeline-bar timeline-bar-3"></div>
+                                <span class="timeline-label">Intent hash verification — <strong>PARAMETER DRIFT DETECTED</strong></span>
+                            </div>
+                            <div class="timeline-event timeline-event--blocked">
+                                <span class="timeline-time">T+8ms</span>
+                                <div class="timeline-bar timeline-bar-4"></div>
+                                <span class="timeline-label">⛔ Circuit breaker fires — transaction killed, signing authority revoked</span>
+                            </div>
+                            <div class="timeline-event">
+                                <span class="timeline-time">T+12ms</span>
+                                <div class="timeline-bar timeline-bar-5"></div>
+                                <span class="timeline-label">Incident report signed &amp; anchored on Base L2 + pushed to monitoring dashboard</span>
+                            </div>
+                            <div class="timeline-event">
+                                <span class="timeline-time">T+15ms</span>
+                                <div class="timeline-bar timeline-bar-6"></div>
+                                <span class="timeline-label">AIS score slashed on-chain — agent enters verification ladder</span>
+                            </div>
+                        </div>
+
+                        <p class="penalty-bottom-line">Trust in the agent economy isn't enforced by hoping the model behaves. It's enforced by making unauthorized transactions <strong>mechanically impossible.</strong> The agent's on-chain reputation <em>is</em> its ability to transact — and every violation slashes its score, making it harder to operate until trust is re-earned under supervision.</p>
+
+                        <div class="loop-tags"><span>AIS Slashing</span><span>Circuit Breaker</span><span>Verification Ladder</span><span>Protocol Isolation</span><span>Intent Drift Detection</span><span>Base L2 Anchoring</span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Architecture Deep Dive -->
+    <section id="architecture" style="background: var(--bg-body); border-top: 1px solid var(--border-main);">
+        <div class="container animate-in">
+            <span class="meta-label">Under The Hood</span>
+            <h2>Protocol Architecture</h2>
+            <p style="max-width: 750px; margin-bottom: var(--space-xl);">The Integrity Protocol is a 5-node validation lifecycle that bridges stochastic LLM reasoning with deterministic on-chain finality. Every layer is production-grade.</p>
+
+            <!-- 5-Node Architecture Table -->
+            <div class="arch-table">
+                <div class="arch-step">
+                    <div class="arch-row">
+                        <div class="arch-node">01</div>
+                        <div class="arch-detail">
+                            <h3 class="arch-row-title">On-Chain Settlement Layer</h3>
+                            <p style="margin: 0; font-size: 0.9rem;">Base L2 as the primary settlement and verification chain. Smart contracts (<code>SovereignAgent.sol</code>, <code>ReputationRegistry.sol</code>) manage agent identity, transaction verification, and AIS reputation anchoring. Merkle roots of agent state are committed every 24 hours for tamper-proof historical audits.</p>
+                        </div>
+                        <div class="arch-tags"><span>Base L2</span><span>Solidity</span><span>Merkle Roots</span><span>Foundry</span></div>
+                    </div>
+                    <div class="loop-code arch-code">
+<pre><code><span class="syn-cmt">// SovereignAgent.sol - Base L2 Identity</span>
+<span class="syn-kw">contract</span> SovereignAgent <span class="syn-kw">is</span> ERC6551Account {
+    <span class="syn-kw">address</span> <span class="syn-kw">public</span> hwSigner;
+    <span class="syn-kw">bytes32</span> <span class="syn-kw">public</span> agentDID;
+
+    <span class="syn-kw">function</span> <span class="syn-fn">execute</span>(
+        <span class="syn-kw">address</span> to,
+        <span class="syn-kw">uint256</span> value,
+        <span class="syn-kw">bytes</span> calldata data,
+        <span class="syn-kw">bytes</span> calldata zkAttestation
+    ) <span class="syn-kw">external</span> <span class="syn-kw">returns</span> (<span class="syn-kw">bytes</span> <span class="syn-kw">memory</span>) {
+        <span class="syn-kw">require</span>(msg.sender <span class="syn-var">==</span> hwSigner, <span class="syn-str">"Unauthorized"</span>);
+        <span class="syn-kw">require</span>(<span class="syn-fn">verifyZK</span>(zkAttestation), <span class="syn-str">"Policy violation"</span>);
+        <span class="syn-kw">return</span> <span class="syn-fn">_call</span>(to, value, data);
+    }
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="arch-step">
+                    <div class="arch-row">
+                        <div class="arch-node">02</div>
+                        <div class="arch-detail">
+                            <h3 class="arch-row-title">Identity &amp; Security Layer</h3>
+                            <p style="margin: 0; font-size: 0.9rem;">Hardware-bound agent identity via TEE (AWS Nitro / Intel SGX). W3C DID Documents (<code>did:intg:&lt;address&gt;</code>) linked to on-chain wallets with hardware fingerprinting. Secure enclave key storage ensures agents cannot be impersonated or their signing authority compromised.</p>
+                        </div>
+                        <div class="arch-tags"><span>W3C DID</span><span>TEE</span><span>AWS KMS</span><span>ERC-6551</span></div>
+                    </div>
+                    <div class="loop-code arch-code">
+<pre><code><span class="syn-cmt"># AWS Nitro Enclave TEE Key Generation</span>
+<span class="syn-kw">def</span> <span class="syn-fn">generate_tee_did</span>():
+    <span class="syn-cmt"># Generate secp256k1 keypair inside enclave</span>
+    private_key <span class="syn-var">=</span> nitro_enclave.<span class="syn-fn">generate_key</span>()
+    public_address <span class="syn-var">=</span> eth_utils.<span class="syn-fn">pub_to_address</span>(private_key.public)
+    
+    <span class="syn-cmt"># Create W3C DID document</span>
+    did_doc <span class="syn-var">=</span> {
+        <span class="syn-str">"id"</span>: <span class="syn-str">f"did:intg:{public_address}"</span>,
+        <span class="syn-str">"verificationMethod"</span>: [{
+            <span class="syn-str">"type"</span>: <span class="syn-str">"EcdsaSecp256k1VerificationKey2019"</span>,
+            <span class="syn-str">"publicKeyHex"</span>: private_key.public.<span class="syn-fn">hex</span>()
+        }]
+    }
+    <span class="syn-kw">return</span> did_doc</code></pre>
+                    </div>
+                </div>
+                
+                <div class="arch-step">
+                    <div class="arch-row">
+                        <div class="arch-node">03</div>
+                        <div class="arch-detail">
+                            <h3 class="arch-row-title">Behavioral Commitment Chain (BCC)</h3>
+                            <p style="margin: 0; font-size: 0.9rem;">Pre-execution gating: agents cryptographically commit to an <code>intended_state_hash</code> before any action executes. OPA policy evaluation, SHA-256 intent drift detection, TTL-based commitment expiration (60s default), and AIS threshold gating.</p>
+                        </div>
+                        <div class="arch-tags"><span>FastAPI</span><span>OPA</span><span>SHA-256</span></div>
+                    </div>
+                    <div class="loop-code arch-code">
+<pre><code><span class="syn-cmt">// FastAPI Pre-Execution Middleware</span>
+@app.<span class="syn-fn">post</span>(<span class="syn-str">"/v1/bcc/intercept"</span>)
+<span class="syn-kw">async def</span> <span class="syn-fn">intercept_tx</span>(intent: IntentPayload):
+    <span class="syn-cmt"># Gate 1: Check TTL expiration</span>
+    <span class="syn-kw">if</span> intent.timestamp <span class="syn-var"><</span> time.<span class="syn-fn">now</span>() <span class="syn-var">-</span> <span class="syn-num">60</span>:
+        <span class="syn-kw">raise</span> <span class="syn-fn">HTTPException</span>(<span class="syn-num">400</span>, <span class="syn-str">"Commitment expired"</span>)
+        
+    <span class="syn-cmt"># Gate 2: Evaluate OPA Policy</span>
+    compliant <span class="syn-var">=</span> <span class="syn-kw">await</span> opa.<span class="syn-fn">evaluate</span>(intent, agent.policy_id)
+    <span class="syn-kw">if not</span> compliant:
+        <span class="syn-kw">await</span> circuit_breaker.<span class="syn-fn">trigger</span>(agent.id)
+        <span class="syn-kw">raise</span> <span class="syn-fn">PolicyViolationError</span>(<span class="syn-str">"Action outside Alignment Card"</span>)
+        
+    <span class="syn-kw">return</span> {<span class="syn-str">"status"</span>: <span class="syn-str">"verified"</span>, <span class="syn-str">"token"</span>: hmac.<span class="syn-fn">sign</span>(intent)}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="arch-step">
+                    <div class="arch-row">
+                        <div class="arch-node">04</div>
+                        <div class="arch-detail">
+                            <h3 class="arch-row-title">Zero-Knowledge Verification (ZK-ML)</h3>
+                            <p style="margin: 0; font-size: 0.9rem;">Aztec Noir circuits with UltraPlonk backend for zero-knowledge proofs of execution correctness. Proves an agent's reasoning was policy-compliant without exposing proprietary strategies, model weights, or sensitive parameters. Proofs are submitted on-chain for trustless third-party verification.</p>
+                        </div>
+                        <div class="arch-tags"><span>Aztec Noir</span><span>UltraPlonk</span><span>WASM</span><span>On-Chain Proofs</span></div>
+                    </div>
+                    <div class="loop-code arch-code">
+<pre><code><span class="syn-cmt">// Aztec Noir Prover Generation</span>
+<span class="syn-kw">import</span> { AztecBackend } <span class="syn-kw">from</span> <span class="syn-str">'@aztec/bb.js'</span>;
+<span class="syn-kw">import</span> { Noir } <span class="syn-kw">from</span> <span class="syn-str">'@noir-lang/noir_js'</span>;
+
+<span class="syn-kw">async function</span> <span class="syn-fn">generateAttestation</span>(trace, policyRoot) {
+    <span class="syn-kw">const</span> backend <span class="syn-var">=</span> <span class="syn-kw">new</span> <span class="syn-fn">AztecBackend</span>(circuit_bytecode);
+    <span class="syn-kw">const</span> noir <span class="syn-var">=</span> <span class="syn-kw">new</span> <span class="syn-fn">Noir</span>(circuit, backend);
+    
+    <span class="syn-kw">const</span> input <span class="syn-var">=</span> { 
+        intent_hash: <span class="syn-fn">hash</span>(trace.intent), 
+        policy_root: policyRoot,
+        trace: trace.private_data 
+    };
+    
+    <span class="syn-kw">const</span> proof <span class="syn-var">=</span> <span class="syn-kw">await</span> noir.<span class="syn-fn">generateFinalProof</span>(input);
+    <span class="syn-kw">return</span> proof.proof;
+}</code></pre>
+                    </div>
+                </div>
+                
+                <div class="arch-step">
+                    <div class="arch-row">
+                        <div class="arch-node">05</div>
+                        <div class="arch-detail">
+                            <h3 class="arch-row-title">Reputation &amp; Compliance Observability</h3>
+                            <p style="margin: 0; font-size: 0.9rem;"><a href="https://github.com/XibalbaTechSol/integrity-oracle" target="_blank" style="color: inherit; text-decoration: underline; font-weight: 500;">Telemetry Engine</a> ingests high-throughput execution traces via OTLP/gRPC. Calculates the domain-weighted Agent Integrity Score (AIS, 0&ndash;1000) and anchors it to <code>ReputationRegistry.sol</code> on Base L2 &mdash; a composable on-chain reputation primitive readable by any smart contract or counterparty.</p>
+                        </div>
+                        <div class="arch-tags"><span>Rust</span><span>Axum</span><span>PostgreSQL</span><span>Base L2</span></div>
+                    </div>
+                    <div class="loop-code arch-code">
+<pre><code><span class="syn-cmt">// Rust Axum Telemetry Oracle</span>
+<span class="syn-kw">pub async fn</span> <span class="syn-fn">process_telemetry</span>(
+    state: State&lt;AppState&gt;,
+    Json(tx_result): Json&lt;TxOutcome&gt;
+) -&gt; <span class="syn-kw">Result</span>&lt;StatusCode, Error&gt; {
+    <span class="syn-kw">let</span> <span class="syn-kw">mut</span> agent <span class="syn-var">=</span> state.db.<span class="syn-fn">get_agent</span>(tx_result.agent_id).<span class="syn-kw">await</span>?;
+    
+    <span class="syn-cmt">// Recalculate axes</span>
+    agent.entropy <span class="syn-var">=</span> <span class="syn-fn">calc_variance</span>(&agent.history, &tx_result);
+    agent.ais <span class="syn-var">=</span> <span class="syn-fn">compute_ais_score</span>(&agent);
+    
+    <span class="syn-cmt">// Anchor to Base L2</span>
+    state.eth_client.<span class="syn-fn">submit_reputation_update</span>(agent.did, agent.ais).<span class="syn-kw">await</span>?;
+    
+    <span class="syn-kw">Ok</span>(StatusCode::OK)
+}</code></pre>
+                    </div>
+                </div>
+            </div>
+
+            <!-- AIS Scoring Math -->
+            <div style="margin-top: 4rem;">
+                <h3 style="margin-bottom: 1.5rem;">Agent Integrity Score (AIS) &mdash; The Math</h3>
+                <div class="split" style="gap: 2rem; align-items: start;">
+                    <div class="card katex-card">
+                        <div class="katex-eq">
+                            <p class="eq-label">ENTROPY (Behavioral Stability)</p>
+                            <div class="eq-render">$$S_{entropy} = e^{\,-1.5\,\cdot\,\sigma^2} \times 1000$$</div>
+                            <p class="eq-note">where <span class="eq-inline">\(\sigma^2\)</span> is the variance derived from latency and success rate</p>
+                        </div>
+                        <div class="katex-eq">
+                            <p class="eq-label">GROUNDING (Human Accountability)</p>
+                            <div class="eq-render">$$S_{grounding} = HGI \times 1000$$</div>
+                        </div>
+                        <div class="katex-eq">
+                            <p class="eq-label">FINAL AGENT INTEGRITY SCORE (AIS)</p>
+                            <div class="eq-render">$$AIS_{final} = (S_{entropy} \cdot w_E + S_{grounding} \cdot w_G + S_{sacrifice} \cdot w_S + S_{compliance} \cdot w_C) \times ZK_{boost}$$</div>
+                            <p class="eq-note">Domain-weighted aggregation across <strong>four axes</strong>: Entropy, Grounding, Sacrifice, and Compliance.</p>
+                        </div>
+                    </div>
+                    <div>
+                        <p style="font-size: 0.95rem; margin-bottom: 1rem;">Every agent is continuously scored on four axes:</p>
+                        <ul style="font-size: 0.95rem; margin-bottom: 1.5rem; padding-left: 1.25rem; color: var(--text-secondary); line-height: 1.7;">
+                            <li><strong style="color: var(--text-primary);">Behavioral Entropy (\(S_{entropy}\))</strong>: Measures action predictability. High variance (\(\sigma^2\)) in transaction latency or success rates exponentially decays the score, enforcing operational stability.</li>
+                            <li><strong style="color: var(--text-primary);">Grounding (\(S_{grounding}\))</strong>: Measures human accountability. The Human Grounding Index (HGI) tracks the ratio of autonomous decisions vs. human-supervised interventions.</li>
+                            <li><strong style="color: var(--text-primary);">Computational Sacrifice (\(S_{sacrifice}\))</strong>: Verified GPU-hours or cryptoeconomic stake burned to back the agent's operations, acting as a Sybil resistance mechanism.</li>
+                            <li><strong style="color: var(--text-primary);">Compliance (\(S_{compliance}\))</strong>: Tracks regulatory health, policy violations, and audit consistency across specific domains.</li>
+                        </ul>
+                        <p style="font-size: 0.95rem;">These axes are domain-weighted (\(w_E, w_G, w_S, w_C\)) and multiplied by a zero-knowledge boost (\(ZK_{boost}\)) if the agent uses cryptographic proofs. The final AIS determines what an agent can transact. Below 600, it's pseudonymous with limited scope. Above 700, it can access institutional credit lines. At 850+, it qualifies for TEE-bound institutional trust &mdash; the on-chain equivalent of a AAA credit rating for autonomous systems.</p>
+                        <!-- Verification Ladder -->
+                        <div class="verification-ladder" style="margin-top: 1.5rem;">
+                            <div class="ladder-tier">
+                                <span class="tier-label" style="color: var(--text-muted);">Tier 1 &mdash; Sovereign</span>
+                                <span class="tier-bar" style="width: 60%; background: var(--border-bright);"></span>
+                                <span class="tier-cap">600</span>
+                            </div>
+                            <div class="ladder-tier">
+                                <span class="tier-label" style="color: var(--text-secondary);">Tier 2 &mdash; Linked</span>
+                                <span class="tier-bar" style="width: 85%; background: var(--color-brand-secondary);"></span>
+                                <span class="tier-cap">850</span>
+                            </div>
+                            <div class="ladder-tier">
+                                <span class="tier-label" style="color: var(--text-primary);">Tier 3 &mdash; Institutional</span>
+                                <span class="tier-bar" style="width: 100%; background: var(--color-brand-primary);"></span>
+                                <span class="tier-cap">1000</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div style="margin-top: 4rem;">
+                <h3 style="margin-bottom: 1.5rem;">Verification &amp; Compliance Mapping</h3>
+                <div class="compliance-table">
+                    <div class="compliance-row compliance-header">
+                        <span>Verification Requirement</span>
+                        <span>Domain</span>
+                        <span>How We Solve It</span>
+                    </div>
+                    <div class="compliance-row">
+                        <span>Agent Identity &amp; Access Control</span>
+                        <span><code>On-Chain / HIPAA</code></span>
+                        <span><code><a href="https://github.com/XibalbaTechSol/integrity-protocol" target="_blank" style="color: inherit; text-decoration: underline;">SovereignAgent.sol</a></code> identity wrapper with TEE-bound DID &amp; on-chain wallet</span>
+                    </div>
+                    <div class="compliance-row">
+                        <span>Tamper-proof Audit Trail</span>
+                        <span><code>On-Chain / SOC 2</code></span>
+                        <span>Provenance Ledger + 24h Merkle root anchoring to Base L2</span>
+                    </div>
+                    <div class="compliance-row">
+                        <span>Transaction Integrity</span>
+                        <span><code>Smart Contracts</code></span>
+                        <span>BCC pre-execution gating + intent hash verification + HMAC-SHA256 tokens</span>
+                    </div>
+                    <div class="compliance-row">
+                        <span>Data Privacy (ZK)</span>
+                        <span><code>All Verticals</code></span>
+                        <span>Aztec Noir ZK-proofs verify compliance without exposing proprietary logic or sensitive data</span>
+                    </div>
+                    <div class="compliance-row">
+                        <span>Reputation &amp; Risk Scoring</span>
+                        <span><code>On-Chain</code></span>
+                        <span><code>ReputationRegistry.sol</code> &mdash; composable AIS readable by any smart contract or counterparty</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- SDK Code Snippet -->
+            <div style="margin-top: 4rem;">
+                <h3 style="margin-bottom: 0.5rem;">For Developers &mdash; Integrate in 5 Lines</h3>
+                <p style="margin-bottom: 1.5rem;">The Integrity SDK (Python, v2.2) ships with native LangChain integration, TEE attestation, on-chain settlement, and BCC intent-locking out of the box.</p>
+                <div class="code-block">
+                    <div class="code-header"><span>Python</span><a href="https://github.com/XibalbaTechSol/integrity-sdk" target="_blank" style="color: var(--text-muted); text-decoration: underline;">integrity-sdk v2.2</a></div>
+<pre><code><span class="code-kw">from</span> integrity_sdk <span class="code-kw">import</span> IntegrityClient
+
+client = IntegrityClient(did=<span class="code-str">"did:intg:0xA3f..."</span>, chain=<span class="code-str">"base"</span>)
+policy = client.load_policy(<span class="code-str">"defi_swap_limits"</span>)
+
+<span class="code-comment"># Every transaction is gated by the BCC middleware</span>
+result = <span class="code-kw">await</span> client.execute_with_integrity(
+    action=contract.swap,
+    policy=policy,
+    require_zk_proof=<span class="code-val">True</span>
+)</code></pre>
+                </div>
+            </div>
+
+            <!-- Tech Stack Badges -->
+            <div style="margin-top: 4rem; text-align: center;">
+                <h3 style="margin-bottom: 1.5rem;">Built With</h3>
+                <div style="display: flex; flex-direction: column; gap: 0.75rem; align-items: center;">
+                    <div class="stack-badges">
+                        <span class="stack-badge">Rust</span>
+                        <span class="stack-badge">Solidity</span>
+                        <span class="stack-badge">Aztec Noir</span>
+                        <span class="stack-badge">Python</span>
+                        <span class="stack-badge">C++</span>
+                    </div>
+                    <div class="stack-badges">
+                        <span class="stack-badge">FastAPI</span>
+                        <span class="stack-badge">Base L2</span>
+                        <span class="stack-badge">AWS KMS</span>
+                        <span class="stack-badge">PostgreSQL</span>
+                        <span class="stack-badge">LangChain</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- CTA Buttons -->
+            <div class="text-center" style="margin-top: 4rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
+                <a href="https://xibalbatechsol.github.io/docs/xibalba_shield_proposal.pdf" target="_blank" class="btn">Read the Whitepaper &rarr;</a>
+                <a href="https://github.com/XibalbaTechSol/integrity-wiki" target="_blank" class="btn-outline">View Docs on GitHub &rarr;</a>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Section -->
+    <section id="about" style="background: var(--bg-surface); border-top: 1px solid var(--border-main);">
+        <div class="container animate-in">
+            <span class="meta-label">The Founder</span>
+            <h2>Who is Jacob Vickers?</h2>
+            
+            <div class="bento-grid" style="margin-top: 3rem;">
+                <!-- Card A: Identity -->
+                <div class="bento-card bento-identity text-center">
+                    <div class="status-badge"><span class="pulse-dot"></span> Building</div>
+                    <img src="founder.png" alt="Jacob Vickers" class="founder-avatar glowing-avatar">
+                    <h3 style="margin-top: 1.5rem; margin-bottom: 0.5rem;">Jacob Vickers</h3>
+                    <p style="color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 1.5rem;">Founder, Xibalba Solutions</p>
+                    <div class="social-links" style="display: flex; gap: 1rem; justify-content: center;">
+                        <a href="https://x.com/jacobvickers" target="_blank" aria-label="X (Twitter)" class="social-pill x-pill">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                        </a>
+                        <a href="https://linkedin.com/in/jacobvickers" target="_blank" aria-label="LinkedIn" class="social-pill in-pill">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                        </a>
+                        <a href="https://github.com/XibalbaTechSol" target="_blank" aria-label="GitHub" class="social-pill gh-pill">
+                            <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Card B: Mission Quote -->
+                <div class="bento-card bento-quote">
+                    <p class="mission-text">"How do you trust a <span class="highlight-prob">probabilistic</span> model to execute <span class="highlight-det">deterministic</span> transactions in the autonomous agent economy?"</p>
+                </div>
+
+                <!-- Card C: Origin Story -->
+                <div class="bento-card bento-origin">
+                    <div class="terminal-header">
+                        <span class="dot" style="background:#ff5f56;"></span>
+                        <span class="dot" style="background:#ffbd2e;"></span>
+                        <span class="dot" style="background:#27c93f;"></span>
+                        <span class="term-title">founder_log.txt</span>
+                    </div>
+                    <div class="terminal-body">
+                        <p>> I'm a systems architect obsessed with decentralized infrastructure &mdash; specifically the problem of guaranteeing trust and security in autonomous systems.</p>
+                        <p>> I watched the AI agent space explode: agents that can reason, plan, and use tools. But I kept seeing the same gap. These agents can <code class="glow-code">think</code>, but they can't <code class="glow-code">transact with trust</code>. No identity, no reputation, no way to prove they did what they said they'd do. The moment an agent needs to sign a contract, move funds, or commit to an SLA &mdash; trust collapses.</p>
+                        <p>> I founded Xibalba Solutions to bridge AI reasoning and on-chain execution certainty. The <code class="glow-code">Integrity Protocol</code> gives every agent a cryptographic identity, a verifiable reputation score, and a pre-execution gating layer &mdash; so autonomous systems can transact on Base L2 with the same finality guarantees as human-signed contracts.</p>
+                        <p class="cursor-blink">_</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- FAQ Section -->
+    <section id="faq" class="faq-section">
+        <div class="container animate-in">
+            <div class="text-center faq-header-container">
+                <span class="meta-label">Questions & Answers</span>
+                <h2>Frequently Asked Questions</h2>
+                <p class="section-desc">Everything you need to know about how autonomous agents transact on-chain, the Integrity Protocol's security guarantees, and how Xibalba powers the autonomous agent economy.</p>
+            </div>
+            
+            <div class="faq-accordion">
+                <!-- FAQ Item 1 -->
+                <div class="faq-item" data-faq-index="1">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">01</span> How do agents sign and execute smart contracts through the Integrity Protocol?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>Every agent registered with the Integrity Protocol receives a hardware-bound DID identity (<code>did:intg:&lt;address&gt;</code>) linked to an on-chain wallet on Base L2. When an agent proposes a transaction &mdash; signing a contract, moving funds, or committing to an SLA &mdash; the SDK serializes the intended state, hashes it with SHA-256, and cryptographically signs it with the agent's TEE-bound private key. The BCC middleware validates the commitment against the agent's Alignment Card policies <strong>before</strong> the transaction is broadcast to the chain. Only verified, policy-compliant transactions reach on-chain execution. This gives you deterministic finality for agent actions without trusting the agent's probabilistic reasoning.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 2 -->
+                <div class="faq-item" data-faq-index="2">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">02</span> Does the pre-execution gating add latency to agent transactions?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>No. The 4-gate validation pipeline (TTL check, AIS threshold, intent hash match, OPA policy evaluation) runs locally via lightweight BCC middleware in <strong>under 15ms</strong> &mdash; negligible compared to typical L2 block confirmation times (~2s on Base). The computationally heavy ZK-proof generation is processed <strong>completely asynchronously</strong> on a background queue and anchored to the chain after execution. Your agent's transaction throughput is never bottlenecked by the verification layer.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 3 -->
+                <div class="faq-item" data-faq-index="3">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">03</span> What blockchains and L2s does Xibalba support?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p><strong>Base L2 is the primary settlement and verification layer.</strong> We chose Base for its low gas costs, fast finality, and alignment with the Coinbase ecosystem &mdash; the largest fiat on-ramp for agent-to-human payments. The Integrity Protocol's smart contracts (<code>SovereignAgent.sol</code>, <code>ReputationRegistry.sol</code>) are written in standard Solidity and are <strong>fully EVM-compatible</strong>, meaning deployment to Arbitrum, Optimism, Polygon, or Ethereum mainnet requires zero code changes. We plan to add non-EVM support (Solana SVM, Cosmos IBC) based on ecosystem demand.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 4 -->
+                <div class="faq-item" data-faq-index="4">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">04</span> How does on-chain verification work without exposing proprietary agent logic?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>This is where ZK-proofs are essential. Aztec Noir circuits with UltraPlonk backend generate a zero-knowledge proof that the agent's reasoning trace complied with its Alignment Card policies &mdash; <em>without revealing the prompts, model weights, tool calls, or any proprietary business logic</em>. Only the cryptographic proof and a commitment hash are published on-chain. Any third party can verify the proof's validity (the agent acted within policy) without learning <em>how</em> it reasoned or <em>what</em> data it processed. This is critical for competitive agent operators who need verifiable trust without IP exposure.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 5 -->
+                <div class="faq-item" data-faq-index="5">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">05</span> Can I define custom transaction policies beyond the default templates?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>Absolutely. The policy engine uses <strong>Rego (Open Policy Agent)</strong>, giving you full declarative control over your agent's behavioral boundaries. Default templates cover common patterns &mdash; spending limits, approved contract addresses, action-class whitelists, rate limiting &mdash; but you can write arbitrarily complex custom rules. Examples: cap a DeFi agent's single-swap exposure at 2% of portfolio, restrict an insurance-claims agent to approved ICD-10 codes, or require multi-sig human approval for transactions above a USD threshold. Policies are version-controlled and hot-reloadable without redeploying your agent.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 6 -->
+                <div class="faq-item" data-faq-index="6">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">06</span> Is the SDK compatible with existing agent frameworks like LangChain, CrewAI, or AutoGen?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>Yes. The Integrity SDK operates at the function execution and network interface layers &mdash; framework-agnostic by design. We provide drop-in wrappers for popular agent frameworks (LangChain, LlamaIndex, AutoGen, CrewAI) and raw LLM providers (OpenAI, Anthropic, Gemini). We also integrate natively with on-chain agent standards like ERC-6551 (token-bound accounts). If your agent can execute in Python or Node.js and interact with an EVM chain, Xibalba can wrap it with verifiable execution in under five minutes.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 7 -->
+                <div class="faq-item" data-faq-index="7">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">07</span> What happens when an agent violates its policy in a live economic environment?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>The violation is caught <strong>pre-execution</strong> &mdash; before any transaction hits the chain. The circuit breaker fires in &lt;15ms, killing the action and isolating the session. From there, configurable responses kick in: <strong>Self-Correction loops</strong> return the violation reasoning to the agent so it can reformulate a compliant transaction; <strong>Fallback Routing</strong> escalates to human-in-the-loop approval; or the agent is automatically downgraded to read-only mode. The violation is logged immutably, the agent's on-chain AIS score is slashed, and counterparties are notified via the Reputation Registry. No bad transaction ever reaches settlement.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 8 -->
+                <div class="faq-item" data-faq-index="8">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">08</span> How does the Agent Integrity Score (AIS) reputation system work on-chain?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>Every agent's AIS (0&ndash;1000) is a domain-weighted composite of four on-chain metrics: <strong>behavioral entropy</strong> (how predictable and stable are its actions?), <strong>grounding</strong> (how often does a human need to intervene?), <strong>computational sacrifice</strong> (verified GPU-hours), and <strong>compliance</strong> (regulatory health). The score is recalculated in real-time by the Rust Axum telemetry engine and anchored to the <code>ReputationRegistry.sol</code> contract on Base L2. Counterparties can query any agent's AIS before entering a contract. Below 600, the agent operates pseudonymously with limited transaction scope. Above 700, it qualifies for institutional credit lines. At 850+, it earns TEE-bound institutional trust &mdash; the on-chain equivalent of a AAA credit rating for autonomous systems.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 9 -->
+                <div class="faq-item" data-faq-index="9">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">09</span> How does Xibalba compare to Ritual, Autonolas, Fetch.ai, and Phala Network?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p><strong>Ritual</strong> focuses on on-chain inference verification &mdash; proving a model produced a specific output. <strong>Autonolas/Olas</strong> provides a framework for composing multi-agent services with token incentives. <strong>Fetch.ai</strong> builds an agent-to-agent communication and discovery layer. <strong>Phala Network</strong> offers TEE-based confidential compute for smart contracts. Xibalba is <em>none of these</em> &mdash; and complementary to all of them. We are the <strong>pre-execution trust layer</strong>: the gating, reputation, and policy enforcement infrastructure that sits between an agent's intent and its on-chain action. Ritual verifies what happened; we prevent what shouldn't happen. Olas orchestrates agent services; we ensure each agent in the swarm is policy-compliant before it transacts. We integrate with these ecosystems rather than compete with them.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- FAQ Item 10 -->
+                <div class="faq-item" data-faq-index="10">
+                    <button class="faq-trigger" aria-expanded="false">
+                        <span><span class="faq-num">10</span> What's the go-to-market strategy? Why start with healthcare?</span>
+                        <span class="faq-icon">+</span>
+                    </button>
+                    <div class="faq-content">
+                        <div class="faq-content-inner">
+                            <p>Healthcare is our <strong>first vertical</strong>, not our identity. We chose it because HIPAA creates the highest regulatory bar for autonomous agent behavior &mdash; if our protocol can enforce compliance for an AI agent writing to an EHR with PHI exposure rules, it can enforce policy for any agent in any domain. The wedge is healthcare (HIPAA-compliant agent gating), but the platform is horizontal: DeFi agents executing swaps within risk parameters, insurance agents processing claims against policy rules, supply-chain agents committing to SLAs on-chain. Every vertical where an autonomous agent needs to <em>prove</em> it acted within boundaries before transacting is our market. The autonomous agent economy needs trust infrastructure the same way e-commerce needed SSL.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Section -->
+    <section id="contact" style="border-top: 1px solid var(--border-main);">
+        <div class="container animate-in">
+            <div class="text-center" style="max-width: 600px; margin: 0 auto;">
+                <span class="meta-label">Developer Access</span>
+                <h2>Join the Developer Beta</h2>
+                <p style="color: var(--text-secondary); margin: 1rem 0 2.5rem;">We are opening early access to the Python SDK for teams building autonomous agents that need verifiable execution and on-chain trust. Sign up below to get your API key.</p>
+                
+                <form class="waitlist-form" action="https://xibalba-api.onrender.com/contact" method="POST">
+                    <input type="email" name="email" placeholder="Enter your work email" required class="waitlist-input">
+                    <button type="submit" class="btn waitlist-btn">Get API Key &rarr;</button>
+                </form>
+                <div id="waitlist-feedback" class="waitlist-feedback"></div>
+            </div>
+        </div>
+    </section>
+
+    <footer class="site-footer">
+        <div class="container footer-grid">
+            <div class="footer-info">
+                <img src="XibalbaSolutionsLogo.png" alt="Xibalba Solutions Logo" class="footer-logo">
+                <p class="footer-desc">Building the trust layer for the autonomous agent economy.</p>
+                <div class="social-links">
+                    <a href="https://x.com/JacobSVickers" target="_blank" aria-label="X (Twitter)" class="footer-social-link">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="currentColor"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/></svg>
+                    </a>
+                    <a href="https://linkedin.com/in/jacobvickers" target="_blank" aria-label="LinkedIn" class="footer-social-link">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"></path><rect x="2" y="9" width="4" height="12"></rect><circle cx="4" cy="4" r="2"></circle></svg>
+                    </a>
+                    <a href="https://github.com/XibalbaTechSol" target="_blank" aria-label="GitHub" class="footer-social-link">
+                        <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path></svg>
+                    </a>
+                </div>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-col-title">Protocol</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#value-prop">Platform</a></li>
+                    <li><a href="#how-it-works">Validation Loop</a></li>
+                    <li><a href="#architecture">Architecture</a></li>
+                    <li><a href="#faq">FAQ</a></li>
+                </ul>
+            </div>
+            <div class="footer-links-col">
+                <h4 class="footer-col-title">Company</h4>
+                <ul class="footer-links-list">
+                    <li><a href="#about">The Founder</a></li>
+                    <li><a href="#contact">Request Pilot</a></li>
+                    <li><a href="https://xibalbatechsol.github.io/docs/xibalba_shield_proposal.pdf" target="_blank">Whitepaper</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="container footer-bottom">
+            <span>&copy; 2026 Xibalba Solutions LLC. All rights reserved.</span>
+        </div>
+    </footer>
+
+    <script src="script.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/katex.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/katex@0.16.11/dist/contrib/auto-render.min.js" crossorigin="anonymous"></script>
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            renderMathInElement(document.body, {
+                delimiters: [
+                    {left: '$$', right: '$$', display: true},
+                    {left: '\\(', right: '\\)', display: false}
+                ],
+                throwOnError: false
+            });
+        });
+    </script>
+</body>
+</html>

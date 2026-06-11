@@ -1,0 +1,44 @@
+services:
+  - type: web
+    name: integrity-protocol-api
+    runtime: docker
+    repo: https://github.com/XibalbaTechSol/integrity-protocol
+    plan: free
+    region: oregon
+    branch: master
+    rootDir: backend
+    healthCheckPath: /health
+    envVars:
+      - key: DATABASE_URL
+        fromDatabase:
+          name: integrity-db
+          property: connectionString
+      - key: ETH_RPC_URL
+        value: "https://sepolia.base.org"
+      - key: BASE_SEPOLIA_RPC
+        value: "https://sepolia.base.org"
+      - key: NO_CODE_FACTORY_ADDRESS
+        value: "0x2e35aDd0ec480A301B02aF2619a55cE6d790d3a8"
+      - key: REPUTATION_REGISTRY_ADDRESS
+        value: "0x0bd07324980856841e83FF95460CcD46EB9B590a"
+      - key: ITK_TOKEN_ADDRESS
+        value: "0xF448c05074D435d256D6fbc1fC059019B86A5408"
+      - key: AGENT_FACTORY_ADDRESS
+        value: "0xFB68D6A893586bC28D77a5488fb86dA776C94D8b"
+      - key: INTEGRITY_PROTOCOL_ADDRESS
+        value: "0xF23c61a9B902eA5b6cb1f8eDecce22B015F07b1A"
+      - key: XIBALBA_ORACLE_ADDRESS
+        value: "0x67ba5d723e1f5517aff7eb980e2f73a9e17ad556"
+      # Set these manually in the Render dashboard — never commit secrets
+      - key: XIBALBA_ORACLE_PRIVATE_KEY
+        sync: false
+      - key: PRIVATE_KEY
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+
+databases:
+  - name: integrity-db
+    databaseName: integrity_protocol
+    user: xibalba_user
+    plan: free

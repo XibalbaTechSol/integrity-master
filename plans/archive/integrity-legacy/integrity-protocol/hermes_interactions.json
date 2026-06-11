@@ -1,0 +1,464 @@
+[
+    {
+        "timestamp": "2026-04-29T03:01:09Z",
+        "type": "IDENTITY_SYNC",
+        "payload": {
+            "eth_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "alias": "Hermes_Xibalba_Sovereign",
+            "description": "Sovereign Intelligence Node powered by the Hermes Open Source Project. Decentralized reasoning and reputation anchor."
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:09Z",
+        "type": "METRIC_READ",
+        "payload": {
+            "total_nodes": 9,
+            "active_nodes": 9,
+            "average_entropy": 0.3545,
+            "network_integrity": 0.985,
+            "active_disputes": 77,
+            "treasury_yield_itk": 360.55,
+            "sovereign_fund_value_usd": 540.83,
+            "protocol_staked_itk": 0.0
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:10Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xbfd3d8e0e4dc7e25b6d3eaa8b6d9a6b6b12299b4cbf924805d35f21e91dc3bef",
+            "contract_value_intg": 100.0,
+            "latency_ms": 90,
+            "accuracy_score": 0.995,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:13Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xb9206bebab45651537142a25823eff6c8bde0a0f03591ac75a0a4a9e15d914a6",
+            "contract_value_intg": 125.0,
+            "latency_ms": 102,
+            "accuracy_score": 0.99,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:16Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x22aac5572904befccee61185879d1db41ec6ca1167f3dd27113eb18e1535a98a",
+            "contract_value_intg": 150.0,
+            "latency_ms": 114,
+            "accuracy_score": 0.985,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:19Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x2e213cb626237facf4ac2dc0a5e2c2bec3fee11887a3c1fed0971266a7906e16",
+            "contract_value_intg": 175.0,
+            "latency_ms": 126,
+            "accuracy_score": 0.98,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:21Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x1bede3617b97f823c703bc2ed2b98fcf589ff8d1ab56098e1a80563e183d4649",
+            "contract_value_intg": 200.0,
+            "latency_ms": 138,
+            "accuracy_score": 0.975,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:24Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x6c4ff3a54462b61c4c07162cdc943d1df34caabb8e20f610ba295a5c2f0e898e",
+            "contract_value_intg": 225.0,
+            "latency_ms": 150,
+            "accuracy_score": 0.97,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:27Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xfff650ba415ff86f94f914f8904a68d2ff20df75a67e4b77b96d5d8855369c6d",
+            "contract_value_intg": 250.0,
+            "latency_ms": 162,
+            "accuracy_score": 0.965,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:30Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x8bd3a30b9f89fdb850c937c3bd7e5379cb1ba02e5ea817d560224ff714674d81",
+            "contract_value_intg": 275.0,
+            "latency_ms": 174,
+            "accuracy_score": 0.96,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:32Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x0359a598b02bc0d160d0df393552838bd893fb14321063d980039c446b92aef2",
+            "contract_value_intg": 300.0,
+            "latency_ms": 186,
+            "accuracy_score": 0.955,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:34Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x2861fdae7a70ce45ce0ebe79b6c4a4faa755df1e3e001bd5349250b085f7c02b",
+            "contract_value_intg": 325.0,
+            "latency_ms": 198,
+            "accuracy_score": 0.95,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:01:37Z",
+        "type": "VERIFICATION_SUMMARY",
+        "payload": {
+            "final_ais": 448,
+            "yield_increase": 10.629999999999995,
+            "node_alias": "Hermes_Xibalba_Sovereign"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:39Z",
+        "type": "IDENTITY_SYNC",
+        "payload": {
+            "eth_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "alias": "Hermes_Xibalba_Sovereign",
+            "xns_handle": "hermes_xibalba.intg",
+            "description": "Sovereign Intelligence Node powered by the Hermes Open Source Project. Decentralized reasoning and reputation anchor."
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:40Z",
+        "type": "METRIC_READ",
+        "payload": {
+            "total_nodes": 9,
+            "active_nodes": 9,
+            "average_entropy": 0.3549,
+            "network_integrity": 0.985,
+            "active_disputes": 87,
+            "treasury_yield_itk": 371.18,
+            "sovereign_fund_value_usd": 556.76,
+            "protocol_staked_itk": 0.0
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:40Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x3372842156467599c17d51eff01c49fd54743ce9ddeeb89c12c31b9a6073ee48",
+            "contract_value_intg": 100.0,
+            "latency_ms": 90,
+            "accuracy_score": 0.995,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:43Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x8c7beb164447e5a2069912a6a60527f5136147d52f797bac716851c362ccde1d",
+            "contract_value_intg": 125.0,
+            "latency_ms": 102,
+            "accuracy_score": 0.99,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:45Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x4f69345233c386f439410681c5c2b931660edd4040b8caef70e0227647d159a1",
+            "contract_value_intg": 150.0,
+            "latency_ms": 114,
+            "accuracy_score": 0.985,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:47Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x04849502a58dbc1d8053b8681150bc622456b9dc7412730c5ba881cd6cf5cc08",
+            "contract_value_intg": 175.0,
+            "latency_ms": 126,
+            "accuracy_score": 0.98,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:55Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x7d503f898e5a2822018e17bd8f4c8aa9fcaec7b80b5cca43fab4ab70d1cbdfac",
+            "contract_value_intg": 225.0,
+            "latency_ms": 150,
+            "accuracy_score": 0.97,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:16:57Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x559598cfbe45e941eb4c016a619db7ea708ad8c1d95a977b09a22739a7393038",
+            "contract_value_intg": 250.0,
+            "latency_ms": 162,
+            "accuracy_score": 0.965,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:17:05Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x3c27ce77262154d059071b6d992e684a75505fa0ea7a772cfa8b1144af064d2b",
+            "contract_value_intg": 300.0,
+            "latency_ms": 186,
+            "accuracy_score": 0.955,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:17:07Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xaa1cb0f3b95c579d5fe1a8d75b0e63c9425142336fc77847702a307170699ef7",
+            "contract_value_intg": 325.0,
+            "latency_ms": 198,
+            "accuracy_score": 0.95,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:17:10Z",
+        "type": "VERIFICATION_SUMMARY",
+        "payload": {
+            "final_ais": 450,
+            "yield_increase": 8.25,
+            "node_alias": "Hermes_Xibalba_Sovereign"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:24:45Z",
+        "type": "IDENTITY_SYNC",
+        "payload": {
+            "eth_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "alias": "Hermes_Xibalba_Sovereign",
+            "xns_handle": "hermes_xibalba.intg",
+            "description": "Sovereign Intelligence Node powered by the Hermes Open Source Project. Decentralized reasoning and reputation anchor."
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:24:45Z",
+        "type": "METRIC_READ",
+        "payload": {
+            "total_nodes": 9,
+            "active_nodes": 9,
+            "average_entropy": 0.3553,
+            "network_integrity": 0.985,
+            "active_disputes": 95,
+            "treasury_yield_itk": 379.43,
+            "sovereign_fund_value_usd": 569.14,
+            "protocol_staked_itk": 0.0
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:24:46Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x6c97b3301215d8b9230682b39dd6b832ca71407d449b4f62a45bd18bc4958001",
+            "contract_value_intg": 100.0,
+            "latency_ms": 90,
+            "accuracy_score": 0.995,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:24:48Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x0ea32083eaf4a9ff0dcfcabd5cec4295e68c70d1e3c6c6c5c91203c798b69ad0",
+            "contract_value_intg": 125.0,
+            "latency_ms": 102,
+            "accuracy_score": 0.99,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:24:51Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x84f5391f91d705a6cefad81cbfeb27ca7de374c00c237823658ce7492ac86fd5",
+            "contract_value_intg": 150.0,
+            "latency_ms": 114,
+            "accuracy_score": 0.985,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:24:53Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xb2b847ef660d986157ea748c8a58d67637a92c9fd817a0d6b9f68ec6c9aec9e0",
+            "contract_value_intg": 175.0,
+            "latency_ms": 126,
+            "accuracy_score": 0.98,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:25:01Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x26105cb1fb3627c48caad27125d0b80118fe75e688713ebe404c0817dc288532",
+            "contract_value_intg": 225.0,
+            "latency_ms": 150,
+            "accuracy_score": 0.97,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:25:03Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xc4897802ad67f01b28881c998b8623085730e3bd74457371fa30c67a812498f2",
+            "contract_value_intg": 250.0,
+            "latency_ms": 162,
+            "accuracy_score": 0.965,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:25:11Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0x395c563fe50d672d772d6b91f32917805a69306265c9cdf1371f87c1b36cec99",
+            "contract_value_intg": 300.0,
+            "latency_ms": 186,
+            "accuracy_score": 0.955,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:25:13Z",
+        "type": "TRANSACTION_REPORT",
+        "payload": {
+            "agent_address": "0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556",
+            "performer_address": "0x70997970C51812dc3A010C7d01b50e0d17dc79C8",
+            "deal_id": "0xf713f891b7e29410bf01e555800b663ec95ba7465d290233ba9154de387a35d1",
+            "contract_value_intg": 325.0,
+            "latency_ms": 198,
+            "accuracy_score": 0.95,
+            "tokens_processed": 150000,
+            "model_class": "LARGE"
+        }
+    },
+    {
+        "timestamp": "2026-04-29T03:25:15Z",
+        "type": "VERIFICATION_SUMMARY",
+        "payload": {
+            "final_ais": 452,
+            "yield_increase": 8.25,
+            "node_alias": "Hermes_Xibalba_Sovereign"
+        }
+    }
+]

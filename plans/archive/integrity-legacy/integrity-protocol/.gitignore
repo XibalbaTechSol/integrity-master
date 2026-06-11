@@ -1,0 +1,53 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Environments
+.env
+.venv
+venv/
+ENV/
+
+# Build and Dist
+dist/
+artifacts/
+cache/
+*.abi
+*.bin
+
+# Node.js
+node_modules/
+npm-debug.log*
+
+# Hardhat
+cache/
+artifacts/
+
+# System files
+.DS_Store
+*.swp
+
+# Secrets
+-credentials.json
+.env*
+
+# Firebase
+**/.firebase/
+firebase-debug.log*
+
+# Databases
+*.db
+*.sqlite3
+
+# Build Artifacts
+build/
+.next/
+out/
+.cache/
+.swp
+.DS_Store
+
+# Hermes Logs and PIDs
+bridge.log
+bridge.pid

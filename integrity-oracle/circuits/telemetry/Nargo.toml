@@ -1,0 +1,8 @@
+[package]
+name = "telemetry"
+type = "bin"
+authors = ["Xibalba Solutions"]
+compiler_version = ">=0.31.0"
+
+[dependencies]
+std = { tag = "v0.31.0" }

@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Xibalba Integrity Sovereign Wiki</title>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
+  <meta name="description" content="Decentralized credit bureau and cryptographic integrity stack for autonomous AI agents.">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0">
+  
+  <!-- Sleek dark theme stylesheet -->
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/docsify@4/lib/themes/dark.css">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.16.8/dist/katex.min.css">
+  
+  <style>
+    :root {
+      --theme-color: #c9a84c; /* Gold accent matching Xibalba theme */
+    }
+    body {
+      background-color: #050D18 !important; /* Deep navy dark */
+      color: #f4f4f5 !important;
+    }
+    .sidebar {
+      background-color: #02070d !important;
+      border-right: 1px solid rgba(255, 255, 255, 0.05);
+    }
+    .markdown-section {
+      max-width: 950px !important;
+    }
+    code {
+      color: #c9a84c !important;
+      background-color: rgba(201, 168, 76, 0.08) !important;
+    }
+    .markdown-section pre {
+      background-color: #02070d !important;
+      border-left: 3px solid #c9a84c !important;
+    }
+    blockquote {
+      border-left: 4px solid #c9a84c !important;
+      background: rgba(201, 168, 76, 0.03) !important;
+    }
+  </style>
+</head>
+<body>
+  <div id="app">Attesting system envelopes...</div>
+  <script>
+    var path = window.location.pathname;
+    var basePath = path.endsWith('.html') ? path.substring(0, path.lastIndexOf('/') + 1) : path;
+    if (!basePath.endsWith('/')) {
+      basePath += '/';
+    }
+
+    window.$docsify = {
+      name: 'Xibalba Sovereign Wiki',
+      repo: 'XibalbaTechSol/integrity-wiki',
+      homepage: 'index.md',
+      basePath: basePath,
+      relativePath: true,
+      loadSidebar: false,
+      auto2top: true,
+      search: {
+        maxAge: 86400000,
+        paths: 'auto',
+        placeholder: 'Search the Attestation Stack...',
+        noData: 'No attestation records found!',
+        depth: 6
+      },
+      plugins: [
+        function(hook, vm) {
+          hook.afterEach(function(html) {
+            var footer = [
+              '<hr/>',
+              '<footer>',
+              '<span>&copy; 2026 <a href="https://github.com/XibalbaTechSol" style="color: #c9a84c; text-decoration: none;">Xibalba AI Solutions</a>. All rights reserved.</span>',
+              '</footer>'
+            ].join('');
+            return html + footer;
+          });
+        }
+      ]
+    }
+  </script>
+  
+  <!-- Required Docsify Scripts -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify@4/lib/plugins/search.min.js"></script>
+  
+  <!-- KaTeX & Mermaid plugins for Docsify -->
+  <script src="https://cdn.jsdelivr.net/npm/docsify-katex@latest/dist/docsify-katex.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/mermaid@10/dist/mermaid.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/docsify-mermaid@latest/dist/docsify-mermaid.js"></script>
+  <script>
+    mermaid.initialize({ startOnLoad: true, theme: 'dark' });
+  </script>
+</body>
+</html>

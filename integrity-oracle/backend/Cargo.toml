@@ -1,0 +1,29 @@
+[package]
+name = "backend"
+version = "1.0.0-rc1"
+edition = "2021"
+
+[dependencies]
+axum = "0.8"
+tokio = { version = "1", features = ["full"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+tower-http = { version = "0.6", features = ["cors"] }
+sqlx = { version = "0.8", features = ["postgres", "macros", "runtime-tokio", "tls-rustls", "uuid", "chrono"] }
+dotenvy = "0.15"
+chrono = "0.4.44"
+sha2 = "0.11.0"
+hex = "0.4.3"
+k256 = { version = "0.13", features = ["ecdsa", "sha256"] }
+uuid = { version = "1", features = ["v4", "serde"] }
+alloy-primitives = "1.6.0"
+alloy-provider = { version = "2.0.5", features = ["ws", "reqwest"] }
+alloy-signer-local = "2.0.5"
+alloy-network = "2.0.5"
+alloy-sol-types = "1.6.0"
+alloy-contract = "2.0.5"
+alloy-transport-ws = "2.0.5"
+alloy-rpc-client = { version = "2.0.5", features = ["pubsub", "ws"] }
+reqwest = { version = "0.13", features = ["json"] }
+primitive-types = "0.14.0"
+scoring-core = { path = "../scoring-core" }

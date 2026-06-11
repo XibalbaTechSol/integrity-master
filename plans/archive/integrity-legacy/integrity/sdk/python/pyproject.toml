@@ -1,0 +1,15 @@
+[build-system]
+requires = ["setuptools>=42", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "integrity_sdk"
+version = "0.1.0"
+description = "Xibalba Integrity Protocol SDK for edge batching and ZK telemetry"
+authors = [
+    {name = "Xibalba"}
+]
+dependencies = [
+    "requests>=2.28.0",
+    "pydantic>=2.0.0",
+]

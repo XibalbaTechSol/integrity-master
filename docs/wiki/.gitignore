@@ -1,0 +1,16 @@
+# Python scripts and utilities
+serve_wiki.py
+convert_wiki.py
+
+# Python bytecode
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Local dev server files
+contact_submissions.jsonl
+.DS_Store
+test_wiki.js
+validate_static.py
+

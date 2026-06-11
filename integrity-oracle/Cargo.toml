@@ -1,0 +1,8 @@
+[workspace]
+members = [
+    "backend",
+    "scoring-core",
+    "oracle-core",
+    "passport-verifier", "scoring-core",
+]
+resolver = "2"

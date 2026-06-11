@@ -1,0 +1,100 @@
+version: '3.8'
+
+services:
+  # 1. The Trust Vault (PostgreSQL DB)
+  db:
+    image: postgres:15-alpine
+    container_name: xibalba-db
+    environment:
+      - POSTGRES_USER=xibalba_admin
+      - POSTGRES_PASSWORD=integrity_secret_123
+      - POSTGRES_DB=integrity_protocol
+    ports:
+      - "5434:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    networks:
+      - integrity-net
+
+  # 2. XAO Trust Oracle API (For Insurance & Agents)
+  api:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    container_name: xibalba-trust-api
+    depends_on:
+      - db
+    ports:
+      - "8001:8001"
+    environment:
+      - DATABASE_URL=postgresql://xibalba_admin:integrity_secret_123@db:5432/integrity_protocol
+      - ETH_RPC_URL=${ETH_RPC_URL}
+      - ITK_TOKEN_ADDRESS=${ITK_TOKEN_ADDRESS}
+      - REPUTATION_REGISTRY_ADDRESS=${REPUTATION_REGISTRY_ADDRESS}
+      - INTEGRITY_PROTOCOL_ADDRESS=${INTEGRITY_PROTOCOL_ADDRESS}
+      - NO_CODE_FACTORY_ADDRESS=${NO_CODE_FACTORY_ADDRESS}
+      - XIBALBA_ORACLE_ADDRESS=${XIBALBA_ORACLE_ADDRESS}
+      - XIBALBA_ORACLE_PRIVATE_KEY=${XIBALBA_ORACLE_PRIVATE_KEY}
+      - PYTHONUNBUFFERED=1
+    networks:
+      - integrity-net
+
+  # 3. Autonomous Data Ingestor (Blockchain Event Processor)
+  ingestor:
+    build: .
+    container_name: xibalba-data-ingestor
+    depends_on:
+      - db
+    command: python3 services/oracle_worker.py
+    environment:
+      - DATABASE_URL=postgresql://xibalba_admin:integrity_secret_123@db:5432/integrity_protocol
+      - ETH_RPC_URL=${ETH_RPC_URL}
+      - ITK_TOKEN_ADDRESS=${ITK_TOKEN_ADDRESS}
+      - REPUTATION_REGISTRY_ADDRESS=${REPUTATION_REGISTRY_ADDRESS}
+      - INTEGRITY_PROTOCOL_ADDRESS=${INTEGRITY_PROTOCOL_ADDRESS}
+      - NO_CODE_FACTORY_ADDRESS=${NO_CODE_FACTORY_ADDRESS}
+      - XIBALBA_ORACLE_ADDRESS=${XIBALBA_ORACLE_ADDRESS}
+      - XIBALBA_ORACLE_PRIVATE_KEY=${XIBALBA_ORACLE_PRIVATE_KEY}
+    networks:
+      - integrity-net
+
+  # 4. Integrity Protocol Frontend (React)
+  frontend:
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    container_name: xibalba-frontend
+    ports:
+      - "3000:80"
+    environment:
+      - VITE_API_BASE=http://localhost:8001
+    depends_on:
+      - api
+    networks:
+      - integrity-net
+
+  # 5. Guest Wallet Cleanup (Token Recovery)
+  cleanup:
+    build: .
+    container_name: xibalba-guest-cleanup
+    depends_on:
+      - db
+    command: python3 services/guest_cleanup.py
+    environment:
+      - DATABASE_URL=postgresql://xibalba_admin:integrity_secret_123@db:5432/integrity_protocol
+      - ETH_RPC_URL=${ETH_RPC_URL}
+      - ITK_TOKEN_ADDRESS=${ITK_TOKEN_ADDRESS}
+      - REPUTATION_REGISTRY_ADDRESS=${REPUTATION_REGISTRY_ADDRESS}
+      - INTEGRITY_PROTOCOL_ADDRESS=${INTEGRITY_PROTOCOL_ADDRESS}
+      - NO_CODE_FACTORY_ADDRESS=${NO_CODE_FACTORY_ADDRESS}
+      - XIBALBA_ORACLE_ADDRESS=${XIBALBA_ORACLE_ADDRESS}
+      - XIBALBA_ORACLE_PRIVATE_KEY=${XIBALBA_ORACLE_PRIVATE_KEY}
+    networks:
+      - integrity-net
+
+networks:
+  integrity-net:
+    driver: bridge
+
+volumes:
+  postgres_data:

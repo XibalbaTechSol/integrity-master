@@ -1,0 +1,14 @@
+version: '3.8'
+
+services:
+  api:
+    env_file:
+      - ./oracle/.env.production
+    ports:
+      - "80:8001" # Expose the API on standard HTTP port in production
+    networks:
+      - integrity-net
+
+networks:
+  integrity-net:
+    driver: bridge

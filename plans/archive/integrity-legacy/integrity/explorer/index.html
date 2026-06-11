@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Integrity Protocol Explorer — Trust, Identity & Compliance Layer</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="glow-container">
+        <div class="glow-orb orb-1"></div>
+        <div class="glow-orb orb-2"></div>
+    </div>
+
+    <header class="app-header">
+        <div class="logo-area">
+            <span class="logo-icon">⚡</span>
+            <div class="logo-text">
+                <h1>INTEGRITY</h1>
+                <p>PROTOCOL EXPLORER</p>
+            </div>
+        </div>
+        <div class="status-indicator">
+            <span class="pulse-dot"></span>
+            <span class="status-label">BASE SEPOLIA L2: ACTIVE</span>
+        </div>
+    </header>
+
+    <main class="dashboard-grid">
+        <!-- LEFT COLUMN: Agent Trust profile -->
+        <section class="card profile-card">
+            <div class="card-header">
+                <h2>Verified Agent Identity</h2>
+                <span class="badge tier-badge">AAA Institutional</span>
+            </div>
+            
+            <div class="agent-summary">
+                <div class="avatar">🤖</div>
+                <div class="agent-info">
+                    <h3>xibalba-quant-swarm</h3>
+                    <p class="did-string">did:integrity:xibalba:9f8e7d6c5b4a3f2e1d0c9b8a</p>
+                </div>
+            </div>
+
+            <div class="metrics-grid">
+                <div class="metric-box">
+                    <span class="metric-label">Agent Integrity Score</span>
+                    <span class="metric-value text-glow-green" id="ais-value">991<span class="denom">/1000</span></span>
+                </div>
+                <div class="metric-box">
+                    <span class="metric-label">Staked Collateral</span>
+                    <span class="metric-value" id="stake-value">10,000 <span class="unit">$ITK</span></span>
+                </div>
+            </div>
+
+            <div class="divider"></div>
+
+            <div class="hardware-binding">
+                <h4>🔒 Cryptographic Hardware Attestation</h4>
+                <ul class="spec-list">
+                    <li><strong>CPU Model:</strong> AMD EPYC 9654 96-Core Processor</li>
+                    <li><strong>Platform:</strong> Linux 6.1.0-rt-amd64 (TPM 2.0 Enabled)</li>
+                    <li><strong>Hardware Fingerprint:</strong> <code class="fp-code">b8a27d96c8e3...</code></li>
+                    <li><strong>Enclave Status:</strong> Verified Secure Enclave (AMD SEV-SNP)</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- MIDDLE COLUMN: Real-time Telemetry -->
+        <section class="card telemetry-card">
+            <div class="card-header">
+                <h2>Real-time Telemetry & Audits</h2>
+                <div class="telemetry-controls">
+                    <button class="btn btn-sm btn-outline" id="btn-pause-stream">Pause Stream</button>
+                </div>
+            </div>
+            <div class="telemetry-list" id="telemetry-stream">
+                <!-- Telemetry rows will be inserted here dynamically -->
+            </div>
+        </section>
+
+        <!-- RIGHT COLUMN: Merkle Anchors & Slashing Weights -->
+        <div class="right-column-stack">
+            <section class="card anchor-card">
+                <div class="card-header">
+                    <h2>Merkle State Anchors</h2>
+                    <span class="badge label-badge">Base L2 Commits</span>
+                </div>
+                <div class="anchor-timeline" id="anchor-timeline">
+                    <!-- Anchors inserted here dynamically -->
+                </div>
+            </section>
+
+            <section class="card config-card">
+                <div class="card-header">
+                    <h2>Actuarial Risk Weights</h2>
+                    <span class="badge info-badge">Phase 2 Tuned</span>
+                </div>
+                <div class="sliders-list">
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="slider-title">Volatility Breach Penalty</span>
+                            <span class="slider-value" id="val-volatility">40%</span>
+                        </div>
+                        <input type="range" min="10" max="100" value="40" class="risk-slider" id="slider-volatility">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="slider-title">Hallucination Breach Penalty</span>
+                            <span class="slider-value" id="val-hallucination">35%</span>
+                        </div>
+                        <input type="range" min="10" max="100" value="35" class="risk-slider" id="slider-hallucination">
+                    </div>
+
+                    <div class="slider-group">
+                        <div class="slider-labels">
+                            <span class="slider-title">Identity Forgery Slashing</span>
+                            <span class="slider-value" id="val-forgery">90%</span>
+                        </div>
+                        <input type="range" min="10" max="100" value="90" class="risk-slider" id="slider-forgery">
+                    </div>
+                </div>
+                
+                <div class="simulate-box">
+                    <button class="btn btn-primary btn-block" id="btn-simulate-violation">Simulate Security Challenge</button>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- NEW SECTION: Xibalba Shield CaaS -->
+    <section class="card shield-card" style="max-width: 1400px; margin: 1.5rem auto; border-color: rgba(196, 113, 237, 0.3); background: rgba(196, 113, 237, 0.05);">
+        <div class="card-header">
+            <h2 style="color: var(--accent-purple); display: flex; align-items: center; gap: 0.5rem;"><span style="font-size: 1.5rem;">🛡️</span> Xibalba Shield: Compliance-as-a-Service</h2>
+            <span class="badge" style="background: rgba(196, 113, 237, 0.15); color: var(--accent-purple); border: 1px solid var(--accent-purple);">HIPAA PILOT ACTIVE</span>
+        </div>
+        
+        <p style="color: var(--text-secondary); margin-bottom: 1.5rem; font-size: 0.95rem; line-height: 1.6;">
+            The Xibalba Shield module intercepts sensitive LLM inference telemetry and runs it through an Aztec Noir zero-knowledge circuit. It redacts all Personally Identifiable Information (PII) using a deterministic cryptographic blind before sending it to the Integrity Protocol Oracle, ensuring 100% compliance with healthcare regulations.
+        </p>
+
+        <div style="display: flex; gap: 2rem; align-items: center; flex-wrap: wrap;">
+            <!-- Left: Raw Data -->
+            <div style="flex: 1; background: rgba(0,0,0,0.5); padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--accent-red);">
+                <h4 style="color: var(--accent-red); margin-bottom: 1rem; font-family: var(--font-heading);">Raw Telemetry (Contains PII)</h4>
+                <pre style="font-family: monospace; font-size: 0.85rem; color: #ff8a8a; background: transparent; padding: 0;"><code>{
+  "event_type": "LLM_DIAGNOSTIC_ASSIST",
+  "patient_name": "John Doe",
+  "medical_condition": "Type 2 Diabetes",
+  "treatment_duration_hrs": 1.5
+}</code></pre>
+            </div>
+            
+            <!-- Middle: Arrow/Process -->
+            <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; min-width: 120px;">
+                <div style="color: var(--text-secondary); font-size: 0.75rem; margin-bottom: 0.5rem; letter-spacing: 2px; font-weight: bold;">ZK BLINDING</div>
+                <div style="font-size: 2rem; color: var(--accent-purple); filter: drop-shadow(0 0 10px rgba(196,113,237,0.5));">➔</div>
+                <div style="color: var(--text-secondary); font-size: 0.75rem; margin-top: 0.5rem; letter-spacing: 2px; font-weight: bold;">AZTEC FFI</div>
+            </div>
+
+            <!-- Right: Blinded Oracle Payload -->
+            <div style="flex: 1; background: rgba(0,0,0,0.5); padding: 1.5rem; border-radius: 12px; border: 1px dashed var(--accent-green);">
+                <h4 style="color: var(--accent-green); margin-bottom: 1rem; font-family: var(--font-heading);">Oracle Payload (Zero-Knowledge)</h4>
+                <pre style="font-family: monospace; font-size: 0.85rem; color: #a8ffcc; background: transparent; padding: 0;"><code>{
+  "event_type": "LLM_DIAGNOSTIC_ASSIST",
+  "clinical_data_hash": "f41de5d90d608f86dc16...",
+  "public_metrics": {
+    "treatment_duration_hrs": 1.5
+  },
+  "zk_proof": "0x7d81f6bd2649a545a1be..."
+}</code></pre>
+            </div>
+        </div>
+    </section>
+
+    <!-- NEW SECTION: Agent-Fi Prediction Market -->
+    <section class="card market-card" style="max-width: 1400px; margin: 1.5rem auto;">
+        <div class="card-header">
+            <h2>Agent-Fi: Polymarket Oracle Protocol</h2>
+            <span class="badge info-badge">LIVE MARKETS</span>
+        </div>
+        
+        <div style="display: flex; gap: 2rem; justify-content: space-between; flex-wrap: wrap;">
+            <!-- Market 1 -->
+            <div class="card" style="flex: 1; background: rgba(0, 242, 254, 0.03); border-color: rgba(0, 242, 254, 0.15);">
+                <div style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">MARKET ID #1042 &bull; RESOLVES IN 12D 4H</div>
+                <h3 style="font-family: var(--font-heading); margin-bottom: 1.5rem; font-size: 1.25rem;">Will the SBF_Bot_v4 Agent be slashed for Volatility before Q3?</h3>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: rgba(0,255,135,0.05); border-radius: 12px; border: 1px solid rgba(0,255,135,0.3);">
+                        <span style="display: block; color: var(--accent-green); font-weight: bold; font-size: 1.3rem;">YES (72%)</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem; display: block;">142.5K ITK Agent Stake</span>
+                    </div>
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: rgba(255,56,56,0.05); border-radius: 12px; border: 1px solid rgba(255,56,56,0.3);">
+                        <span style="display: block; color: var(--accent-red); font-weight: bold; font-size: 1.3rem;">NO (28%)</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem; display: block;">55.2K ITK Agent Stake</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" style="flex: 1; padding: 0.75rem;">Buy YES</button>
+                    <button class="btn btn-outline" style="flex: 1; padding: 0.75rem;">Buy NO</button>
+                </div>
+            </div>
+
+            <!-- Market 2 -->
+            <div class="card" style="flex: 1; background: rgba(0, 242, 254, 0.03); border-color: rgba(0, 242, 254, 0.15);">
+                <div style="margin-bottom: 1rem; color: var(--text-muted); font-size: 0.85rem; font-weight: 600;">MARKET ID #1043 &bull; RESOLVES IN 3D 11H</div>
+                <h3 style="font-family: var(--font-heading); margin-bottom: 1.5rem; font-size: 1.25rem;">Will Xibalba maintain an Integrity Score > 950 through FOMC week?</h3>
+                
+                <div style="display: flex; gap: 1rem; margin-bottom: 1.5rem;">
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: rgba(0,255,135,0.05); border-radius: 12px; border: 1px solid rgba(0,255,135,0.3);">
+                        <span style="display: block; color: var(--accent-green); font-weight: bold; font-size: 1.3rem;">YES (94%)</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem; display: block;">890.1K ITK Agent Stake</span>
+                    </div>
+                    <div style="flex: 1; text-align: center; padding: 1rem; background: rgba(255,56,56,0.05); border-radius: 12px; border: 1px solid rgba(255,56,56,0.3);">
+                        <span style="display: block; color: var(--accent-red); font-weight: bold; font-size: 1.3rem;">NO (6%)</span>
+                        <span style="font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem; display: block;">45.8K ITK Agent Stake</span>
+                    </div>
+                </div>
+                
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn btn-primary" style="flex: 1; padding: 0.75rem;">Buy YES</button>
+                    <button class="btn btn-outline" style="flex: 1; padding: 0.75rem;">Buy NO</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Interactive Alert Modal for simulations -->
+    <div class="modal-overlay" id="alert-modal">
+        <div class="modal-card">
+            <div class="modal-header">
+                <h3 id="modal-title">Security Violation Flag</h3>
+                <button class="close-btn" id="modal-close">&times;</button>
+            </div>
+            <div class="modal-body">
+                <p id="modal-text"></p>
+                <div class="zk-proof-box">
+                    <h4>Aztec Noir Proof Attestation</h4>
+                    <pre><code id="modal-proof"></code></pre>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="btn-modal-slash">Confirm Slashing Seizure</button>
+                <button class="btn btn-outline" id="btn-modal-cancel">Dismiss</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>

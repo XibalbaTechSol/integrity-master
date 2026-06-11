@@ -1,0 +1,8 @@
+[package]
+name = "reputation_proof"
+type = "bin"
+authors = ["Xibalba Solutions"]
+compiler_version = ">=0.19.0"
+
+[dependencies]
+std = { tag = "v0.19.0" }
