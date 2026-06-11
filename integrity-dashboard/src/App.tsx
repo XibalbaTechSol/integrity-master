@@ -3,8 +3,12 @@ import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
 import { TabNav } from './components/layout/TabNav';
 import { ToastManager } from './components/shared/Toast';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
 
-// Placeholder imports for tabs (we'll implement these next)
+// Landing Page
+import { LandingPage } from './pages/LandingPage';
+
+// Tabs
 import { TelemetryPanel } from './components/tabs/TelemetryPanel';
 import { IdentityPanel } from './components/tabs/IdentityPanel';
 import { LedgerPanel } from './components/tabs/LedgerPanel';
@@ -51,8 +55,26 @@ function DashboardShell() {
 
 export default function App() {
   return (
-    <DashboardProvider>
-      <DashboardShell />
-    </DashboardProvider>
+    <BrowserRouter>
+      <Routes>
+        <Route path="/" element={<LandingPage />} />
+        <Route 
+          path="/dashboard" 
+          element={
+            <DashboardProvider>
+              <DashboardShell />
+            </DashboardProvider>
+          } 
+        />
+        <Route 
+          path="/login" 
+          element={
+            <DashboardProvider>
+              <DashboardShell />
+            </DashboardProvider>
+          } 
+        />
+      </Routes>
+    </BrowserRouter>
   );
 }
