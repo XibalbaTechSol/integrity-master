@@ -1,4 +1,5 @@
 import axios from 'axios';
+import { API_BASE } from '../constants';
 import type { 
   Agent, ProtocolStats, OwnedContract,
   ReputationPoint,
@@ -6,7 +7,8 @@ import type {
   MarketTask
 } from '../types';
 
-const BASE_URL = 'http://localhost:8080/v1';
+const BASE_URL = `${API_BASE}/v1`;
+
 
 class ApiService {
   private async fetch<T>(endpoint: string): Promise<T> {

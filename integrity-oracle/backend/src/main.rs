@@ -820,6 +820,37 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/v1/identity/xns/register", post(register_xns_handle))
         // --- Rollup & Anchoring ---
         .route("/v1/rollup/commit", post(commit_rollup_batch))
+        // --- Credit Facility ---
+        .route("/v1/agent/{identifier}/credit/profile", get(get_credit_profile))
+        .route("/v1/agent/{identifier}/credit/borrow", post(post_credit_borrow))
+        .route("/v1/agent/{identifier}/credit/repay", post(post_credit_repay))
+        // --- Wallet & Tokens ---
+        .route("/v1/wallet/{address}/balance", get(get_wallet_balance))
+        .route("/v1/wallet/transfer", post(post_wallet_transfer))
+        // --- Governance ---
+        .route("/v1/governance/proposals", get(get_governance_proposals).post(post_governance_proposal))
+        .route("/v1/governance/proposals/{id}/vote", post(post_governance_vote))
+        // --- Marketplace ---
+        .route("/v1/market/tasks", get(get_market_tasks))
+        .route("/v1/market/task/create", post(post_market_task_create))
+        .route("/v1/market/task/bid", post(post_market_task_bid))
+        .route("/v1/market/task/settle", post(post_market_task_settle))
+        .route("/v1/market/task/fund-with-loan", post(post_market_task_fund))
+        // --- ZK Proofs ---
+        .route("/v1/agent/{identifier}/zk/generate-proof", post(post_zk_generate_proof))
+        // --- Stability & Audit ---
+        .route("/v1/stability/benchmarks", get(get_stability_benchmarks))
+        .route("/v1/audit/request", post(post_audit_request))
+        // --- API Keys ---
+        .route("/v1/api-keys/generate", post(post_generate_api_key))
+        // --- Contract Factory ---
+        .route("/v1/contracts/factory/deploy", post(post_contract_deploy))
+        .route("/v1/contracts/list-market", post(post_contract_list_market))
+        // --- Provenance ---
+        .route("/v1/agent/{identifier}/provenance", get(get_agent_provenance))
+        // --- Identity Challenges ---
+        .route("/v1/agent/{identifier}/identity/challenge", post(post_identity_challenge))
+        .route("/v1/agent/{identifier}/identity/claim", post(post_identity_claim))
         .layer(cors)
         .with_state(state);
 
@@ -3206,4 +3237,244 @@ async fn get_agent_contracts(
         .collect();
 
     Ok(Json(serde_json::json!(contracts)))
+}
+
+// =============================================================================
+// Dashboard Stub Endpoints
+// =============================================================================
+
+async fn get_credit_profile(
+    State(_state): State<Arc<AppState>>,
+    Path(identifier): Path<String>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "agent_address": identifier,
+        "max_credit_line": 50000.0,
+        "outstanding": 0.0,
+        "credit_score": 750,
+        "utilization": 0.0,
+        "status": "active"
+    })))
+}
+
+async fn post_credit_borrow(
+    State(_state): State<Arc<AppState>>,
+    Path(identifier): Path<String>,
+    Json(payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    let amount = payload.get("amount").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    Ok(Json(serde_json::json!({
+        "status": "approved",
+        "agent_address": identifier,
+        "amount_borrowed": amount
+    })))
+}
+
+async fn post_credit_repay(
+    State(_state): State<Arc<AppState>>,
+    Path(identifier): Path<String>,
+    Json(payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    let amount = payload.get("amount").and_then(|v| v.as_f64()).unwrap_or(0.0);
+    Ok(Json(serde_json::json!({
+        "status": "repaid",
+        "agent_address": identifier,
+        "amount_repaid": amount
+    })))
+}
+
+async fn get_wallet_balance(
+    State(_state): State<Arc<AppState>>,
+    Path(address): Path<String>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "address": address,
+        "balance_itk": 100000.0
+    })))
+}
+
+async fn post_wallet_transfer(
+    State(_state): State<Arc<AppState>>,
+    Json(payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "status": "transferred",
+        "from": payload.get("from_address"),
+        "to": payload.get("to_address"),
+        "amount_itk": payload.get("amount_itk")
+    })))
+}
+
+async fn get_governance_proposals(
+    State(_state): State<Arc<AppState>>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!([])))
+}
+
+async fn post_governance_proposal(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "id": format!("prop-{}", uuid::Uuid::new_v4()),
+        "status": "created"
+    })))
+}
+
+async fn post_governance_vote(
+    State(_state): State<Arc<AppState>>,
+    Path(id): Path<String>,
+    Json(payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "proposal_id": id,
+        "vote": payload.get("vote"),
+        "status": "voted"
+    })))
+}
+
+async fn get_market_tasks(
+    State(state): State<Arc<AppState>>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    let rows = sqlx::query(
+        "SELECT task_id::text, title, description, reward_itk::float8, status, creator_agent_id::text \
+         FROM market_tasks ORDER BY created_at DESC LIMIT 50"
+    )
+    .fetch_all(&state.db)
+    .await;
+    match rows {
+        Ok(rows) => {
+            let tasks: Vec<serde_json::Value> = rows.into_iter().map(|r| {
+                serde_json::json!({
+                    "task_id": r.get::<String, _>(0),
+                    "title": r.get::<String, _>(1),
+                    "description": r.get::<String, _>(2),
+                    "reward_itk": r.get::<f64, _>(3),
+                    "status": r.get::<String, _>(4),
+                    "creator_agent_id": r.get::<String, _>(5),
+                })
+            }).collect();
+            Ok(Json(serde_json::json!(tasks)))
+        }
+        Err(_) => Ok(Json(serde_json::json!([]))),
+    }
+}
+
+async fn post_market_task_create(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "task_id": format!("task-{}", uuid::Uuid::new_v4()),
+        "status": "created"
+    })))
+}
+
+async fn post_market_task_bid(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({ "status": "bid_placed" })))
+}
+
+async fn post_market_task_settle(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({ "status": "settled" })))
+}
+
+async fn post_market_task_fund(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({ "status": "funded" })))
+}
+
+async fn post_zk_generate_proof(
+    State(_state): State<Arc<AppState>>,
+    Path(identifier): Path<String>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "proof_id": format!("zk-{}", uuid::Uuid::new_v4()),
+        "agent_address": identifier,
+        "status": "generated",
+        "verified": true
+    })))
+}
+
+async fn get_stability_benchmarks(
+    State(_state): State<Arc<AppState>>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!([])))
+}
+
+async fn post_audit_request(
+    State(_state): State<Arc<AppState>>,
+    Json(payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "audit_id": format!("aud-{}", uuid::Uuid::new_v4()),
+        "agent_address": payload.get("agent_address"),
+        "audit_type": payload.get("audit_type"),
+        "status": "queued"
+    })))
+}
+
+async fn post_generate_api_key(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "api_key": format!("intg_dev_{}", uuid::Uuid::new_v4().to_string().replace('-', ""))
+    })))
+}
+
+async fn post_contract_deploy(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    use sha2::{Digest, Sha256};
+    let mut hasher = Sha256::new();
+    hasher.update(uuid::Uuid::new_v4().to_string().as_bytes());
+    let addr = format!("0x{}", &hex::encode(hasher.finalize())[..40]);
+    Ok(Json(serde_json::json!({
+        "contract_address": addr,
+        "status": "deployed"
+    })))
+}
+
+async fn post_contract_list_market(
+    State(_state): State<Arc<AppState>>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({ "status": "listed" })))
+}
+
+async fn get_agent_provenance(
+    State(_state): State<Arc<AppState>>,
+    Path(_identifier): Path<String>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!([])))
+}
+
+async fn post_identity_challenge(
+    State(_state): State<Arc<AppState>>,
+    Path(identifier): Path<String>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    let challenge = format!("Sign this message to prove ownership of agent {}: nonce={}", identifier, uuid::Uuid::new_v4());
+    Ok(Json(serde_json::json!(challenge)))
+}
+
+async fn post_identity_claim(
+    State(_state): State<Arc<AppState>>,
+    Path(identifier): Path<String>,
+    Json(_payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({
+        "agent_address": identifier,
+        "status": "claimed"
+    })))
 }
