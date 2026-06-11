@@ -13,7 +13,7 @@ export function Topbar() {
   };
 
   return (
-    <div className="topbar">
+    <div className="topbar" style={{ flexWrap: 'wrap', height: 'auto', padding: '12px 24px', gap: '12px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         <Shield size={20} color="var(--gold)" />
         <div>
@@ -26,7 +26,7 @@ export function Topbar() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap', justifyContent: 'flex-end' }}>
         {isBackendOffline && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--danger-dim)', color: 'var(--danger)', padding: '4px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
             <AlertTriangle size={14} /> ORACLE DATABASE OFFLINE

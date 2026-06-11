@@ -111,6 +111,7 @@ p {
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: -0.02em;
   font-weight: 500;
+  word-break: break-all;
 }
 
 /* Premium Scrollbars */
@@ -623,9 +624,10 @@ p {
   justify-content: space-between;
 }
 
-.flex-column {
+.flex-column, .flex-col {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .gap-2 { gap: 8px; }

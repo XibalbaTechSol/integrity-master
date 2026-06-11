@@ -12,11 +12,14 @@ const EquationPart = ({ children, label, delay = 0, color = "var(--gold)" }: { c
         style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}
     >
         <div style={{ 
-            fontSize: '2.5rem', 
+            fontSize: 'clamp(1.2rem, 5vw, 2.5rem)', 
             fontWeight: 800, 
             color: 'white', 
             fontFamily: 'JetBrains Mono, monospace',
-            textShadow: `0 0 20px ${color}40`
+            textShadow: `0 0 20px ${color}40`,
+            wordBreak: 'break-word',
+            maxWidth: '100%',
+            textAlign: 'center'
         }}>
             {children}
         </div>
@@ -99,7 +102,7 @@ export const AISEquationAnimation = () => {
             </div>
 
             {/* Main Equation Container */}
-            <div style={{ display: 'flex', alignItems: 'center', gap: '24px', zIndex: 10 }}>
+            <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'center', gap: '24px', zIndex: 10, padding: '0 20px' }}>
                 <EquationPart label="INTEGRITY SCORE" color="var(--gold)">
                     <Latex>$AIS(t)$</Latex>
                 </EquationPart>
@@ -122,7 +125,7 @@ export const AISEquationAnimation = () => {
                     >
                         min
                     </motion.div>
-                    <div style={{ display: 'flex', alignItems: 'flex-start', gap: '16px', padding: '32px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', position: 'relative' }}>
+                    <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', alignItems: 'flex-start', gap: '8px', padding: '16px', background: 'rgba(255,255,255,0.02)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', position: 'relative', maxWidth: '100%', boxSizing: 'border-box' }}>
                         
                         {/* Brackets */}
                         <div style={{ position: 'absolute', left: '12px', top: '20px', bottom: '20px', width: '2px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px' }} />
@@ -141,7 +144,7 @@ export const AISEquationAnimation = () => {
                             ,
                         </motion.div>
 
-                        <div style={{ display: 'flex', gap: '16px', alignItems: 'center' }}>
+                        <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '16px', alignItems: 'center' }}>
                             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: '12px' }}>
                                 <EquationPart label="TRI-METRIC AGGREGATE" delay={1.8} color="#60a5fa">
                                     <Latex>$\left[\sum w_i \cdot Metric_i\right]$</Latex>
@@ -220,7 +223,7 @@ export const AISEquationAnimation = () => {
                 initial={{ opacity: 0 }}
                 animate={{ opacity: 1 }}
                 transition={{ delay: 3.5 }}
-                style={{ marginTop: '24px', display: 'flex', gap: '40px' }}
+                style={{ marginTop: '24px', display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: '20px' }}
             >
                 <div style={{ display: 'flex', alignItems: 'center', gap: '8px', fontSize: '0.7rem', fontWeight: 800, color: 'rgba(255,255,255,0.3)', letterSpacing: '0.1em' }}>
                     <Shield size={12} /> DETERMINISTIC BOUNDS

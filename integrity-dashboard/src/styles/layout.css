@@ -41,6 +41,7 @@
   overflow: hidden;
   background: radial-gradient(circle at top right, rgba(34, 211, 238, 0.05), transparent 50%),
               radial-gradient(circle at bottom left, rgba(139, 92, 246, 0.05), transparent 50%);
+  min-width: 0;
 }
 
 /* Topbar */
@@ -99,6 +100,7 @@
   flex: 1;
   overflow-y: auto;
   padding: var(--space-6);
+  min-width: 0;
 }
 
 /* Grid Layouts */
