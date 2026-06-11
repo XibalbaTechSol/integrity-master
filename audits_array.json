@@ -1,0 +1,52 @@
+[
+  {
+    "audit_id": "830a9682-73ae-40e0-81e9-45a5118e49bf",
+    "agent_id": "4e3921ba-4bdd-4482-a995-fc82fe670749",
+    "audit_date": "2026-06-11T11:48:35.960846-05:00",
+    "audit_type": "MANUAL_DEEP_DIVE",
+    "verification_score": 0.94,
+    "verification_fee_paid_tx_hash": null,
+    "notes": "High integrity verified by Xibalba Sentinel.",
+    "expires_at": "2026-09-09T11:48:36.111442-05:00"
+  },
+  {
+    "audit_id": "67c82e35-e5fb-437a-a1b8-fffd0d22a173",
+    "agent_id": "dadacd84-3454-463a-97eb-9dc83debee69",
+    "audit_date": "2026-06-11T11:48:35.960846-05:00",
+    "audit_type": "AUTOMATED",
+    "verification_score": 0.97,
+    "verification_fee_paid_tx_hash": null,
+    "notes": "High integrity verified by Xibalba Sentinel.",
+    "expires_at": "2026-09-09T11:48:36.113464-05:00"
+  },
+  {
+    "audit_id": "dee02b53-675e-4367-a3d3-49887c00096a",
+    "agent_id": "7a5ec8ad-d5ae-441d-b563-0b7095cdfff1",
+    "audit_date": "2026-06-11T11:48:35.960846-05:00",
+    "audit_type": "MANUAL_DEEP_DIVE",
+    "verification_score": 0.83,
+    "verification_fee_paid_tx_hash": null,
+    "notes": "High integrity verified by Xibalba Sentinel.",
+    "expires_at": "2026-09-09T11:48:36.114131-05:00"
+  },
+  {
+    "audit_id": "2b360f3a-75ba-42c6-ac9f-cf6e48bb616b",
+    "agent_id": "a59aca5f-1aa8-4e09-9e34-480e32852192",
+    "audit_date": "2026-06-11T11:48:35.960846-05:00",
+    "audit_type": "PLATINUM",
+    "verification_score": 0.96,
+    "verification_fee_paid_tx_hash": null,
+    "notes": "High integrity verified by Xibalba Sentinel.",
+    "expires_at": "2026-09-09T11:48:36.115328-05:00"
+  },
+  {
+    "audit_id": "e49ae42f-1dd3-45fc-bf02-0a36fcb512e9",
+    "agent_id": "9bc7c7bb-59af-4053-8673-5d6f249e7ddf",
+    "audit_date": "2026-06-11T11:48:35.960846-05:00",
+    "audit_type": "AUTOMATED",
+    "verification_score": 0.97,
+    "verification_fee_paid_tx_hash": null,
+    "notes": "High integrity verified by Xibalba Sentinel.",
+    "expires_at": "2026-09-09T11:48:36.118965-05:00"
+  }
+]

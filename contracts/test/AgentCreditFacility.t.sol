@@ -26,6 +26,7 @@ contract AgentCreditFacilityTest is Test {
 
     address oracle = address(0x123);
     address controller = address(0x456);
+    address entryPoint = address(0x789);
 
     function setUp() public {
         itk = new MockITK();
@@ -37,9 +38,9 @@ contract AgentCreditFacilityTest is Test {
         factory.mint(controller, 3);
 
         // Deploy 3 agents
-        agentTier1 = new SovereignAgent("Agent 1", controller, oracle, 1, address(factory));
-        agentTier2 = new SovereignAgent("Agent 2", controller, oracle, 2, address(factory));
-        agentTier3 = new SovereignAgent("Agent 3", controller, oracle, 3, address(factory));
+        agentTier1 = new SovereignAgent("Agent 1", controller, oracle, 1, address(factory), entryPoint);
+        agentTier2 = new SovereignAgent("Agent 2", controller, oracle, 2, address(factory), entryPoint);
+        agentTier3 = new SovereignAgent("Agent 3", controller, oracle, 3, address(factory), entryPoint);
 
         // Fund the facility with 1 million ITK
         itk.mint(address(facility), 1_000_000 * 10**18);

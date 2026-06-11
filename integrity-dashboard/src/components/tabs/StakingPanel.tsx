@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Panel } from '../shared/Panel';
 import { Lock, Coins, TrendingUp, AlertTriangle } from 'lucide-react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { api } from '../../services/api';
 
 export function StakingPanel() {
@@ -70,8 +70,9 @@ export function StakingPanel() {
             ) : (
               <>
                 <div className="form-group">
-                  <label className="form-label">Amount to Stake (ITK)</label>
+                  <label className="form-label" htmlFor="stake-amount">Amount to Stake (ITK)</label>
                   <input 
+                    id="stake-amount"
                     type="number" 
                     className="input" 
                     placeholder="Min. 100 ITK"

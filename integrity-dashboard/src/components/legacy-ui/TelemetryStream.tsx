@@ -17,9 +17,10 @@ export const TelemetryStream = () => {
         const fetchTelemetry = async () => {
             try {
                 const res = await axios.get(`${API_BASE}/v1/telemetry/latest`);
-                setStream(res.data);
+                setStream(Array.isArray(res.data) ? res.data : []);
             } catch (e) {
                 console.error("Telemetry fetch error:", e);
+                setStream([]);
             }
         };
 

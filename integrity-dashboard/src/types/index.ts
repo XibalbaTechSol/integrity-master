@@ -255,6 +255,8 @@ export type TabId =
   | 'zk'
   | 'factory'
   | 'compliance'
+  | 'shield'
+  | 'oracle'
   | 'credit'
   | 'governance'
   | 'markets'

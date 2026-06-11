@@ -3,7 +3,7 @@ pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import "./IntegrityProtocol.sol";
+import "../framework/IntegrityProtocol.sol";
 import "./ReputationRegistry.sol";
 
 /**

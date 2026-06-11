@@ -2,7 +2,7 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "./SovereignAgent.sol";
+import "../core/SovereignAgent.sol";
 
 /**
  * @title AgentFactory
@@ -12,6 +12,7 @@ import "./SovereignAgent.sol";
 contract AgentFactory is ERC721 {
     uint256 private _nextTokenId;
     address[] public allAgents;
+    address public immutable entryPoint;
     
     // Mapping from tokenId to the actual agent contract address
     mapping(uint256 => address) public tokenToAgent;
@@ -19,7 +20,10 @@ contract AgentFactory is ERC721 {
     event AgentRegistered(address indexed agentContract, address indexed controller, uint256 indexed tokenId, string agentAlias);
     event Vouched(address indexed parent, address indexed child);
 
-    constructor() ERC721("Xibalba Agent Identity", "XID") {}
+    constructor(address _entryPoint) ERC721("Xibalba Agent Identity", "XID") {
+        require(_entryPoint != address(0), "Invalid EntryPoint");
+        entryPoint = _entryPoint;
+    }
 
     /**
      * @notice Creates a new SovereignAgent and mints an Identity NFT to the sender.
@@ -30,7 +34,14 @@ contract AgentFactory is ERC721 {
     function createAgent(string memory _alias, address _oracle, address _vouchFor) external returns (address) {
         uint256 tokenId = _nextTokenId++;
         
-        SovereignAgent newAgent = new SovereignAgent(_alias, msg.sender, _oracle, tokenId, address(this));
+        SovereignAgent newAgent = new SovereignAgent(
+            _alias, 
+            msg.sender, 
+            _oracle, 
+            tokenId, 
+            address(this),
+            entryPoint
+        );
         address agentAddr = address(newAgent);
         
         allAgents.push(agentAddr);

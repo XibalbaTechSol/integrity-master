@@ -1,4 +1,4 @@
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { PlusCircle, Database, ShieldCheck } from 'lucide-react';
 import { StatusBadge } from '../shared/StatusBadge';
 

@@ -1,6 +1,6 @@
 import { Panel } from '../shared/Panel';
 import { ShieldCheck, AlertTriangle } from 'lucide-react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 
 export function CompliancePanel() {
   const { selectedAgent } = useDashboard();

@@ -454,6 +454,7 @@ class TransactionReportRequest(BaseModel):
     contract_value_intg: float
     latency_ms: int
     accuracy_score: float
+    domain_id: str = "global"
     tokens_processed: int = 100000
     model_class: str = "SMALL"
     metadata: Optional[Dict[str, Any]] = None
@@ -494,6 +495,7 @@ class TelemetryEventSchema(BaseModel):
 
 class TelemetryBatchRequest(BaseModel):
     agent_address: str
+    domain_id: str = "global"
     events: List[TelemetryEventSchema]
     signature: Optional[str] = None
     timestamp: Optional[int] = None
@@ -1330,12 +1332,14 @@ async def report_transaction_metrics(request: TransactionReportRequest, db: Sess
         latency_ms=request.latency_ms,
         accuracy=request.accuracy_score,
         tokens_processed=request.tokens_processed,
+        domain_id=request.domain_id,
         model_class=request.model_class
     )
     
     # Store commitment metadata for dual-witness
     tx = db.query(TransactionLog).filter(TransactionLog.on_chain_tx_hash == request.deal_id).first()
     if tx:
+        tx.domain_id = request.domain_id
         tx.provider_metadata = request.metadata or {
             "estimated_latency": request.latency_ms,
             "max_tokens_allocated": request.tokens_processed
@@ -1373,7 +1377,8 @@ async def report_telemetry_batch(request: TelemetryBatchRequest, db: Session = D
 
     scores = ingestor.process_telemetry_batch(
         agent_address=request.agent_address,
-        events=[e.dict() for e in request.events]
+        events=[e.dict() for e in request.events],
+        domain_id=request.domain_id
     )
     
     return {

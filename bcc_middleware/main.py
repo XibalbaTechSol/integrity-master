@@ -75,11 +75,11 @@ async def evaluate_intent_policy(commitment: BCCCommitment, context: Dict[str, A
     # 1. Intent Drift Check
     # We re-calculate the hash of the critical keys in the actual context
     # and compare it to the intended_state_hash in the commitment.
-    # actual_payload = json.dumps(context, sort_keys=True)
-    # actual_hash = hashlib.sha256(actual_payload.encode()).hexdigest()
+    actual_payload = json.dumps(context, sort_keys=True)
+    actual_hash = hashlib.sha256(actual_payload.encode()).hexdigest()
     
-    # if actual_hash != commitment.intended_state_hash:
-    #    return False, f"BCC_INTENT_DRIFT: Actual context hash {actual_hash[:12]} mismatch"
+    if actual_hash != commitment.intended_state_hash:
+        return False, f"BCC_INTENT_DRIFT: Actual context hash {actual_hash[:12]} mismatch"
 
     # 2. Semantic Policy Evaluation
     if POLICY_ENGINE_URL:

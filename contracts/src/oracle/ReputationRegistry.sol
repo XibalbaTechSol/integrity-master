@@ -21,6 +21,14 @@ interface IValidationRegistry {
 }
 
 /**
+ * @title IUltraVerifier
+ * @dev Interface for the Aztec Noir generated UltraPlonk verifier.
+ */
+interface IUltraVerifier {
+    function verify(bytes calldata _proof, bytes32[] calldata _publicInputs) external view returns (bool);
+}
+
+/**
  * @title ReputationRegistry
  * @author Xibalba Solutions
  * @notice The central ledger for Agent Integrity Scores (AIS), compliant with ERC-8004.
@@ -29,6 +37,7 @@ interface IValidationRegistry {
 contract ReputationRegistry is AccessControl, IValidationRegistry, ReentrancyGuard {
     
     bytes32 public constant VALIDATOR_ROLE = keccak256("VALIDATOR_ROLE");
+    bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
 
     struct AgentProfile {
         uint256 ais;          // 300 - 1000
@@ -43,7 +52,7 @@ contract ReputationRegistry is AccessControl, IValidationRegistry, ReentrancyGua
     IntegrityToken public intgToken;
     address public identityRegistry; 
     address public stateAnchor; // StateAnchor contract address
-    address public zkVereifier; // UltraVerifier contract address
+    address public zkVerifier; // UltraVerifier contract address
     
     // Chainlink CCIP Configuration
     IRouterClient public ccipRouter;
@@ -53,7 +62,6 @@ contract ReputationRegistry is AccessControl, IValidationRegistry, ReentrancyGua
     mapping(bytes32 => bool) public pendingValidations;
     mapping(address => mapping(address => uint256)) public userStakes; // user => agent => amount
 
-    
     event AISUpdated(address indexed agent, uint256 oldScore, uint256 newScore);
     event Staked(address indexed agent, uint256 amount);
     event Unstaked(address indexed agent, uint256 amount);
@@ -74,7 +82,7 @@ contract ReputationRegistry is AccessControl, IValidationRegistry, ReentrancyGua
 
     function setZKConfigs(address _anchor, address _verifier) external onlyRole(DEFAULT_ADMIN_ROLE) {
         stateAnchor = _anchor;
-        zkVereifier = _verifier;
+        zkVerifier = _verifier;
     }
     
     /**
@@ -103,65 +111,60 @@ contract ReputationRegistry is AccessControl, IValidationRegistry, ReentrancyGua
         pendingValidations[_requestHash] = false;
         emit ValidationResponded(_requestHash, _status, _uri);
     }
-}
-
-/**
- * @title IUltraVerifier
- * @dev Interface for the Aztec Noir generated UltraPlonk verifier.
- */
-interface IUltraVerifier {
-    function verify(bytes calldata _proof, bytes32[] calldata _publicInputs) external view returns (bool);
-}
 
     /**
-     * @title ReputationRegistry
-    ...
-        /**
-         * @notice Verifies a Noir ZK-proof of reputation and updates the local AIS cache.
-         * @param _proof The Noir ZK-proof bytes.
-         * @param _publicInputs Array of public inputs: [ais_threshold, max_risk_days, agent_address, state_root]
-         */
-        function verifyReputationZK(bytes calldata _proof, bytes32[] calldata _publicInputs) external nonReentrant {
-            address agent = address(uint160(uint256(_publicInputs[2])));
-            require(msg.sender == agent, "Only the agent can submit their own ZK-proof.");
+     * @notice Verifies a Noir ZK-proof of reputation and updates the local AIS cache.
+     * @param _proof The Noir ZK-proof bytes.
+     * @param _publicInputs Array of public inputs: [ais_threshold, max_risk_days, agent_address, state_root]
+     */
+    function verifyReputationZK(bytes calldata _proof, bytes32[] calldata _publicInputs) external nonReentrant {
+        address agent = address(uint160(uint256(_publicInputs[2])));
+        require(msg.sender == agent, "Only the agent can submit their own ZK-proof.");
 
-            require(zkVereifier != address(0), "ZK Verifier not configured.");
-            require(stateAnchor != address(0), "State Anchor not configured.");
+        require(zkVerifier != address(0), "ZK Verifier not configured.");
+        require(stateAnchor != address(0), "State Anchor not configured.");
 
-            // 1. CALL THE ZK-VERIFIER
-            bool isValid = IUltraVerifier(zkVereifier).verify(_proof, _publicInputs);
-            require(isValid, "Invalid ZK Proof: Mathematical constraint failure.");
+        // 1. CALL THE ZK-VERIFIER
+        bool isValid = IUltraVerifier(zkVerifier).verify(_proof, _publicInputs);
+        require(isValid, "Invalid ZK Proof: Mathematical constraint failure.");
 
-            bytes32 public constant VALIDATOR_ROLE = keccak256("VALIDATOR_ROLE");
-            bytes32 public constant BRIDGE_ROLE = keccak256("BRIDGE_ROLE");
-            ...
-            /**
-             * @notice Registers or updates an agent's AIS based on protocol calculations.
-             */
-            function updateAIS(address _agent, uint256 _ais, uint256 _tier) external onlyRole(VALIDATOR_ROLE) {
-                _updateAISInternal(_agent, _ais, _tier);
-            }
+        // 2. VERIFY STATE ANCHOR (MERKLE ROOT)
+        // In a real implementation, we would verify the state_root against the StateAnchor contract.
+        
+        // 3. UPDATE AIS (Successful verification grants a boost)
+        uint256 currentAIS = agents[agent].ais;
+        if (currentAIS < 950) {
+            _updateAISInternal(agent, currentAIS + 50, agents[agent].verificationTier);
+        }
+        emit ZKProofVerified(agent, _publicInputs[3]);
+    }
 
-            /**
-             * @notice Updates reputation score received from a trusted cross-chain bridge.
-             */
-            function updateAISByBridge(address _agent, uint256 _ais, uint256 _tier) external onlyRole(BRIDGE_ROLE) {
-                _updateAISInternal(_agent, _ais, _tier);
-            }
+    /**
+     * @notice Registers or updates an agent's AIS based on protocol calculations.
+     */
+    function updateAIS(address _agent, uint256 _ais, uint256 _tier) external onlyRole(VALIDATOR_ROLE) {
+        _updateAISInternal(_agent, _ais, _tier);
+    }
 
-            function _updateAISInternal(address _agent, uint256 _ais, uint256 _tier) internal {
-                require(_ais >= 300 && _ais <= 1000, "AIS out of valid range.");
-                require(_tier >= 1 && _tier <= 3, "Invalid tier.");
+    /**
+     * @notice Updates reputation score received from a trusted cross-chain bridge.
+     */
+    function updateAISByBridge(address _agent, uint256 _ais, uint256 _tier) external onlyRole(BRIDGE_ROLE) {
+        _updateAISInternal(_agent, _ais, _tier);
+    }
 
-                uint256 oldScore = agents[_agent].ais;
-                agents[_agent].ais = _ais;
-                agents[_agent].verificationTier = _tier;
-                agents[_agent].lastUpdate = block.timestamp;
+    function _updateAISInternal(address _agent, uint256 _ais, uint256 _tier) internal {
+        require(_ais >= 300 && _ais <= 1000, "AIS out of valid range.");
+        require(_tier >= 1 && _tier <= 3, "Invalid tier.");
 
-                emit AISUpdated(_agent, oldScore, _ais);
-            }
+        uint256 oldScore = agents[_agent].ais;
+        agents[_agent].ais = _ais;
+        agents[_agent].verificationTier = _tier;
+        agents[_agent].lastUpdate = block.timestamp;
 
-    
+        emit AISUpdated(_agent, oldScore, _ais);
+    }
+
     /**
      * @notice Broadcasts an agent's AIS score to a destination chain (e.g. Ethereum L1) via Chainlink CCIP.
      * @param _agent The agent whose score to broadcast.
@@ -180,21 +183,17 @@ interface IUltraVerifier {
         Client.EVM2AnyMessage memory evm2AnyMessage = Client.EVM2AnyMessage({
             receiver: abi.encode(_receiver),
             data: payload,
-            tokenAmounts: new Client.EVMTokenAmount[](0), // No tokens sent, just data
+            tokenAmounts: new Client.EVMTokenAmount[](0),
             extraArgs: Client._argsToBytes(
-                Client.EVMExtraArgsV1({gasLimit: 200_000}) // Gas limit for the receiving contract
+                Client.EVMExtraArgsV1({gasLimit: 200_000})
             ),
             feeToken: address(linkToken)
         });
         
-        // Calculate the required LINK fee
         uint256 fees = ccipRouter.getFee(_destinationChainSelector, evm2AnyMessage);
         require(linkToken.balanceOf(address(this)) >= fees, "Not enough LINK balance to cover CCIP fees.");
         
-        // Approve router to spend LINK
         linkToken.approve(address(ccipRouter), fees);
-        
-        // Send the CCIP message
         messageId = ccipRouter.ccipSend(_destinationChainSelector, evm2AnyMessage);
         
         emit AIBroadcastedCrossChain(_agent, _destinationChainSelector, messageId);
@@ -247,7 +246,6 @@ interface IUltraVerifier {
      * @notice Unstakes ITK tokens, reducing the AIS boost.
      */
     function unstake(uint256 _amount) external nonReentrant {
-
         require(_amount > 0, "Amount must be greater than zero.");
         require(agents[msg.sender].totalStaked >= _amount, "Insufficient staked balance.");
         

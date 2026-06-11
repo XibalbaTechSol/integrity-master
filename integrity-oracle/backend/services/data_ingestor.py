@@ -24,9 +24,11 @@ class IntegrityDataIngestor:
         """
         Creates a daily snapshot of the agent's reputation scores if one doesn't exist for today.
         """
+        domain_id = scores.get("domain_id", "global")
         today = datetime.datetime.utcnow().date()
         existing_snapshot = db.query(ReputationSnapshot).filter(
             ReputationSnapshot.agent_id == agent.agent_id,
+            ReputationSnapshot.domain_id == domain_id,
             ReputationSnapshot.timestamp >= today,
             ReputationSnapshot.timestamp < today + datetime.timedelta(days=1)
         ).first()
@@ -40,6 +42,7 @@ class IntegrityDataIngestor:
 
             snapshot = ReputationSnapshot(
                 agent_id=agent.agent_id,
+                domain_id=domain_id,
                 timestamp=datetime.datetime.utcnow(),
                 ais_score=ais_score,
                 entropy_score=entropy_score,
@@ -47,9 +50,9 @@ class IntegrityDataIngestor:
                 sacrifice_score=sacrifice_score
             )
             db.add(snapshot)
-            print(f"[SNAPSHOT] Created daily snapshot for agent {agent.alias}: AIS={ais_score}")
+            print(f"[SNAPSHOT] Created daily snapshot for agent {agent.alias} ({domain_id}): AIS={ais_score}")
         else:
-            print(f"[SNAPSHOT] Daily snapshot already exists for agent {agent.alias}. Skipping.")
+            print(f"[SNAPSHOT] Daily snapshot already exists for agent {agent.alias} ({domain_id}). Skipping.")
 
     def process_new_transaction(self,
                                 agent_address: str,
@@ -58,6 +61,7 @@ class IntegrityDataIngestor:
                                 latency_ms: int,
                                 accuracy: float,
                                 tokens_processed: int,
+                                domain_id: str = "global",
                                 model_class="SMALL"):
         """
         Main entry point for incoming performance reports.
@@ -72,7 +76,10 @@ class IntegrityDataIngestor:
                 # We can proceed with a default performance variance.
                 performance_variance = 0.5 
             else:
-                history = db.query(TransactionLog).filter(TransactionLog.agent_id == agent.agent_id).limit(100).all()
+                history = db.query(TransactionLog).filter(
+                    TransactionLog.agent_id == agent.agent_id,
+                    TransactionLog.domain_id == domain_id
+                ).limit(100).all()
                 latencies = [t.completion_time_ms for t in history] + [latency_ms]
                 accuracies = [float(t.data_quality_score) for t in history] + [accuracy]
                 performance_variance = self.verifier.calculate_performance_entropy(latencies, accuracies)
@@ -80,6 +87,7 @@ class IntegrityDataIngestor:
             # Construct payload for the Rust service
             payload = {
                 "agent_id": agent_address,
+                "domain_id": domain_id,
                 "deal_id": tx_hash,
                 "deal_amount": contract_value,
                 "latency_ms": latency_ms,
@@ -107,6 +115,7 @@ class IntegrityDataIngestor:
                     "entropy_score": rust_scores.get("entropy"),
                     "grounding_score": rust_scores.get("grounding"),
                     "sacrifice_score": rust_scores.get("sacrifice"),
+                    "domain_id": domain_id
                 }
                 self._create_reputation_snapshot(db, agent, scores)
                 db.commit() # Commit snapshot
@@ -124,7 +133,7 @@ class IntegrityDataIngestor:
         finally:
             db.close()
 
-    def process_telemetry_batch(self, agent_address: str, events: list):
+    def process_telemetry_batch(self, agent_address: str, events: list, domain_id: str = "global"):
         """
         Processes a batch of telemetry events by delegating each one to the Rust service.
         """
@@ -140,7 +149,8 @@ class IntegrityDataIngestor:
                     contract_value=event.get('contract_value', 0.0),
                     latency_ms=event.get('latency_ms', 0),
                     accuracy=event.get('accuracy', 1.0),
-                    tokens_processed=event.get('tokens_out', 0)
+                    tokens_processed=event.get('tokens_out', 0),
+                    domain_id=domain_id
                 )
                 if scores:
                     all_scores.append(scores)

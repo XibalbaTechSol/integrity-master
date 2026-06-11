@@ -39,7 +39,7 @@ export const ImmutableLedger: React.FC<ImmutableLedgerProps> = ({ agentAddress }
             // 2. Try to fetch from Base Sepolia on-chain events to merge or enrich
             try {
                 const provider = new ethers.JsonRpcProvider(RPC_URL);
-                const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI, provider);
+                const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI.abi, provider);
                 const filter = itkContract.filters.Transfer();
                 const events = await itkContract.queryFilter(filter, -5000);
                 

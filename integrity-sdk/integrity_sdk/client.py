@@ -49,7 +49,6 @@ class IntegrityClient:
         api_domain_prefix: Optional[str] = None,
         bcc_middleware_url: Optional[str] = None,
         framework_url: Optional[str] = None,
-        framework_url: Optional[str] = None,
         domain_id: str = "global",
         mode: str = "production",
         api_key: Optional[str] = None,

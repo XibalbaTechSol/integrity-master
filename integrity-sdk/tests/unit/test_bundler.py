@@ -6,8 +6,10 @@ def test_bundler_init():
     bundler = IntegrityBundler(
         entry_point="0x123",
         paymaster_url="http://localhost:8000",
-        bundler_url="http://localhost:9000"
+        bundler_url="http://localhost:9000",
+        chain_id=1
     )
     assert bundler.entry_point == "0x123"
     assert bundler.paymaster_url == "http://localhost:8000"
     assert bundler.bundler_url == "http://localhost:9000"
+    assert bundler.chain_id == 1

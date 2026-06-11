@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { Panel } from '../shared/Panel';
 import { StatusBadge } from '../shared/StatusBadge';
 import { Coins, HandCoins, Clock, RefreshCw } from 'lucide-react';
 import { api } from '../../services/api';
+import type { Loan } from '../../types';
 
 export function CreditPanel() {
   const { selectedAgent, addToast, fetchData } = useDashboard();
@@ -11,12 +12,17 @@ export function CreditPanel() {
   // Loan Form State
   const [borrowAmount, setBorrowAmount] = useState('5000');
   const [termDays, setTermDays] = useState('30');
+  const [selectedContracts, setSelectedContracts] = useState<string[]>([]);
   const [isSubmitting, setIsBorrowing] = useState(false);
 
   // Derived calculations
   const p = parseFloat(borrowAmount) || 0;
   const ais = selectedAgent?.current_ais || 500;
-  const interestRate = Math.max(1.5, 12 - (ais / 100)); // Dynamic rate based on AIS
+  
+  // Rate decreases slightly for each collateral contract provided
+  const collateralDiscount = selectedContracts.length * 0.5;
+  const interestRate = Math.max(1.5, 12 - (ais / 100) - collateralDiscount); 
+  
   const borrowLimit = selectedAgent?.credit_profile?.max_borrow_limit || 10000;
   const isOverLimit = p > borrowLimit;
 
@@ -27,13 +33,16 @@ export function CreditPanel() {
     setIsBorrowing(true);
     try {
       await api.borrow(selectedAgent.eth_address, {
-        amount_itk: p,
+        amount: p,
+        collateral_contracts: selectedContracts,
         term_days: parseInt(termDays)
       });
       addToast('success', 'Loan approved and funded via protocol credit');
       if (fetchData) await fetchData();
-    } catch (err: any) {
-      addToast('error', `Loan failed: ${err.message}`);
+      setSelectedContracts([]);
+    } catch (err: unknown) {
+      const error = err as Error;
+      addToast('error', `Loan failed: ${error.message}`);
     } finally {
       setIsBorrowing(false);
     }
@@ -44,12 +53,13 @@ export function CreditPanel() {
     try {
       await api.repay(selectedAgent.eth_address, {
         loan_id: loanId,
-        amount_itk: amount
+        amount: amount
       });
       addToast('success', 'Repayment processed successfully');
       if (fetchData) await fetchData();
-    } catch (err: any) {
-      addToast('error', `Repayment failed: ${err.message}`);
+    } catch (err: unknown) {
+      const error = err as Error;
+      addToast('error', `Repayment failed: ${error.message}`);
     }
   };
 
@@ -91,17 +101,41 @@ export function CreditPanel() {
           <form onSubmit={handleBorrow} className="grid-cols-2">
             <div className="flex-col gap-4">
               <div className="form-group">
-                <label className="form-label">Principal Amount (ITK)</label>
-                <input type="number" className="input" value={borrowAmount} onChange={e => setBorrowAmount(e.target.value)} required />
+                <label className="form-label" htmlFor="borrow-amount">Principal Amount (ITK)</label>
+                <input id="borrow-amount" type="number" className="input" value={borrowAmount} onChange={e => setBorrowAmount(e.target.value)} required />
                 {isOverLimit && <div style={{ fontSize: '0.75rem', color: 'var(--danger)', marginTop: '4px' }}>Exceeds maximum borrow limit</div>}
               </div>
               <div className="form-group">
-                <label className="form-label">Term Duration</label>
-                <select className="select" value={termDays} onChange={e => setTermDays(e.target.value)}>
+                <label className="form-label" htmlFor="term-days">Term Duration</label>
+                <select id="term-days" className="select" value={termDays} onChange={e => setTermDays(e.target.value)}>
                   <option value="30">30 Days</option>
                   <option value="60">60 Days</option>
                   <option value="90">90 Days</option>
                 </select>
+              </div>
+              <div className="form-group">
+                <label className="form-label" htmlFor="collateral">Collateral Contracts (Optional)</label>
+                <select 
+                  id="collateral" 
+                  className="select" 
+                  multiple 
+                  value={selectedContracts} 
+                  onChange={e => {
+                    const options = Array.from(e.target.selectedOptions, option => option.value);
+                    setSelectedContracts(options);
+                  }}
+                  style={{ height: '80px', padding: '8px' }}
+                >
+                  {selectedAgent?.owned_contracts?.map(c => (
+                    <option key={c.contract_address} value={c.contract_address}>
+                      {c.contract_type} - {c.contract_address.substring(0,10)}...
+                    </option>
+                  ))}
+                  {(!selectedAgent?.owned_contracts || selectedAgent.owned_contracts.length === 0) && (
+                    <option disabled>No deployed contracts available</option>
+                  )}
+                </select>
+                <div style={{ fontSize: '0.65rem', color: 'var(--text-muted)', marginTop: '4px' }}>Hold Ctrl/Cmd to select multiple. Lowers APR by 0.5% per contract.</div>
               </div>
             </div>
 
@@ -149,7 +183,7 @@ export function CreditPanel() {
                 </tr>
               </thead>
               <tbody>
-                {activeLoans.map((loan: any) => {
+                {activeLoans.map((loan: Loan) => {
                   const totalDue = loan.principal * (1 + (loan.interest_rate));
                   const progress = (loan.repaid_amount / totalDue) * 100; 
                   return (

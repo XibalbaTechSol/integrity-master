@@ -2,24 +2,13 @@
 pragma solidity ^0.8.20;
 
 import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/utils/cryptography/ECDSA.sol";
+import "@openzeppelin/contracts/utils/cryptography/MessageHashUtils.sol";
+import "../core/IAccount.sol";
 
 /**
  * @dev Self-contained ERC-4337 minimal Interfaces to ensure immediate compilation.
  */
-
-struct UserOperation {
-    address sender;
-    uint256 nonce;
-    bytes initCode;
-    bytes callData;
-    uint256 callGasLimit;
-    uint256 verificationGasLimit;
-    uint256 preVerificationGas;
-    uint256 maxFeePerGas;
-    uint256 maxPriorityFeePerGas;
-    bytes paymasterAndData;
-    bytes signature;
-}
 
 enum PostOpMode {
     opSucceeded,
@@ -73,6 +62,8 @@ interface ISwapRouter {
  * @notice Standard ERC-4337 paymaster that sponsors transactions for verified agents.
  */
 contract IntegrityPaymaster is IPaymaster, Ownable {
+    using ECDSA for bytes32;
+
     address public immutable entryPoint;
     address public oracleSigner;
     address public reputationRegistry;
@@ -114,13 +105,15 @@ contract IntegrityPaymaster is IPaymaster, Ownable {
 
         // 2. Verify Oracle Signature (from paymasterAndData)
         bytes calldata paymasterAndData = userOp.paymasterAndData;
-        require(paymasterAndData.length >= 84, "Invalid paymasterAndData length"); // 20 bytes address + 64+ bytes signature
+        require(paymasterAndData.length >= 85, "Invalid paymasterAndData length"); // 20 bytes address + 65 bytes signature
         
         bytes memory signature = paymasterAndData[20:];
         bytes32 hash = keccak256(abi.encodePacked(userOpHash, block.chainid));
+        bytes32 ethSignedMessageHash = MessageHashUtils.toEthSignedMessageHash(hash);
         
         // Ensure the Oracle authorized this specific operation
-        if (!_verifySignature(hash, signature)) {
+        address recovered = ethSignedMessageHash.recover(signature);
+        if (recovered != oracleSigner) {
             return ("", 1); // Signature validation failed
         }
 
@@ -135,15 +128,8 @@ contract IntegrityPaymaster is IPaymaster, Ownable {
     ) external override {
         // No-op for sponsorship mode
     }
-
-    function _verifySignature(bytes32 _hash, bytes memory _signature) internal view returns (bool) {
-        // ECDSA recover logic
-        // Simplified for brevity: in production, use OpenZeppelin ECDSA.recover
-        return true; 
-    }
 }
 
 interface IReputationRegistry {
     function getAgent(address _agent) external view returns (uint256 score, uint256 staked, bool verified, uint256 tier);
 }
-

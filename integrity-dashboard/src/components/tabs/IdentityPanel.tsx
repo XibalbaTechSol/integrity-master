@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { Panel } from '../shared/Panel';
-import { Key, Users, ShieldCheck } from 'lucide-react';
+import { Key, Users, ShieldCheck, Search } from 'lucide-react';
 import { DIDExplorer } from '../legacy-ui/DIDExplorer';
 import { AgentOnboarding } from '../legacy-ui/AgentOnboarding';
+import { XNSSearchService } from '../legacy-ui/XNSSearchService';
 
 export function IdentityPanel() {
   const { selectedAgent, fetchData } = useDashboard();
@@ -25,6 +26,10 @@ export function IdentityPanel() {
         </div>
 
         <div className="flex-col gap-6">
+          <Panel title="XNS Search Service" icon={<Search size={18} />}>
+            <XNSSearchService />
+          </Panel>
+
           <Panel title="Register New Agent" icon={<Users size={18} />}>
             <div className="flex-col gap-4">
                <p className="text-muted" style={{ fontSize: '0.875rem' }}>

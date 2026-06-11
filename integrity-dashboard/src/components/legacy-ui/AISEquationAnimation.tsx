@@ -1,8 +1,7 @@
-// @ts-nocheck
 import React, { useEffect, useState } from 'react';
-import { motion, useAnimation, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence } from 'framer-motion';
 import Latex from 'react-latex-next';
-import { Shield, Zap, Target, Activity, Coins, Clock } from 'lucide-react';
+import { Shield, Target, Activity, Coins, Clock } from 'lucide-react';
 
 const EquationPart = ({ children, label, delay = 0, color = "var(--gold)" }: { children: React.ReactNode, label: string, delay?: number, color?: string }) => (
     <motion.div
@@ -39,22 +38,34 @@ const EquationPart = ({ children, label, delay = 0, color = "var(--gold)" }: { c
     </motion.div>
 );
 
+const INITIAL_PARTICLES = [...Array(20)].map((_, i) => ({
+    duration: 4 + Math.random() * 4,
+    delay: Math.random() * 5,
+    left: `${Math.random() * 100}%`,
+    direction: i % 2 === 0 ? 50 : -50
+}));
+
 export const AISEquationAnimation = () => {
-    const controls = useAnimation();
     const [step, setStep] = useState(0);
 
     useEffect(() => {
+        let isMounted = true;
         const sequence = async () => {
             await new Promise(resolve => setTimeout(resolve, 1000));
+            if (!isMounted) return;
             setStep(1);
             await new Promise(resolve => setTimeout(resolve, 2000));
+            if (!isMounted) return;
             setStep(2);
             await new Promise(resolve => setTimeout(resolve, 2000));
+            if (!isMounted) return;
             setStep(3);
             await new Promise(resolve => setTimeout(resolve, 2000));
+            if (!isMounted) return;
             setStep(4);
         };
         sequence();
+        return () => { isMounted = false; };
     }, []);
 
     return (
@@ -73,23 +84,23 @@ export const AISEquationAnimation = () => {
         }}>
             {/* Cinematic Background Particles */}
             <div style={{ position: 'absolute', inset: 0, pointerEvents: 'none' }}>
-                {[...Array(20)].map((_, i) => (
+                {INITIAL_PARTICLES.map((p, i) => (
                     <motion.div
                         key={i}
                         initial={{ opacity: 0 }}
                         animate={{ 
                             opacity: [0.1, 0.3, 0.1],
                             y: [0, -100],
-                            x: [0, (i % 2 === 0 ? 50 : -50)]
+                            x: [0, p.direction]
                         }}
                         transition={{ 
-                            duration: 4 + Math.random() * 4, 
+                            duration: p.duration, 
                             repeat: Infinity,
-                            delay: Math.random() * 5
+                            delay: p.delay
                         }}
                         style={{ 
                             position: 'absolute',
-                            left: `${Math.random() * 100}%`,
+                            left: p.left,
                             bottom: '-20px',
                             width: '2px',
                             height: '2px',

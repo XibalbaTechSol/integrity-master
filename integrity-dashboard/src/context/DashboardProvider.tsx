@@ -1,34 +1,9 @@
-import { createContext, useContext, useState, useEffect } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 import type { ReactNode } from 'react';
 import { api } from '../services/api';
 import type { Agent, ProtocolStats, TabId } from '../types';
-
-interface ToastMessage {
-  id: string;
-  type: 'success' | 'error' | 'info';
-  message: string;
-}
-
-interface DashboardContextType {
-  agents: Agent[];
-  selectedAgent: Agent | null;
-  stats: ProtocolStats | null;
-  walletAddress: string | null;
-  walletBalance: number;
-  activeTab: TabId;
-  isLoading: boolean;
-  isBackendOffline: boolean;
-  toasts: ToastMessage[];
-  
-  selectAgent: (address: string) => void;
-  setActiveTab: (tab: TabId) => void;
-  connectWallet: () => Promise<void>;
-  fetchData: () => Promise<void>;
-  addToast: (type: 'success' | 'error' | 'info', message: string) => void;
-  removeToast: (id: string) => void;
-}
-
-const DashboardContext = createContext<DashboardContextType | undefined>(undefined);
+import { DashboardContext } from './useDashboard';
+import type { ToastMessage } from './useDashboard';
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -40,9 +15,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [isBackendOffline, setIsBackendOffline] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
   
+  const toastCounter = useRef(0);
+  
   const [activeTab, setActiveTabState] = useState<TabId>(() => {
     const hash = window.location.hash.replace('#', '') as TabId;
-    const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'credit', 'governance', 'markets', 'advanced', 'staking', 'stability', 'wallet'];
+    const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'advanced', 'staking', 'stability', 'wallet'];
     return validTabs.includes(hash) ? hash : 'telemetry';
   });
 
@@ -51,34 +28,35 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     window.location.hash = tab;
   };
 
-  const addToast = (type: 'success' | 'error' | 'info', message: string) => {
-    const id = Math.random().toString(36).substring(2, 9);
+  const removeToast = useCallback((id: string) => {
+    setToasts(prev => prev.filter(t => t.id !== id));
+  }, []);
+
+  const addToast = useCallback((type: 'success' | 'error' | 'info', message: string) => {
+    toastCounter.current += 1;
+    const id = `toast_${toastCounter.current}`;
     setToasts(prev => [...prev, { id, type, message }]);
     setTimeout(() => removeToast(id), 5000);
-  };
+  }, [removeToast]);
 
-  const removeToast = (id: string) => {
-    setToasts(prev => prev.filter(t => t.id !== id));
-  };
-
-  const connectWallet = async () => {
-    if ((window as any).ethereum) {
+  const connectWallet = useCallback(async () => {
+    const ethereum = (window as Window & typeof globalThis & { ethereum?: any }).ethereum;
+    if (ethereum) {
       try {
-        const accounts = await (window as any).ethereum.request({ method: 'eth_requestAccounts' });
+        const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         if (accounts.length > 0) {
           setWalletAddress(accounts[0]);
           addToast('success', 'Wallet connected');
         }
-      } catch (err) {
+      } catch {
         addToast('error', 'Wallet connection failed');
       }
     } else {
       addToast('error', 'MetaMask not detected');
     }
-  };
+  }, [addToast]);
 
-  const fetchData = async () => {
-    setIsLoading(true);
+  const fetchData = useCallback(async () => {
     try {
       const [fetchedAgents, fetchedStats] = await Promise.all([
         api.getAgents(),
@@ -87,7 +65,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       
       let allAgents = fetchedAgents || [];
       
-      // If an agent is selected, enrich it with credit profile
       const currentAddr = selectedAgentAddr || (allAgents.length > 0 ? allAgents[0].eth_address : null);
       if (currentAddr) {
         try {
@@ -98,7 +75,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // Fetch wallet balance if connected
       if (walletAddress) {
         try {
           const bal = await api.getWalletBalance(walletAddress);
@@ -115,30 +91,37 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       if (!selectedAgentAddr && allAgents.length > 0) {
         setSelectedAgentAddr(allAgents[0].eth_address);
       }
-    } catch (error) {
+    } catch {
       setIsBackendOffline(true);
-      // Fail silently without breaking the UI loop
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [selectedAgentAddr, walletAddress]);
+
 
   useEffect(() => {
-    fetchData();
+    let mounted = true;
+    const load = async () => {
+       setIsLoading(true);
+       await fetchData();
+       if (!mounted) return;
+    };
+    load();
     const interval = setInterval(fetchData, 15000);
     
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as TabId;
-      const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'credit', 'governance', 'markets', 'advanced', 'staking', 'stability', 'wallet'];
+      const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'advanced', 'staking', 'stability', 'wallet'];
       if (validTabs.includes(hash)) setActiveTabState(hash);
     };
     
     window.addEventListener('hashchange', handleHashChange);
     return () => {
+      mounted = false;
       clearInterval(interval);
       window.removeEventListener('hashchange', handleHashChange);
     };
-  }, []);
+  }, [fetchData]);
 
   const selectedAgent = agents.find(a => a.eth_address === selectedAgentAddr) || null;
 
@@ -163,12 +146,4 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       {children}
     </DashboardContext.Provider>
   );
-}
-
-export function useDashboard() {
-  const context = useContext(DashboardContext);
-  if (context === undefined) {
-    throw new Error('useDashboard must be used within a DashboardProvider');
-  }
-  return context;
 }

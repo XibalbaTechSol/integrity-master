@@ -1,4 +1,5 @@
-import { DashboardProvider, useDashboard } from './context/DashboardContext';
+import { DashboardProvider } from './context/DashboardProvider';
+import { useDashboard } from './context/useDashboard';
 import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
 import { TabNav } from './components/layout/TabNav';
@@ -15,6 +16,8 @@ import { LedgerPanel } from './components/tabs/LedgerPanel';
 import { ZKProverPanel } from './components/tabs/ZKProverPanel';
 import { FactoryPanel } from './components/tabs/FactoryPanel';
 import { CompliancePanel } from './components/tabs/CompliancePanel';
+import { ShieldPanel } from './components/tabs/ShieldPanel';
+import { OracleRegistryPanel } from './components/tabs/OracleRegistryPanel';
 import { CreditPanel } from './components/tabs/CreditPanel';
 import { GovernancePanel } from './components/tabs/GovernancePanel';
 import { MarketsPanel } from './components/tabs/MarketsPanel';
@@ -40,6 +43,8 @@ function DashboardShell() {
           {activeTab === 'zk' && <ZKProverPanel />}
           {activeTab === 'factory' && <FactoryPanel />}
           {activeTab === 'compliance' && <CompliancePanel />}
+          {activeTab === 'shield' && <ShieldPanel />}
+          {activeTab === 'oracle' && <OracleRegistryPanel />}
           {activeTab === 'credit' && <CreditPanel />}
           {activeTab === 'markets' && <MarketsPanel />}
           {activeTab === 'staking' && <StakingPanel />}

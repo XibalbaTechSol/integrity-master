@@ -1,7 +1,7 @@
 import { useState } from 'react';
 import { Panel } from '../shared/Panel';
 import { Key, Copy, CheckCircle, AlertTriangle } from 'lucide-react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { api } from '../../services/api';
 
 export function APIKeyPanel() {

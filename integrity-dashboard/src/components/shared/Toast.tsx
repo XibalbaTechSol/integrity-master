@@ -1,4 +1,4 @@
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { CheckCircle, AlertCircle, Info, X } from 'lucide-react';
 
 export function ToastManager() {

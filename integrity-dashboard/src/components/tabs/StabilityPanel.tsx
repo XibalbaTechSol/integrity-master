@@ -2,30 +2,47 @@ import { useState, useEffect } from 'react';
 import { Panel } from '../shared/Panel';
 import { BarChart2, Globe, ShieldCheck, RefreshCw } from 'lucide-react';
 import { StatusBadge } from '../shared/StatusBadge';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { api } from '../../services/api';
 
+interface Benchmark {
+  model_name: string;
+  provider_name: string;
+  simulated_ais: number;
+  stability_metric: number;
+  grounding_metric: number;
+}
+
 export function StabilityPanel() {
-  const [benchmarks, setBenchmarks] = useState<any[]>([]);
+  const [benchmarks, setBenchmarks] = useState<Benchmark[]>([]);
   const [loading, setLoading] = useState(false);
   const [isAuditing, setIsAuditing] = useState(false);
   const { selectedAgent, addToast } = useDashboard();
-
-  useEffect(() => {
-    fetchBenchmarks();
-  }, []);
 
   const fetchBenchmarks = async () => {
     setLoading(true);
     try {
       const data = await api.getBenchmarks();
-      setBenchmarks(data);
+      setBenchmarks(data as Benchmark[]);
     } catch (err) {
       console.error('Failed to fetch benchmarks:', err);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let mounted = true;
+    const load = async () => {
+      if (mounted) {
+        await fetchBenchmarks();
+      }
+    };
+    load();
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const handleStartAudit = async () => {
     if (!selectedAgent) {
@@ -37,8 +54,9 @@ export function StabilityPanel() {
     try {
       await api.requestAudit(selectedAgent.eth_address, 'AUTOMATED');
       addToast('success', 'Institutional certification audit initialized');
-    } catch (err: any) {
-      addToast('error', `Audit request failed: ${err.message}`);
+    } catch (err) {
+      const msg = err instanceof Error ? err.message : String(err);
+      addToast('error', `Audit request failed: ${msg}`);
     } finally {
       setIsAuditing(false);
     }

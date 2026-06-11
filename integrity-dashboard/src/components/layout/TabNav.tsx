@@ -1,10 +1,10 @@
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { useState } from 'react';
 import type { TabId } from '../../types';
 import { useIsMobile } from '../../utils/useIsMobile';
 import { 
   Activity, Users, Layers, ShieldCheck, Hammer, 
-  Coins, Shield, ShoppingCart, BookOpen, Lock, BarChart2, Wallet, Key, ChevronDown
+  Coins, Shield, ShoppingCart, BookOpen, Lock, BarChart2, Wallet, Key, ChevronDown, Globe
 } from 'lucide-react';
 
 const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
@@ -13,6 +13,8 @@ const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
   { id: 'ledger', label: 'Smart Ledger', icon: <Layers size={16} /> },
   { id: 'zk', label: 'ZK Prover', icon: <ShieldCheck size={16} /> },
   { id: 'factory', label: 'Contract Factory', icon: <Hammer size={16} /> },
+  { id: 'shield', label: 'Xibalba Shield', icon: <Shield size={16} /> },
+  { id: 'oracle', label: 'Oracle Registry', icon: <Globe size={16} /> },
   { id: 'credit', label: 'Credit & Loans', icon: <Coins size={16} /> },
   { id: 'markets', label: 'A2A Markets', icon: <ShoppingCart size={16} /> },
   { id: 'staking', label: 'Staking', icon: <Lock size={16} /> },
