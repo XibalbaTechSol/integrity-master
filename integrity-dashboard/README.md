@@ -1,32 +1,85 @@
-# Integrity Dashboard
+# Integrity Dashboard (Control Center & Explorer)
 
-**Infrastructure for the autonomous agent economy powered by smart contracts.**
+**The Institutional Command Center for the Xibalba Integrity Protocol.**
 
 ## Overview
 
-The `integrity-dashboard` is the institutional command center for the Xibalba Integrity Protocol. It provides a visual interface for managing AI agents that sign smart contracts, prove execution intent, and transact with cryptographic certainty.
+The `integrity-dashboard` is the primary visual interface and control center for managing autonomous agents operating on the Integrity Protocol. Built with React and Vite, it allows protocol operators, investors, and developers to monitor real-time telemetry, track Agent Integrity Scores (AIS), and deploy smart contracts.
 
-While our initial use cases focus on the healthcare vertical, the Dashboard is built to serve the comprehensive needs of the entire autonomous agent economy.
+While the protocol backend handles the heavy cryptographic verification, the Dashboard translates these complex proofs (such as BCC intent locks and ZK-ML verifications) into human-readable metrics, bridging the gap between algorithmic execution and institutional oversight.
 
-## Core Features
+## Table of Contents
+- [Architecture & Protocol Role](#architecture--protocol-role)
+- [Technical Specifications](#technical-specifications)
+- [Key Features](#key-features)
+- [Installation & Setup](#installation--setup)
+- [Usage & API](#usage--api)
+- [Development & Testing](#development--testing)
 
-- **API Key Management:** Generate and manage Developer API Keys for rapid agent deployment and testing.
-- **Agent Monitoring:** Track agent activity, pre-execution intents via the Behavioral Commitment Chain (BCC) middleware, and on-chain settlement status on **Base L2**.
-- **Reputation Tracking:** Monitor your agents' Trust Levels (Agent Integrity Scores - AIS).
+## Architecture & Protocol Role
 
-## Authentication & Developer Limits
+The Dashboard interfaces directly with the Rust Oracle (Node 5) and the Base L2 blockchain (Node 1) to provide real-time observability:
 
-The Dashboard is the primary entry point for developers looking to integrate with the protocol:
+```mermaid
+graph TD
+    subgraph Frontend Client
+        UI[React/Vite Dashboard]
+    end
 
-- **Developer API Keys:** Instead of complex hardware DID setups, developers can generate API keys directly from the dashboard to authenticate their agents in test environments.
-- **Trust Level Capping:** To maintain protocol security during testing, agents using Developer API Keys are strictly capped at an AIS (Trust Level) of **300**.
-- **Hardware DID Management:** For production agents requiring higher Trust Levels, the dashboard provides workflows for hardware DID registration and verification.
+    subgraph Integrity Protocol
+        UI -->|Fetch AIS / Telemetry| Oracle[Rust Oracle Node 5]
+        UI -->|Read Merkle Roots| Base[Base L2 Contract Node 1]
+    end
 
-## Development Setup
+    subgraph Agent Interaction
+        UI -->|Issue Developer API Keys| Dev[Agent Developers]
+        UI -->|Manage BAA Escrows| Escrow[SmartBAA.sol]
+    end
+```
 
+### Key Responsibilities
+1. **API Key Generation:** Issues Developer API Keys for rapid prototyping, which automatically enforce a 300 AIS Trust Ceiling on the generated agents.
+2. **Forensic Explorer:** Visualizes the Behavioral Commitment Chain (BCC), displaying the cryptographic proofs of agent intent prior to execution.
+3. **Escrow Deployment:** Provides a no-code UI for deploying agent-managed smart contracts, such as parametric SLAs and HIPAA Business Associate Agreements (BAAs).
+
+## Technical Specifications
+- **Framework:** React 18 / Vite
+- **Styling:** CSS Modules / Vanilla CSS with Lucide Icons
+- **Blockchain Integration:** Ethers.js for Base L2 interaction
+
+## Key Features
+
+- **Agent Fleet Command:** Monitor all registered Sovereign Agents across the network.
+- **Tri-Metric Visualization:** Breakdowns of an agent's AIS into its core components: Entropy, Grounding, Sacrifice, and Compliance.
+- **Verification Ladder Manager:** Upgrade agents from Tier 1 (Sovereign) to Tier 3 (Institutional) by submitting DNS or TEE attestations through the portal.
+
+## Installation & Setup
+
+### Prerequisites
+- Node.js (v18+)
+- npm or yarn
+
+### Build & Run
 ```bash
+cd integrity-dashboard
 npm install
 npm run dev
 ```
 
-The application will start locally and connect to the configured Base L2 testnet environment.
+## Usage & API
+
+Upon running, the dashboard will typically be available at `http://localhost:5173`. 
+The dashboard connects to the backend oracle. Ensure your `.env` is configured correctly:
+
+```env
+VITE_ORACLE_URL=http://localhost:3000
+VITE_BASE_L2_RPC=https://sepolia.base.org
+```
+
+## Development & Testing
+
+To build the project for production:
+```bash
+npm run build
+```
+This generates the optimized static bundle in the `dist/` directory.

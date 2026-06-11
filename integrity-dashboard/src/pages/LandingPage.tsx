@@ -42,7 +42,7 @@ export const LandingPage = () => {
                 <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', maxWidth: '1400px', margin: '0 auto' }}>
                     <div style={{ display: 'flex', alignItems: 'center', gap: isMobile ? '8px' : '16px' }}>
                         <img 
-                            src="https://xibalbatechsol.github.io/xibalba-solutions-site/XibalbaSolutionsLogo.png" 
+                            src="/XibalbaSolutionsLogo.png" 
                             alt="Xibalba" 
                             style={{ height: isMobile ? '24px' : (scrolled ? '32px' : '48px'), transition: 'all 0.4s' }} 
                         />
@@ -107,7 +107,7 @@ export const LandingPage = () => {
                             initial={{ opacity: 0, y: 20 }}
                             animate={{ opacity: 1, y: 0 }}
                             transition={{ duration: 0.8, ease: "easeOut" }}
-                            src="https://xibalbatechsol.github.io/xibalba-solutions-site/XibalbaSolutionsLogo.png"
+                            src="/XibalbaSolutionsLogo.png"
                             alt="Xibalba Solutions"
                             style={{ height: isMobile ? '160px' : '440px', width: 'auto', marginBottom: '16px', filter: 'drop-shadow(0 0 30px rgba(201, 168, 76, 0.3))' }}
                             />
@@ -1467,7 +1467,7 @@ export const LandingPage = () => {
 
             <footer style={{ padding: '80px 60px', borderTop: '1px solid rgba(255,255,255,0.05)', textAlign: 'center' }}>
                 <img 
-                    src="https://xibalbatechsol.github.io/xibalba-solutions-site/XibalbaSolutionsLogo.png" 
+                    src="/XibalbaSolutionsLogo.png" 
                     alt="Xibalba" 
                     style={{ height: '40px', opacity: 0.5, marginBottom: '32px' }} 
                 />

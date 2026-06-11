@@ -1,26 +1,51 @@
 # Integrity CLI
 
-**Infrastructure for the autonomous agent economy powered by smart contracts.**
+**The Developer Toolkit for the Xibalba Integrity Protocol.**
 
 ## Overview
 
-The `integrity-cli` is the command-line interface for the Xibalba Integrity Protocol. It is designed to help developers seamlessly onboard AI agents into the autonomous agent economy, enabling them to sign smart contracts, prove execution intent, and transact with cryptographic certainty.
+The `integrity-cli` provides terminal-based orchestration for developers building on the Integrity Protocol. It is designed to seamlessly onboard AI agents into the autonomous economy, allowing them to sign smart contracts, prove execution intent, and transact with cryptographic certainty.
 
-Healthcare serves as our first vertical, but the CLI is built to support agent operations across any industry.
+The CLI bridges the gap between local agent development (Node 4) and the protocol's backend services (Node 3 BCC Middleware & Node 5 Oracle), providing essential debugging, identity registration, and telemetry inspection commands.
 
-## Core Capabilities
+## Table of Contents
+- [Architecture & Protocol Role](#architecture--protocol-role)
+- [Authentication & Trust Ceilings](#authentication--trust-ceilings)
+- [Installation](#installation)
+- [Usage & Commands](#usage--commands)
 
-- **Agent Provisioning:** Quickly register new autonomous agents on the network.
-- **Intent Debugging:** Inspect pre-execution intent gating interactions with the Behavioral Commitment Chain (BCC) middleware.
-- **Settlement Verification:** Verify on-chain settlement records directly from **Base L2**.
+## Architecture & Protocol Role
 
-## Authentication & Limits
+While the SDK is used within the agent's actual code, the CLI is used by the *human developer* to manage the agent's identity and inspect its on-chain behavior.
 
-For testing and rapid development, the CLI integrates with the Developer API Key system:
+```mermaid
+graph TD
+    subgraph Local Environment
+        CLI[Integrity CLI]
+    end
 
-- **Developer Authentication:** Authenticate the CLI using API keys generated from the Integrity Dashboard, bypassing the need for strict hardware DID validation.
-- **Trust Level Cap (AIS):** Agents registered and interacting via Developer API Keys will have their Trust Level (AIS) capped at **300**.
-- **Production Mode:** The CLI also supports full hardware enclave and DID registration for production agents that require Trust Levels above 300.
+    subgraph Integrity Protocol
+        CLI -->|Authenticate/Register| Oracle[Rust Oracle Node 5]
+        CLI -->|Inspect Intents| BCC[BCC Middleware Node 3]
+    end
+
+    subgraph Base L2
+        CLI -->|Verify Anchor| Contract[StateAnchor.sol]
+    end
+```
+
+### Key Responsibilities
+1. **Agent Provisioning:** Register new agent identities on the network and link them to your developer account.
+2. **Intent Debugging:** Inspect pre-execution intent gating interactions recorded by the BCC middleware.
+3. **Settlement Verification:** Verify on-chain settlement records and Merkle proofs directly from Base L2.
+
+## Authentication & Trust Ceilings
+
+To facilitate rapid development, the CLI integrates directly with the Dashboard's Developer API Key system:
+
+- **Developer Mode:** Authenticate the CLI using an API key generated from the Integrity Dashboard. This bypasses the need to set up complex hardware DIDs locally.
+- **Trust Level Cap:** Agents registered and interacting via Developer API Keys are strictly mathematically capped at a Trust Level (AIS) of **300**.
+- **Production Mode:** The CLI also exposes commands to register hardware enclaves and DID documents for production agents seeking Tier 2 (850 AIS) or Tier 3 (1000 AIS) status.
 
 ## Installation
 
@@ -28,19 +53,27 @@ For testing and rapid development, the CLI integrates with the Developer API Key
 npm install -g @xibalba/integrity-cli
 ```
 
-## Usage
+## Usage & Commands
 
-Authenticate your CLI environment:
+### Authentication
+Authenticate your CLI environment with your Developer API Key:
 ```bash
 integrity login --api-key YOUR_DEVELOPER_KEY
 ```
 
+### Provisioning
 Register a test agent (Max AIS 300):
 ```bash
-integrity agent create --name "TestTrader-01"
+integrity agent create --name "TraderBot-01"
 ```
 
-Verify BCC intent commitments:
+### Debugging
+Verify BCC intent commitments and OPA evaluation results:
 ```bash
 integrity bcc verify <intent-hash>
+```
+
+Check an agent's real-time AIS score from the Oracle:
+```bash
+integrity agent score <agent-id>
 ```

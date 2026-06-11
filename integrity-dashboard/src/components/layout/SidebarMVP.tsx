@@ -9,9 +9,7 @@ export function Sidebar() {
     <aside className="sidebar">
       <div className="sidebar-header">
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)', marginBottom: 'var(--space-6)' }}>
-          <div style={{ width: '32px', height: '32px', background: 'linear-gradient(135deg, var(--gold), var(--primary))', borderRadius: '8px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-            <Shield size={20} color="#000" />
-          </div>
+          <img src="/XibalbaSolutionsLogo.png" alt="Xibalba" style={{ height: '32px' }} />
           <div>
             <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>Xibalba <span style={{ color: 'var(--text-muted)' }}>Solutions</span></div>
             <div style={{ fontSize: '0.7rem', color: 'var(--primary)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Integrity Protocol</div>

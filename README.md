@@ -6,36 +6,75 @@
 
 The **Xibalba Integrity Protocol** is the definitive trust layer for the autonomous agent economy. It enables AI agents to sign smart contracts, prove execution intent, and transact with cryptographic certainty. By bridging non-deterministic AI reasoning with deterministic on-chain finality, we transform volatile agent behavior into financially accountable, cryptographically verifiable, and insurable assets.
 
-While healthcare represents our "first vertical," the core architecture is designed to support the broader autonomous economy, offering a universal standard for agent accountability across all industries.
+While healthcare represents our "first vertical" (via `xibalba-shield`), the core architecture is designed to support the broader autonomous economy, offering a universal standard for agent accountability across all industries. The protocol mathematically neutralizes risks of prompt injection, algorithmic drift, and "reputation laundering" by capping agent scores based on real-world entity verification.
 
-## Core Architecture
+## Table of Contents
+- [End-to-End Validation Lifecycle](#end-to-end-validation-lifecycle)
+- [Protocol Architecture](#protocol-architecture)
+- [Verification Ladder & Trust Ceilings](#verification-ladder--trust-ceilings)
+- [Repository Structure](#repository-structure)
+- [Getting Started](#getting-started)
 
-The protocol is built on a robust, multi-layered architecture:
+## End-to-End Validation Lifecycle
 
-1. **Behavioral Commitment Chain (BCC) Middleware:** Provides pre-execution intent gating. Before an agent can execute an action on-chain or interact with critical systems, its reasoning and intent are securely committed to the BCC. This provides an immutable "receipt" of agent intent, ensuring actions are predictable and verifiable before they occur.
-2. **On-chain Settlement on Base L2:** All final financial transactions, reputation updates, and cryptographic proofs are settled on Base L2, ensuring high scalability, low fees, and Ethereum-grade security.
-3. **Agent Integrity Score (AIS):** A dynamic Trust Level for autonomous agents (ranging from 0 to 1000). The AIS acts as a FICO score for AI, measuring an agent's reliability, predictability, and financial accountability over time.
+The Integrity Protocol operates through a rigorous 5-Node E2E Validation Lifecycle:
 
-## Authentication & Limits
+1. **Node 1: Infrastructure Foundation:** Modular smart contracts (`SovereignAgent.sol`, `StateAnchor.sol`) on Base L2 govern agent access controls, treasuries, and global reputation anchoring.
+2. **Node 2: Identity & Security Layer:** Hardware-bound identity (TEE/SGX) secured via AWS KMS (FIPS 140-2 Level 3). Proves that an agent's digital keys are physically tethered to a legal entity controller.
+3. **Node 3: Behavioral Trust (BCC):** High-frequency pre-execution gating. The Behavioral Commitment Chain (BCC) middleware intercepts agent intents and evaluates them against Open Policy Agent (OPA) safety rules before allowing execution.
+4. **Node 4: Mathematical Verification (ZK-ML):** Aztec Noir Zero-Knowledge proofs verify local execution at the edge, ensuring compliance (e.g., HIPAA) without exposing raw sensitive data to the network.
+5. **Node 5: Economic Observability (Layer 0 Oracle):** An isolated Rust-based oracle engine processes telemetry, enforces domain-specific scoring formulas, and anchors Merkle roots back to Base L2.
 
-To accelerate development and testing, agents can authenticate using **Developer API Keys** generated via the Integrity Dashboard. 
+## Protocol Architecture
 
-- **Testnet/Developer Mode:** These keys bypass strict hardware DID validation, allowing for rapid iteration and testing. 
-- **Trust Limit:** Agents authenticated via Developer API Keys have their Trust Level (AIS) capped at a maximum of **300**. This ensures a safe sandbox environment while preventing abuse of the protocol's credit and marketplace features.
-- **Production Mode:** For full Trust Level unlocking (>300), agents must utilize hardware-bound Decentralized Identifiers (DIDs) and TEE attestations.
+```mermaid
+graph TD
+    subgraph Agent Environment
+        A[Autonomous Agent] -->|Generates Intent| SDK[Integrity SDK]
+        SDK -->|Pre-Execution Lock| BCC[BCC Middleware Node 3]
+        SDK -->|Local Proof| ZK[ZK-ML Circuit Node 4]
+    end
+
+    subgraph Security & Identity
+        BCC -->|Attestation Request| KMS[AWS KMS / TEE Node 2]
+    end
+
+    subgraph Integrity Network
+        BCC -->|Telemetry & Proofs| Oracle[Rust Oracle L0 Node 5]
+        ZK -->|Verifies Inputs| Oracle
+        Oracle -->|Calculates AIS| DB[(PostgreSQL Trust Vault)]
+    end
+
+    subgraph Base L2
+        Oracle -->|Anchors State Root| Contract[StateAnchor.sol Node 1]
+        Contract -->|Escrows & Settlements| BAA[SLA / BAA Contracts]
+    end
+```
+
+## Verification Ladder & Trust Ceilings
+
+To prevent Sybil attacks and reputation laundering, the Agent Integrity Score (AIS) acts as a strict "Trust Ceiling":
+
+| Tier | Status | Verification Method | AIS Ceiling | Credit Limit Cap |
+| :--- | :--- | :--- | :--- | :--- |
+| **Tier 1 (Sovereign)** | Pseudonymous | Proof-of-possession of hardware-bound key | 600 | $10,000 USD |
+| **Tier 2 (Linked)** | Verified Identity | DNS TXT / Social Attestation | 850 | $100,000 USD |
+| **Tier 3 (Institutional)** | TEE-Bound | Remote TEE Attestation + Institutional Audit | 1000 | Uncapped |
+
+*Note: For testing and development, agents authenticated via **Developer API Keys** have their AIS strictly capped at 300.*
 
 ## Repository Structure
 
-- **[`integrity-oracle/`](integrity-oracle/)**: The core telemetry ingestion and ZK-verification engine.
+- **[`integrity-oracle/`](integrity-oracle/)**: The core telemetry ingestion and ZK-verification engine (Node 5).
 - **[`integrity-sdk/`](integrity-sdk/)**: The primary client library for agent instrumentation, intent-locking, and transaction signing.
+- **[`bcc_middleware/`](bcc_middleware/)**: The security sidecar for high-frequency intent interception and OPA evaluation (Node 3).
+- **[`contracts/`](contracts/)**: The centralized repository for core smart contracts on Base L2 (Node 1).
 - **[`integrity-dashboard/`](integrity-dashboard/)**: The control center for API key generation, agent monitoring, and A2A marketplace interactions.
+- **[`xibalba-shield/`](xibalba-shield/)**: Cryptographic HIPAA Compliance-as-a-Service portal and domain-specific smart contracts.
 - **[`integrity-cli/`](integrity-cli/)**: The administrative toolkit for identity registration and local environment setup.
-- **[`contracts/`](contracts/)**: The centralized repository for core smart contracts on Base L2.
-- **[`bcc_middleware/`](bcc_middleware/)**: The security sidecar for high-frequency intent interception.
-- **[`xibalba-shield/`](xibalba-shield/)**: Cryptographic HIPAA Compliance-as-a-Service portal.
-- **[`simulation/`](simulation/)**: Test simulations and autoresearch frameworks.
 - **[`quant_zerodrift/`](quant_zerodrift/)**: PDE solver and control theory engine for quantitative finance.
-- **[`integrity-framework/`](integrity-framework/)**: Foundational framework components (deprecated/archived).
+- **[`simulation/`](simulation/)**: Test simulations and actuarial autoresearch frameworks.
+- **[`integrity-framework/`](integrity-framework/)**: Foundational framework components.
 - **[`personal-site/`](personal-site/)**: Xibalba Solutions landing page.
 
 ## Getting Started
@@ -46,4 +85,4 @@ To accelerate development and testing, agents can authenticate using **Developer
 4. Settle transactions on Base L2 via the [Oracle](integrity-oracle/).
 
 ---
-*Built by Xibalba Solutions. Securing the agentic future.*
+*Built with precision by **Xibalba Solutions**. Mathematically securing the agentic future.*

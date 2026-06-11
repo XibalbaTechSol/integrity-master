@@ -1,157 +1,94 @@
-# Xibalba Shield — Cryptographic HIPAA Compliance-as-a-Service
+# Xibalba Shield (Cryptographic HIPAA CaaS)
 
-Xibalba Shield is an enterprise-grade clinical security portal and decentralized verification pipeline built on top of the **Integrity Protocol** ecosystem. It empowers healthcare clinics, hospitals, and telemedicine networks to run high-performance AI inference models on patient data while cryptographically guaranteeing complete **HIPAA Technical Safeguards compliance (45 CFR § 164.312)**.
+**Enterprise-Grade Clinical Security built on the Xibalba Integrity Protocol.**
 
-Through a dual-layer identity primitive, client-side zero-knowledge edge hashing, and soulbound compliance gating, Xibalba Shield guarantees that private **Protected Health Information (PHI) never touches the blockchain**.
+## Overview
 
----
+Xibalba Shield is the first vertical implementation of the Integrity Protocol, designed specifically for healthcare networks and Hospital Chief Compliance Officers (CCOs). It replaces passive legal BAAs with active cryptographic defense, allowing clinics to run autonomous AI agents on Protected Health Information (PHI) while mathematically guaranteeing HIPAA Technical Safeguards compliance (45 CFR § 164.312).
 
-## 🏥 Enterprise CCO Capabilities
+By leveraging the Integrity Protocol's ZK-ML edge proving (Node 4) and Base L2 settlement (Node 1), Shield guarantees that private PHI never touches the blockchain or unauthorized third-party LLMs.
 
-Designed specifically for Hospital Chief Compliance Officers (CCOs), Xibalba Shield replaces passive legal BAAs with active cryptographic defense:
+## Table of Contents
+- [Architecture & Protocol Role](#architecture--protocol-role)
+- [Enterprise CCO Capabilities](#enterprise-cco-capabilities)
+- [Technical Specifications](#technical-specifications)
+- [Installation & Setup](#installation--setup)
+- [Configuration](#configuration)
+- [Usage & API](#usage--api)
+- [Development & Testing](#development--testing)
 
-*   **Pre-Funded Indemnification (Smart BAAs):** AI vendors stake collateral in an L2 EVM smart contract. If they hallucinate or breach HIPAA terms, the contract programmatically slashes their collateral and routes it to the hospital treasury.
-*   **The "Red Button" Global Kill Switch:** CCOs can revoke a vendor's Smart BAA in one click, immediately severing all API access across the entire clinic network.
-*   **Mathematical Sub-Processor Blocking:** The proxy physically prevents "Shadow AI" by blocking data egress to unauthorized third-party LLMs lacking a Sub-BAA.
-*   **Zero-Knowledge OCR Audit Exporter:** Generate instant, mathematically verified reports for HHS/OCR proving compliance without exposing underlying PHI.
+## Architecture & Protocol Role
 
----
+Shield operates as a vertical domain (Domain ID: `SHIELD_01`) on top of the generic Integrity Protocol.
 
-## 🚀 Key Architectural Pillars
+```mermaid
+graph TD
+    subgraph Hospital Intranet (Edge)
+        Data[Patient PHI] --> Scribe[AI Agent Scribe]
+        Scribe --> SDK[Shield Edge SDK Node 4]
+        SDK -->|ZK Blinds PHI| Hash[Clinical ZK_Hash]
+    end
 
-### 1. Dual-Layer Identity Primitive
-- **Operator ECDSA Keypair**: The human medical professional or administrator authenticates using standard public-key cryptography.
-- **Machine Agent SBT**: The autonomous AI model is registered as an on-chain asset mapped to a non-transferable Soulbound Token (`ReputationSBT.sol`) that tracks its real-time compliance metrics.
+    subgraph Integrity Protocol
+        Hash -->|Commits Intent| BCC[BCC Middleware Node 3]
+        BCC -->|Domain: SHIELD_01| Oracle[Rust Oracle Node 5]
+    end
 
-### 2. Tri-Metric Agent Reputation Gating
-AI models are continuously audited across three performance vectors:
-- **Accuracy**: Integrity of clinical summaries, diagnosis codes, and billing classifications.
-- **Privacy**: Zero exposure of identifiable fields or accidental leakage of raw text.
-- **Reliability**: Query latency, contract execution consistency, and node health.
-
-If any vector dips below predefined enterprise thresholds, the SBT access token is dynamically revoked or locked.
-
-### 3. ZK Edge Blinding (Safe Harbor Method)
-Under the HIPAA Safe Harbor standard, raw text must be blinded pre-network interface. The Xibalba Shield Edge SDK hashes raw patient records locally:
-$$\text{ZK\_Hash} = \text{SHA256}(\text{clinicalData} + \text{nonce})$$
-Only this blind, cryptographic hash is sent to the blockchain for timestamping and anchoring, ensuring absolute privacy.
-
-### 4. Collateralized Staking & Slashing
-AI model performance is backed by financial stakes. If an agent experiences severe hallucinations or breaches compliance thresholds, the $ITK collateral is slashed and disbursed as an insurance callback to affected clinic systems.
-
----
-
-## 🛠️ Smart Contract Ecosystem (`/contracts`)
-
-The underlying Web3 primitive layer comprises the following Solidity smart contracts:
-
-- **`SovereignAgent.sol`**: Manages registration, authorization, and ownership records of AI models.
-- **`ReputationSBT.sol`**: Implements soulbound reputation tracking using performance structs (`uint8 accuracy`, `uint8 privacy`, `uint8 reliability`).
-- **`AuditShield.sol`**: Handles cryptographic log anchoring. Employs duplicate transaction modifiers (`Log already anchored`) to prevent replay or hash reuse.
-- **`StakingReputation.sol`**: Manages $ITK collateral staking, delegation, and penalty execution (slashing).
-- **`MockPaymaster.sol`**: Underpins gasless Layer-2 transactions, subsidizing clinical audit logs with L2 paymaster networks.
-
----
-
-## 📦 Client-Side Edge SDK (`src/lib/sdk/`)
-
-The edge SDK (`xibalba-shield-sdk.ts`) allows developers to easily integrate ZK compliance checks into outpatient scribes, billing bots, and triage channels:
-
-```typescript
-import { XibalbaShieldSDK } from "./sdk/shield-sdk";
-
-// Initialize with ITK Testnet provider
-const sdk = new XibalbaShieldSDK({
-  rpcUrl: "https://testnet.itk-protocol.io",
-  reputationSbtAddress: "0x...",
-  auditShieldAddress: "0x..."
-});
-
-// Perform local cryptographic blinding of patient data
-const { dataHash, payload } = await sdk.blindClinicalRecord({
-  patientId: "PAT-8831",
-  symptoms: "Persistent dry cough, fatigue, low-grade fever",
-  vitals: { temp: "100.1F", bp: "120/80" }
-});
-
-// Verify if the active AI model is compliant pre-inference
-const isCompliant = await sdk.verifyAgentCompliance("0xModelAgentAddress");
-if (isCompliant) {
-  // Send ZK Hash to on-chain AuditShield
-  const txHash = await sdk.anchorAuditLog("0xModelAgentAddress", dataHash);
-  console.log(`Compliance verified. Audit log anchored: ${txHash}`);
-}
+    subgraph Base L2 Settlement
+        Oracle -->|Anchors Audit Log| Contract[AuditShield.sol Node 1]
+        Contract -->|Checks Compliance| BAA[SmartBAA.sol]
+    end
 ```
 
----
+### Key Responsibilities
+1. **Zero-Knowledge Blinding:** Hashes PHI locally at the edge (`SHA256(clinicalData + nonce)`) so no raw data leaves the hospital.
+2. **Smart BAAs:** Programmatic Business Associate Agreements that automatically slash an AI vendor's collateral if they breach HIPAA rules.
+3. **The "Red Button":** Allows CCOs to instantly sever an agent's API access globally.
 
-## 🚀 Quickstart & Deployed Workspace
+## Enterprise CCO Capabilities
+
+- **Pre-Funded Indemnification:** AI vendors stake ITK collateral in L2 smart contracts.
+- **Tri-Metric Agent Gating:** AI models are continuously audited for Accuracy, Privacy, and Reliability.
+- **Zero-Knowledge OCR Audit Exporter:** Generates mathematically verified reports for HHS/OCR without exposing underlying PHI.
+
+## Technical Specifications
+- **Client Stack:** Next.js / React / TypeScript
+- **Smart Contracts:** Solidity / Hardhat (for Shield-specific logic)
+- **Compliance Mapping:**
+  - § 164.312(a)(1) Access Control: `ReputationSBT.sol`
+  - § 164.312(b) Transmission Security: ZK-edge blinding
+  - § 164.312(c)(1) Integrity: `AuditShield.sol` anchoring
+
+## Installation & Setup
 
 ### Prerequisites
-- Node.js (v18 or higher)
-- Hardhat (`npx hardhat`)
-- `uv` (for Python-based agent sync and simulation scripts)
+- Node.js (v18+)
+- Hardhat
 
-### Installation
-1. Clone the repository and install packages:
-   ```bash
-   npm install
-   ```
-2. Set up environment variables:
-   ```bash
-   cp .env.example .env
-   ```
+### Install
+```bash
+cd xibalba-shield
+npm install
+```
 
-### Running Local Development Environment
-1. Launch the local Hardhat Node simulating the ITK Testnet:
-   ```bash
-   npx hardhat node
-   ```
-2. Deploy the smart contracts to the local network:
-   ```bash
-   npx hardhat run scripts/deploy.ts --network localhost
-   ```
-3. Boot the Next.js dev portal:
-   ```bash
-   npm run dev
-   ```
-4. Access the clinical console landing page at `http://localhost:3000` and the secure command center dashboard at `http://localhost:3000/dashboard`.
+## Configuration
+Copy the environment template:
+```bash
+cp .env.example .env
+```
+Ensure `NEXT_PUBLIC_RPC_URL` points to your preferred Base L2 or testnet endpoint.
 
----
+## Usage & API
 
-## 🔬 Simulation & Automated Tests
+Start the Shield portal and dashboard:
+```bash
+npm run dev
+```
+Navigate to `http://localhost:3000` for the clinical console and `/dashboard` for the CCO command center.
 
-To run the B2B outpatient simulation loop testing concurrent block mining and duplicate log prevention modifiers:
+## Development & Testing
+
+Run the B2B outpatient simulation loop testing concurrent block mining and duplicate log prevention:
 ```bash
 npx hardhat run scripts/test-scribe-loop.ts --network localhost
 ```
-The simulation tests key parameters:
-1. **Happy Path**: Successful hashing, SBT lookup, gas paymaster subsidy, and block mining.
-2. **Duplicate Prevention Guard**: Re-submitting identical hashes successfully triggers the contract-level modifier, reverting with `Log already anchored`.
-
----
-
-## 🛡️ Regulatory Compliance Matrix
-
-Xibalba Shield maps directly to the **45 CFR § 164.312 HIPAA Technical Safeguards Matrix**:
-- **§ 164.312(a)(1) Access Control**: Enforced pre-inference via `ReputationSBT` checks.
-- **§ 164.312(b) Transmission Security**: Ensured locally via ZK-edge blinding hashing.
-- **§ 164.312(c)(1) Integrity**: Deriving local raw patient data offline and checking the hash against `AuditShield.sol` dynamically verifies file integrity.
-- **§ 164.312(d) Authentication**: Dual-Layer cryptographic identity primitive mapping machine SBT address and operator ECDSA signatures.
-
----
-
-## 📄 License & Integrity Statement
-
-This codebase is published under the **MIT License**.
-*Form-First Engineering. Mathematical Certainty. Proliferating the Integrity Protocol.*
-
----
-
-## 🏛️ Relationship to Integrity Protocol
-
-Xibalba Shield is a **Vertical Implementation** of the Integrity Protocol. While the core protocol provides a generic "Trust Layer," Xibalba Shield extends it with healthcare-specific logic:
-
-- **Clearance Bitmask**: Xibalba Shield utilizes the protocol's generic `clearance_bitmask` to represent HIPAA compliance status (Bit 0: PHI Access, Bit 1: Billing Authority).
-- **ZK-Edge Blinding**: Shield utilizes the protocol's ZK-verification engine to prove an agent meets HIPAA-specific AIS thresholds (>= 750) without revealing clinical metadata.
-- **Service Layer**: Shield acts as the "Healthcare Credit Bureau," interpreting the raw reputation scores into clinical trust levels.
