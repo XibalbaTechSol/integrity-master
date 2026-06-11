@@ -1,5 +1,5 @@
 import { useDashboard } from '../../context/DashboardContext';
-import { Shield, PlusCircle, Database, ShieldCheck } from 'lucide-react';
+import { PlusCircle, Database, ShieldCheck } from 'lucide-react';
 import { StatusBadge } from '../shared/StatusBadge';
 
 export function Sidebar() {

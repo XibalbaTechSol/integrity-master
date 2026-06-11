@@ -44,8 +44,10 @@ graph TD
 ### Key Responsibilities
 1. **Telemetry Ingestion:** Receives raw and ZK-blinded execution metrics from autonomous agents.
 2. **ZK-ML Verification:** Validates Aztec Noir Zero-Knowledge Proofs generated at the edge (Node 4) to ensure data compliance (e.g., HIPAA) without ingesting PHI.
-3. **AIS Calculation:** Computes dynamic trust scores based on Entropy, Grounding, Sacrifice, and Compliance metrics.
-4. **State Anchoring:** Batches reputation states into Merkle Roots and anchors them to `StateAnchor.sol` on Base L2 via Alloy 2.0.
+3. **Agent Integrity Scoring**: Evaluates agents continuously using a Tri-Metric System (Entropy, Grounding, Compute Sacrifice).
+4. **ZK Telemetry Verification**: Integrates Pedersen hashes and SNARK proofs to verify agent claims off-chain.
+5. **MEV Protection (Private RPC)**: Exposes `/api/v1/rpc/private` to shield highly trusted agents (Tier 3) from public mempool front-running by relaying their transactions directly to private mempools (e.g. Flashbots).
+6. **State Anchoring**: Batches reputation states into Merkle Roots and anchors them to `StateAnchor.sol` on Base L2 via Alloy 2.0.
 
 ## Technical Specifications
 

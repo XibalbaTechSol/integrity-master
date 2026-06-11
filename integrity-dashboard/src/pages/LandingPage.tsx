@@ -109,7 +109,7 @@ export const LandingPage = () => {
                             transition={{ duration: 0.8, ease: "easeOut" }}
                             src="/XibalbaSolutionsLogo.png"
                             alt="Xibalba Solutions"
-                            style={{ height: isMobile ? '160px' : '440px', width: 'auto', marginBottom: '16px', filter: 'drop-shadow(0 0 30px rgba(201, 168, 76, 0.3))' }}
+                            style={{ height: isMobile ? '80px' : '140px', width: 'auto', marginBottom: '16px', filter: 'drop-shadow(0 0 30px rgba(201, 168, 76, 0.3))' }}
                             />
                             <span style={{ color: 'var(--gold)', fontSize: isMobile ? '0.65rem' : '0.85rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: isMobile ? '0.3em' : '0.6em', marginBottom: '12px', display: 'block' }}>Verifiable Accountability for Autonomous Agents</span>
 
