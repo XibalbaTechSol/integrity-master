@@ -1,0 +1,15 @@
+version: "3.8"
+services:
+  oracle-backend:
+    build: ./integrity-oracle/backend
+    ports: ["8080:8080"]
+    env_file: ./integrity-oracle/backend/.env
+
+  bcc-middleware:
+    build: ./bcc_middleware
+    ports: ["8081:8081"]
+
+  dashboard:
+    build: ./integrity-dashboard
+    ports: ["5173:5173"]
+    depends_on: [oracle-backend]

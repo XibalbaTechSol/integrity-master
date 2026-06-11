@@ -3,6 +3,6 @@ members = [
     "backend",
     "scoring-core",
     "oracle-core",
-    "passport-verifier", "scoring-core",
+    "passport-verifier",
 ]
 resolver = "2"

@@ -1,0 +1,29 @@
+name: CI BCC Middleware
+
+on:
+  push:
+    paths:
+      - 'bcc_middleware/**'
+      - '.github/workflows/ci-bcc.yml'
+  pull_request:
+    paths:
+      - 'bcc_middleware/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+      - name: Install dependencies
+        working-directory: bcc_middleware
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .
+          pip install pytest
+      - name: Test
+        working-directory: bcc_middleware
+        run: pytest

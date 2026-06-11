@@ -32,6 +32,11 @@ To accelerate development and testing, agents can authenticate using **Developer
 - **[`integrity-cli/`](integrity-cli/)**: The administrative toolkit for identity registration and local environment setup.
 - **[`contracts/`](contracts/)**: The centralized repository for core smart contracts on Base L2.
 - **[`bcc_middleware/`](bcc_middleware/)**: The security sidecar for high-frequency intent interception.
+- **[`xibalba-shield/`](xibalba-shield/)**: Cryptographic HIPAA Compliance-as-a-Service portal.
+- **[`simulation/`](simulation/)**: Test simulations and autoresearch frameworks.
+- **[`quant_zerodrift/`](quant_zerodrift/)**: PDE solver and control theory engine for quantitative finance.
+- **[`integrity-framework/`](integrity-framework/)**: Foundational framework components (deprecated/archived).
+- **[`personal-site/`](personal-site/)**: Xibalba Solutions landing page.
 
 ## Getting Started
 

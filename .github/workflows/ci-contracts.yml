@@ -1,0 +1,24 @@
+name: CI Contracts
+
+on:
+  push:
+    paths:
+      - 'contracts/**'
+      - '.github/workflows/ci-contracts.yml'
+  pull_request:
+    paths:
+      - 'contracts/**'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Foundry
+        uses: foundry-rs/foundry-toolchain@v1
+      - name: Build
+        working-directory: contracts
+        run: forge build
+      - name: Test
+        working-directory: contracts
+        run: forge test

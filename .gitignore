@@ -34,3 +34,20 @@ build/
 .idea/
 .vscode/
 *.swp
+
+# Archive
+plans/archive/integrity-legacy/
+
+# Logs
+*.log
+
+# Virtual envs (catch all patterns)
+.venv/
+.venv_*/
+
+# Binary outputs
+*.exe
+*.out
+
+# Validation / Screenshots
+**/validation_reports/
