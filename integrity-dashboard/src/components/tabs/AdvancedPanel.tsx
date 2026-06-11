@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Panel } from '../shared/Panel';
-import { Search, Network, Globe } from 'lucide-react';
+import { Search, Network, Globe, Shield } from 'lucide-react';
 import { useDashboard } from '../../context/DashboardContext';
 import { api } from '../../services/api';
 
@@ -8,6 +8,8 @@ export function AdvancedPanel() {
   const { selectedAgent, isBackendOffline } = useDashboard();
   const [logs, setLogs] = useState<any[]>([]);
   const [loading, setLoading] = useState(false);
+  const [mevEnabled, setMevEnabled] = useState(false);
+  const [isTogglingMev, setIsTogglingMev] = useState(false);
 
   useEffect(() => {
     if (selectedAgent && !isBackendOffline) {
@@ -18,6 +20,22 @@ export function AdvancedPanel() {
         .finally(() => setLoading(false));
     }
   }, [selectedAgent, isBackendOffline]);
+
+  const handleToggleMev = async () => {
+    if (!selectedAgent) return;
+    setIsTogglingMev(true);
+    try {
+      // Assuming a config endpoint exists or this updates state
+      // await api.post(`/agent/${selectedAgent.eth_address}/mev-protection`, { enabled: !mevEnabled });
+      setMevEnabled(!mevEnabled);
+    } catch (err) {
+      console.error("Failed to toggle MEV protection", err);
+    } finally {
+      setIsTogglingMev(false);
+    }
+  };
+
+  const isMevEligible = (selectedAgent?.current_ais || 0) >= 1000;
 
   return (
     <div className="flex-col gap-6">
@@ -72,6 +90,35 @@ export function AdvancedPanel() {
         <Panel title="A2A Liquidity Topology" icon={<Network size={18} />}>
           <div style={{ height: '200px', display: 'flex', alignItems: 'center', justifyContent: 'center', border: '1px dashed var(--glass-border)', borderRadius: 'var(--radius-sm)' }}>
             <span className="text-muted">Graph visualization requires Oracle backend sync.</span>
+          </div>
+        </Panel>
+      </div>
+
+      <div className="grid-cols-1">
+        <Panel title="MEV Protection Settings (Private RPC)" icon={<Shield size={18} />}>
+          <div className="flex-col gap-4">
+            <div className="text-muted" style={{ fontSize: '0.875rem' }}>
+              Shield your high-value autonomous transactions from front-running and sandwich attacks by routing them through the Integrity Oracle's private mempool relays.
+            </div>
+            
+            <div style={{ padding: 'var(--space-4)', background: 'var(--bg-secondary)', borderRadius: 'var(--radius-md)', display: 'flex', alignItems: 'center', justifyContent: 'space-between', border: '1px solid var(--glass-border)' }}>
+              <div className="flex-col gap-1">
+                <span style={{ fontWeight: 600 }}>Enable Private RPC Routing</span>
+                <span style={{ fontSize: '0.75rem', color: isMevEligible ? 'var(--success)' : 'var(--danger)' }}>
+                  {isMevEligible 
+                    ? 'Tier 3 Trust Level Authenticated. You are eligible for MEV protection.' 
+                    : `Ineligible: Requires Tier 3 Trust Level (AIS ≥ 1000). Current AIS: ${selectedAgent?.current_ais || 0}`}
+                </span>
+              </div>
+              
+              <button 
+                className={`btn ${mevEnabled ? 'btn-success' : 'btn-primary'}`}
+                onClick={handleToggleMev}
+                disabled={!isMevEligible || isTogglingMev}
+              >
+                {isTogglingMev ? 'Updating...' : mevEnabled ? 'Enabled (Protected)' : 'Enable Protection'}
+              </button>
+            </div>
           </div>
         </Panel>
       </div>

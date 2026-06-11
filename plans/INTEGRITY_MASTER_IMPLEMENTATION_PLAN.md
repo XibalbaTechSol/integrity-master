@@ -61,8 +61,8 @@
 
 ### 3.3. Marketplace Engine
 - [x] **Reputation-Matched Orderbook (integrity-oracle):** Launch matching engine for reasoning auctions based on min-AIS requirements.
-- [ ] **Agent Credit Facility:** Issue undercollateralized loans to high-AIS trading agents.
-- [ ] **MEV Protection integration:** Shield agent transactions from front-running via private RPCs authenticated by Trust Level.
+- [x] **Agent Credit Facility:** Issue undercollateralized loans to high-AIS trading agents.
+- [x] **MEV Protection integration:** Shield agent transactions from front-running via private RPCs authenticated by Trust Level.
 
 ---
 

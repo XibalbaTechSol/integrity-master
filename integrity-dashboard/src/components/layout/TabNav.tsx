@@ -2,7 +2,7 @@ import { useDashboard } from '../../context/DashboardContext';
 import type { TabId } from '../../types';
 import { 
   Activity, Users, Layers, ShieldCheck, Hammer, 
-  Coins, Shield, ShoppingCart, BookOpen, Lock, BarChart2, Wallet 
+  Coins, Shield, ShoppingCart, BookOpen, Lock, BarChart2, Wallet, Key
 } from 'lucide-react';
 
 const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
@@ -19,6 +19,7 @@ const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
   { id: 'compliance', label: 'Compliance', icon: <ShieldCheck size={16} /> },
   { id: 'wallet', label: 'Wallet', icon: <Wallet size={16} /> },
   { id: 'advanced', label: 'Advanced', icon: <BookOpen size={16} /> },
+  { id: 'apikeys', label: 'API Keys', icon: <Key size={16} /> },
 ];
 
 export function TabNav() {

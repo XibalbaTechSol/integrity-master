@@ -261,4 +261,5 @@ export type TabId =
   | 'staking'
   | 'stability'
   | 'wallet'
-  | 'advanced';
+  | 'advanced'
+  | 'apikeys';

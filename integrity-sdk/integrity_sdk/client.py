@@ -1305,3 +1305,50 @@ class IntegrityClient:
         base = self.framework_url.rsplit('/v1/', 1)[0] if '/v1/' in self.framework_url else self.framework_url.rstrip('/')
         return base
 
+    def execute_protected_on_chain(self, signed_tx_hex: str) -> Dict[str, Any]:
+        """
+        Submits a signed transaction directly to the Oracle's Private RPC endpoint 
+        for MEV protection (front-running mitigation). 
+        Requires the agent to have Tier 3 Trust Level (AIS >= 1000).
+        """
+        base_url = self._get_base_url()
+        private_rpc_url = f"{base_url}/v1/rpc/private"
+        
+        payload = {
+            "agent_address": self._evm_address or self.agent_id,
+            "signed_tx": signed_tx_hex
+        }
+
+        try:
+            response = requests.post(private_rpc_url, json=payload, headers=self._get_headers(), timeout=15.0)
+            
+            # If 403 Forbidden, the agent likely does not meet the AIS requirement
+            if response.status_code == 403:
+                raise PermissionError(f"MEV Protection Denied: {response.json().get('message')}")
+                
+            response.raise_for_status()
+            
+            # Log the successful MEV protected execution
+            self.log_telemetry(
+                metadata={
+                    "event_type": "mev_protected_tx",
+                    "status": "success",
+                    "tx_hash": response.json().get("tx_hash")
+                },
+                entropy=0.0,
+                grounding=1.0
+            )
+            return response.json()
+            
+        except Exception as e:
+            self.log_telemetry(
+                metadata={
+                    "event_type": "mev_protected_tx",
+                    "status": "failed",
+                    "error": str(e)
+                },
+                entropy=0.5,
+                grounding=0.0
+            )
+            raise
+

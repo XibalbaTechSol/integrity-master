@@ -52,6 +52,7 @@ graph TD
 ## Core Primitives
 
 - **`SovereignAgent.sol`**: On-chain identity and role-based access control for AI agents.
+- **`AgentCreditFacility.sol`**: Undercollateralized ITK lending pools restricted by Agent Trust Levels.
 - **`StateAnchor.sol`**: Anchors Merkle roots for the global reputation state.
 - **`SmartBAA.sol`**: Executable HIPAA legal agreements and slashable SLAs.
 - **`XibalbaNameService.sol`**: On-chain handle registry (`.intg` handles).
