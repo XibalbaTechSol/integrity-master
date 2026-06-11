@@ -45,16 +45,50 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       try {
         const accounts = await ethereum.request({ method: 'eth_requestAccounts' });
         if (accounts.length > 0) {
+          // Switch to Base Sepolia if not already on it
+          const chainId = await ethereum.request({ method: 'eth_chainId' });
+          if (parseInt(chainId, 16) !== 84532) {
+            try {
+              await ethereum.request({
+                method: 'wallet_switchEthereumChain',
+                params: [{ chainId: '0x14a34' }], // 84532 in hex
+              });
+            } catch (switchError: any) {
+              // This error code indicates that the chain has not been added to MetaMask.
+              if (switchError.code === 4902) {
+                await ethereum.request({
+                  method: 'wallet_addEthereumChain',
+                  params: [
+                    {
+                      chainId: '0x14a34',
+                      chainName: 'Base Sepolia',
+                      nativeCurrency: { name: 'ETH', symbol: 'ETH', decimals: 18 },
+                      rpcUrls: ['https://sepolia.base.org'],
+                      blockExplorerUrls: ['https://sepolia.basescan.org'],
+                    },
+                  ],
+                });
+              }
+            }
+          }
           setWalletAddress(accounts[0]);
-          addToast('success', 'Wallet connected');
+          localStorage.setItem('integrity_wallet_connected', accounts[0]);
+          addToast('success', 'Wallet connected to Base Sepolia');
         }
-      } catch {
-        addToast('error', 'Wallet connection failed');
+      } catch (err: any) {
+        addToast('error', `Wallet connection failed: ${err.message}`);
       }
     } else {
-      addToast('error', 'MetaMask not detected');
+      addToast('error', 'Web3 wallet not detected');
     }
   }, [addToast]);
+
+  useEffect(() => {
+    const savedWallet = localStorage.getItem('integrity_wallet_connected');
+    if (savedWallet) {
+      setWalletAddress(savedWallet);
+    }
+  }, []);
 
   const fetchData = useCallback(async () => {
     try {
@@ -63,7 +97,14 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
         api.getProtocolStats()
       ]);
       
-      let allAgents = fetchedAgents || [];
+      let allAgents = (fetchedAgents || []).map((a: any) => ({
+        ...a,
+        alias: a.alias || a.metadata?.alias || 'Unnamed',
+        verification_tier: a.verification_tier || a.metadata?.verification_tier || 1,
+        grounding_score: a.grounding_score || a.metadata?.grounding_score || 0,
+        staked_itk: a.staked_itk || a.metadata?.staked_amount_itk || 0,
+        last_active: a.last_active || a.last_active_at || new Date().toISOString()
+      }));
       
       const currentAddr = selectedAgentAddr || (allAgents.length > 0 ? allAgents[0].eth_address : null);
       if (currentAddr) {

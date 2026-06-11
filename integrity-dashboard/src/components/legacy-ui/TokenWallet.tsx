@@ -216,7 +216,7 @@ export const TokenWallet = ({ user: propUser }: { user?: User | null }) => {
                             </div>
                         )}
                         <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '0.4em', textTransform: 'uppercase', marginTop: 'var(--space-4)' }}>
-                            ITK (Testnet)
+                            ITK Balance (Testnet)
                         </div>
                     </div>
 

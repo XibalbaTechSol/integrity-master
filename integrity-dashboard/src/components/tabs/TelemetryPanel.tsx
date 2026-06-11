@@ -1,7 +1,9 @@
 import { useState } from 'react';
 import { Panel } from '../shared/Panel';
-import { Activity, Cpu, Binary, Zap, Info } from 'lucide-react';
+import { Activity, Cpu, Binary, Zap, Info, BarChart } from 'lucide-react';
 import { TelemetryStream } from '../legacy-ui/TelemetryStream';
+import { IntegrityRadar } from '../shared/IntegrityRadar';
+import { useDashboard } from '../../context/useDashboard';
 import { motion, AnimatePresence } from 'framer-motion';
 
 /**
@@ -15,10 +17,10 @@ const FormulaDisplay = () => (
       <Binary size={14} /> Core Mathematical Engine (v8.4)
     </div>
     <div style={{ fontSize: '1.25rem', fontFamily: 'serif', textAlign: 'center', padding: '10px 0' }}>
-      <span style={{ color: 'var(--success)' }}>AIS</span> = (
-      <span style={{ color: 'var(--primary)' }}>w_E</span> · S_E + 
-      <span style={{ color: 'var(--primary)' }}>w_G</span> · S_G + 
-      <span style={{ color: 'var(--primary)' }}>w_S</span> · S_S
+      <span style={{ color: 'var(--gold)' }}>AIS</span> = (
+      <span style={{ color: 'var(--gold)' }}>w_E</span> · S_E + 
+      <span style={{ color: 'var(--gold)' }}>w_G</span> · S_G + 
+      <span style={{ color: 'var(--gold)' }}>w_S</span> · S_S
       ) · <span style={{ color: 'var(--warning)' }}>Drag(σ²)</span>
     </div>
     <div className="flex-col gap-1" style={{ fontSize: '0.7rem', marginTop: '8px' }}>
@@ -36,6 +38,7 @@ const FormulaDisplay = () => (
 
 export function TelemetryPanel() {
   const [activeMetric, setActiveMetric] = useState<'entropy' | 'grounding' | 'sacrifice' | 'compliance'>('entropy');
+  const { selectedAgent } = useDashboard();
 
   return (
     <div className="flex-col gap-6">
@@ -50,72 +53,84 @@ export function TelemetryPanel() {
               </div>
             </Panel>
 
-            <Panel title="Metric Decomposition" icon={<Cpu size={18} />}>
-               <div className="flex-col gap-6">
-                  <div className="flex gap-2" style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '12px' }}>
-                    {(['entropy', 'grounding', 'sacrifice', 'compliance'] as const).map(m => (
-                      <button 
-                        key={m} 
-                        onClick={() => setActiveMetric(m)}
-                        className={`btn ${activeMetric === m ? 'btn-primary' : 'btn-ghost'}`}
-                        style={{ padding: '4px 12px', fontSize: '0.75rem', textTransform: 'capitalize' }}
-                      >
-                        {m}
-                      </button>
-                    ))}
-                  </div>
+            <div className="grid-cols-2" style={{ gap: 'var(--space-6)' }}>
+              <Panel title="Metric Decomposition" icon={<Cpu size={18} />}>
+                 <div className="flex-col gap-6">
+                    <div className="flex gap-2" style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '12px' }}>
+                      {(['entropy', 'grounding', 'sacrifice', 'compliance'] as const).map(m => (
+                        <button 
+                          key={m} 
+                          onClick={() => setActiveMetric(m)}
+                          className={`btn ${activeMetric === m ? 'btn-primary' : 'btn-ghost'}`}
+                          style={{ padding: '4px 12px', fontSize: '0.75rem', textTransform: 'capitalize' }}
+                        >
+                          {m}
+                        </button>
+                      ))}
+                    </div>
 
-                  <AnimatePresence mode="wait">
-                    <motion.div 
-                      key={activeMetric}
-                      initial={{ opacity: 0, y: 10 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -10 }}
-                      style={{ minHeight: '120px' }}
-                    >
-                      {activeMetric === 'entropy' && (
-                        <div className="flex-col gap-3">
-                          <div style={{ fontWeight: 600 }}>Entropy Score (Stability)</div>
-                          <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                            Measures the statistical variance in agent response latency and data quality. 
-                            The Oracle applies an exponential decay function to punish unpredictable behavior.
-                          </p>
-                          <div className="flex items-center gap-2" style={{ color: 'var(--warning)', fontSize: '0.75rem' }}>
-                            <Zap size={14} /> Stability Drag Active: -12% applied to current AIS.
+                    <AnimatePresence mode="wait">
+                      <motion.div 
+                        key={activeMetric}
+                        initial={{ opacity: 0, y: 10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0, y: -10 }}
+                        style={{ minHeight: '120px' }}
+                      >
+                        {activeMetric === 'entropy' && (
+                          <div className="flex-col gap-3">
+                            <div style={{ fontWeight: 600 }}>Entropy Score (Stability)</div>
+                            <p className="text-muted" style={{ fontSize: '0.85rem' }}>
+                              Measures the statistical variance in agent response latency and data quality. 
+                              The Oracle applies an exponential decay function to punish unpredictable behavior.
+                            </p>
+                            <div className="flex items-center gap-2" style={{ color: 'var(--warning)', fontSize: '0.75rem' }}>
+                              <Zap size={14} /> Stability Drag Active: -12% applied to current AIS.
+                            </div>
                           </div>
-                        </div>
-                      )}
-                      {activeMetric === 'grounding' && (
-                        <div className="flex-col gap-3">
-                          <div style={{ fontWeight: 600 }}>Grounding Score (HITL)</div>
-                          <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                            Quantifies human intervention depth. Higher grounding scores indicate that the agent's 
-                            high-value actions are being verified by authorized controllers.
-                          </p>
-                        </div>
-                      )}
-                      {activeMetric === 'sacrifice' && (
-                        <div className="flex-col gap-3">
-                          <div style={{ fontWeight: 600 }}>Sacrifice Score (Verifiable Energy)</div>
-                          <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                            Proof-of-Stake for AI. Measures the amount of ITK tokens bonded and the verified GPU/TPU 
-                            hours committed to the protocol.
-                          </p>
-                        </div>
-                      )}
-                      {activeMetric === 'compliance' && (
-                        <div className="flex-col gap-3">
-                          <div style={{ fontWeight: 600 }}>Compliance Score (Guardrails)</div>
-                          <p className="text-muted" style={{ fontSize: '0.85rem' }}>
-                            Adherence to domain-specific OPA safety rules (e.g. HIPAA, SOC2). 
-                            Reflects the pass rate of the BCC Middleware gating.
-                          </p>
-                        </div>
-                      )}
-                    </motion.div>
-                  </AnimatePresence>
-               </div>
-            </Panel>
+                        )}
+                        {activeMetric === 'grounding' && (
+                          <div className="flex-col gap-3">
+                            <div style={{ fontWeight: 600 }}>Grounding Score (HITL)</div>
+                            <p className="text-muted" style={{ fontSize: '0.85rem' }}>
+                              Quantifies human intervention depth. Higher grounding scores indicate that the agent's 
+                              high-value actions are being verified by authorized controllers.
+                            </p>
+                          </div>
+                        )}
+                        {activeMetric === 'sacrifice' && (
+                          <div className="flex-col gap-3">
+                            <div style={{ fontWeight: 600 }}>Sacrifice Score (Verifiable Energy)</div>
+                            <p className="text-muted" style={{ fontSize: '0.85rem' }}>
+                              Proof-of-Stake for AI. Measures the amount of ITK tokens bonded and the verified GPU/TPU 
+                              hours committed to the protocol.
+                            </p>
+                          </div>
+                        )}
+                        {activeMetric === 'compliance' && (
+                          <div className="flex-col gap-3">
+                            <div style={{ fontWeight: 600 }}>Compliance Score (Guardrails)</div>
+                            <p className="text-muted" style={{ fontSize: '0.85rem' }}>
+                              Adherence to domain-specific OPA safety rules (e.g. HIPAA, SOC2). 
+                              Reflects the pass rate of the BCC Middleware gating.
+                            </p>
+                          </div>
+                        )}
+                      </motion.div>
+                    </AnimatePresence>
+                 </div>
+              </Panel>
+
+              <Panel title="AIS Radar Profile" icon={<BarChart size={18} />}>
+                {selectedAgent ? (
+                  <IntegrityRadar agent={selectedAgent} />
+                ) : (
+                  <div className="text-muted" style={{ padding: 'var(--space-8)', textAlign: 'center', fontSize: '0.85rem' }}>
+                    Select an agent to visualize tri-metric alignment.
+                  </div>
+                )}
+              </Panel>
+            </div>
          </div>
 
          <div className="flex-col gap-6">
@@ -125,8 +140,8 @@ export function TelemetryPanel() {
                     The Agent Integrity Score is an actuarial trust metric derived from multi-dimensional telemetry.
                   </p>
                   <FormulaDisplay />
-                  <div className="flex items-start gap-2" style={{ padding: '12px', background: 'var(--primary-dim)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--primary)' }}>
-                    <Info size={16} color="var(--primary)" style={{ flexShrink: 0, marginTop: '2px' }} />
+                  <div className="flex items-start gap-2" style={{ padding: '12px', background: 'var(--gold-dim)', borderRadius: 'var(--radius-sm)', border: '1px solid var(--gold)' }}>
+                    <Info size={16} color="var(--gold)" style={{ flexShrink: 0, marginTop: '2px' }} />
                     <div style={{ fontSize: '0.7rem', color: 'var(--text-primary)' }}>
                       <strong>Oracle Note:</strong> Current domain <em>Global</em> uses equal weights. 
                       <em>Shield</em> domain increases <strong>w_G</strong> to 0.40.
