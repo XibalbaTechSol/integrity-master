@@ -264,4 +264,5 @@ export type TabId =
   | 'stability'
   | 'wallet'
   | 'advanced'
+  | 'trajectory'
   | 'apikeys';

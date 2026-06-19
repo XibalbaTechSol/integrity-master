@@ -26,6 +26,18 @@ import { StabilityPanel } from './components/tabs/StabilityPanel';
 import { AdvancedPanel } from './components/tabs/AdvancedPanel';
 import { WalletPanel } from './components/tabs/WalletPanel';
 import { APIKeyPanel } from './components/tabs/APIKeyPanel';
+import { TrajectoryPanel } from './components/tabs/TrajectoryPanel';
+
+import React from 'react';
+
+const TabContainer = React.memo(({ isActive, PanelComponent }: { isActive: boolean, PanelComponent: React.ComponentType }) => {
+  const MemoizedPanel = React.useMemo(() => <PanelComponent />, [PanelComponent]);
+  return (
+    <div style={{ display: isActive ? 'block' : 'none', height: '100%' }}>
+      {MemoizedPanel}
+    </div>
+  );
+});
 
 function DashboardShell() {
   const { activeTab } = useDashboard();
@@ -37,22 +49,23 @@ function DashboardShell() {
         <Topbar />
         <TabNav />
         <main className="content-area">
-          {activeTab === 'telemetry' && <TelemetryPanel />}
-          {activeTab === 'identity' && <IdentityPanel />}
-          {activeTab === 'ledger' && <LedgerPanel />}
-          {activeTab === 'zk' && <ZKProverPanel />}
-          {activeTab === 'factory' && <FactoryPanel />}
-          {activeTab === 'compliance' && <CompliancePanel />}
-          {activeTab === 'shield' && <ShieldPanel />}
-          {activeTab === 'oracle' && <OracleRegistryPanel />}
-          {activeTab === 'credit' && <CreditPanel />}
-          {activeTab === 'markets' && <MarketsPanel />}
-          {activeTab === 'staking' && <StakingPanel />}
-          {activeTab === 'stability' && <StabilityPanel />}
-          {activeTab === 'governance' && <GovernancePanel />}
-          {activeTab === 'advanced' && <AdvancedPanel />}
-          {activeTab === 'wallet' && <WalletPanel />}
-          {activeTab === 'apikeys' && <APIKeyPanel />}
+          <TabContainer isActive={activeTab === 'telemetry'} PanelComponent={TelemetryPanel} />
+          <TabContainer isActive={activeTab === 'identity'} PanelComponent={IdentityPanel} />
+          <TabContainer isActive={activeTab === 'ledger'} PanelComponent={LedgerPanel} />
+          <TabContainer isActive={activeTab === 'zk'} PanelComponent={ZKProverPanel} />
+          <TabContainer isActive={activeTab === 'factory'} PanelComponent={FactoryPanel} />
+          <TabContainer isActive={activeTab === 'compliance'} PanelComponent={CompliancePanel} />
+          <TabContainer isActive={activeTab === 'shield'} PanelComponent={ShieldPanel} />
+          <TabContainer isActive={activeTab === 'oracle'} PanelComponent={OracleRegistryPanel} />
+          <TabContainer isActive={activeTab === 'credit'} PanelComponent={CreditPanel} />
+          <TabContainer isActive={activeTab === 'markets'} PanelComponent={MarketsPanel} />
+          <TabContainer isActive={activeTab === 'staking'} PanelComponent={StakingPanel} />
+          <TabContainer isActive={activeTab === 'stability'} PanelComponent={StabilityPanel} />
+          <TabContainer isActive={activeTab === 'governance'} PanelComponent={GovernancePanel} />
+          <TabContainer isActive={activeTab === 'trajectory'} PanelComponent={TrajectoryPanel} />
+          <TabContainer isActive={activeTab === 'advanced'} PanelComponent={AdvancedPanel} />
+          <TabContainer isActive={activeTab === 'wallet'} PanelComponent={WalletPanel} />
+          <TabContainer isActive={activeTab === 'apikeys'} PanelComponent={APIKeyPanel} />
         </main>
       </div>
       <ToastManager />

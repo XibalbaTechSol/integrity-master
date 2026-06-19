@@ -1,3 +1,10 @@
+---
+title: Zkp
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # ZKP (Zero-Knowledge Proof)
 
 This page is a redirect to the core concept: [Aztec Noir Circuits](aztec-noir-circuits.md).

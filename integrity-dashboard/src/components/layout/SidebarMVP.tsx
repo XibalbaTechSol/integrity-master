@@ -39,7 +39,7 @@ export function Sidebar() {
                   borderRadius: 'var(--radius-sm)',
                   cursor: 'pointer',
                   background: selectedAgent?.eth_address === agent.eth_address ? 'var(--surface-hover)' : 'transparent',
-                  border: `1px solid ${selectedAgent?.eth_address === agent.eth_address ? 'rgba(34, 211, 238, 0.3)' : 'transparent'}`,
+                  border: `1px solid ${selectedAgent?.eth_address === agent.eth_address ? 'rgba(201, 168, 76, 0.4)' : 'transparent'}`,
                   transition: 'all var(--transition-fast)'
                 }}
               >

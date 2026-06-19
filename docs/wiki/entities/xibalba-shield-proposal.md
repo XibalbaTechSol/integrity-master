@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: Xibalba Shield Business Proposal & HIPAA Strategy
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [proposal, business, compliance, healthcare]
 confidence: high

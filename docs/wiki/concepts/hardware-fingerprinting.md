@@ -2,7 +2,7 @@
 title: Hardware Fingerprinting & Tethered Identity (DID)
 acronyms: [DID]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [identity, cryptography, compliance]
 confidence: high

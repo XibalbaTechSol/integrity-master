@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: Xibalba Shield
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [compliance, security, cryptography, layer-2]
 confidence: high
@@ -21,17 +22,29 @@ In modern healthcare AI integrations, autonomous agents are given direct access 
 
 ## 2. The Smart Contract Stack
 
-Xibalba Shield encapsulates agent identity and auditing inside a robust, local Web3 primitive stack on Base L2:
+Xibalba Shield encapsulates agent identity, liability, and auditing inside a robust Web3 primitive stack on Base L2:
 
+*   `SmartBAA.sol`: The marquee primitive. Converts static PDF Business Associate Agreements into cryptographic, on-chain entities. It uses EIP-712 signatures for legal binding and enforces "Parametric Liability" via ITK staking, allowing instant slashing if the Oracle detects a HIPAA breach.
 *   `SovereignAgent.sol`: Encapsulates AI model identities as on-chain assets, cryptographically binding every cross-silo EMR query to a verified identity.
 *   `ReputationSBT.sol`: Non-transferable Soulbound Tokens (SBTs) that gate system access and API permissions based on the agent's live compliance score ([ais](../concepts/ais.md)).
-*   `AuditShield.sol`: Anchors ZK cryptographic logs of agent inferences. It features a transaction modifier that performs a duplicate log check, returning an automatic revert if a duplicate hash is submitted: `execution reverted: "Log already anchored"`.
+*   `AuditShield.sol`: Anchors ZK cryptographic logs of agent inferences. It features a transaction modifier that performs a duplicate log check, returning an automatic revert if a duplicate hash is submitted.
 *   `StakingReputation.sol`: Financial accountability mechanism. Operators must stake collateral, which is subject to programmatic slashing if auditing nodes detect hallucination or breach.
 *   `MockPaymaster.sol` / `StablecoinVaultPaymaster.sol`: Decoupled gas abstraction mechanics, allowing clients to pay transaction fees in standard stablecoins (USDC) rather than native gas tokens.
 
 ---
 
-## 3. High-Scale Clinical Use Cases
+## 3. The Compliance Officer Command Center
+
+To make the cryptography usable by legacy healthcare organizations, Xibalba Shield provides a dedicated UI dashboard designed for Hospital Compliance Officers.
+
+### Core Workflows:
+1.  **Smart BAA Management:** Officers can propose and sign EIP-712 structured BAAs directly from the UI, locking agent liability stakes on-chain.
+2.  **Medical Record Interaction Logs:** A real-time telemetry feed that cryptographically links every AI agent EMR query to an active `SmartBAA` ID, proving authorized access.
+3.  **Manual Review Queue:** If the BCC (Boundary Control Concept) Middleware blocks a transaction (e.g., an agent attempts to exfiltrate an unencrypted SSN), the event is flagged in a Review Queue. The Compliance Officer can manually inspect the logs and execute an on-chain "Slash Stake" action to seize the agent's bonded ITK as immediate damages.
+
+---
+
+## 4. High-Scale Clinical Use Cases
 
 Xibalba Shield is pre-configured to secure three high-value B2B healthcare pipelines:
 

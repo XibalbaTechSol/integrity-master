@@ -200,7 +200,7 @@ export function MarketsPanel() {
 
           {/* Console / Logs Side */}
           <div className="flex-col gap-4">
-            <div data-testid="protocol-logs" style={{ background: '#0a0a0c', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', height: '240px', padding: 'var(--space-3)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div data-testid="protocol-logs" style={{ background: 'var(--navy-deep)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', height: '240px', padding: 'var(--space-3)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="flex items-center justify-between" style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '4px', marginBottom: '4px' }}>
                 <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                   <Terminal size={14} /> Protocol Logs

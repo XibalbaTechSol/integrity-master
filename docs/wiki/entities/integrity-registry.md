@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: IntegrityRegistry (Solidty Contract)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [layer-2, tokenomics, identity]
 confidence: high

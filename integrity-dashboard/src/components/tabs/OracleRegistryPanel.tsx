@@ -143,7 +143,7 @@ export function OracleRegistryPanel() {
                />
             </div>
 
-            <div style={{ background: '#0a0a0c', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', padding: 'var(--space-4)' }}>
+            <div style={{ background: 'var(--navy-deep)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', padding: 'var(--space-4)' }}>
                <div className="flex justify-between items-center mb-4">
                   <div className="flex items-center gap-2">
                     <StatusBadge status="Active" />

@@ -8,7 +8,8 @@ def test_xibalba_flow():
     # 1. Initialize for Xibalba Master Agent
     # In a real scenario, this would have the actual private keys / TEE attestation
     import os
-    port = os.getenv("INTEGRITY_ORACLE_PORT", "8081")
+    port = os.getenv("INTEGRITY_ORACLE_PORT", "8080")
+    os.environ["INTEGRITY_API_URL"] = f"http://127.0.0.1:{port}"
     client = IntegrityClient(
         oracle_url=f"http://127.0.0.1:{port}/v1/transactions/report",
         agent_id="xibalba_master_agent_sdk_test"

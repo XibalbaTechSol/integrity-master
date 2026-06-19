@@ -1,6 +1,7 @@
 pub mod merkle;
 pub mod rollup_daemon;
 pub mod webhook_worker;
+pub mod mev_proxy;
 use axum::{
     extract::{Path, State},
     routing::{get, patch, post},
@@ -843,7 +844,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
         .route("/v1/stability/benchmarks", get(get_stability_benchmarks))
         .route("/v1/audit/request", post(post_audit_request))
         // --- API Keys ---
+        .route("/v1/api-keys", get(get_api_keys))
         .route("/v1/api-keys/generate", post(post_generate_api_key))
+        .route("/v1/api-keys/delete", post(post_delete_api_key))
         // --- Contract Factory ---
         .route("/v1/contracts/factory/deploy", post(post_contract_deploy))
         .route("/v1/contracts/list-market", post(post_contract_list_market))
@@ -3472,12 +3475,31 @@ async fn post_audit_request(
     })))
 }
 
-async fn post_generate_api_key(
+async fn get_api_keys(
+    State(_state): State<Arc<AppState>>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    // In a real scenario, this would fetch from a database tied to the user session
+    Ok(Json(serde_json::json!([])))
+}
+
+async fn post_delete_api_key(
     State(_state): State<Arc<AppState>>,
     Json(_payload): Json<serde_json::Value>,
 ) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    Ok(Json(serde_json::json!({ "status": "deleted" })))
+}
+
+async fn post_generate_api_key(
+    State(_state): State<Arc<AppState>>,
+    Json(payload): Json<serde_json::Value>,
+) -> Result<Json<serde_json::Value>, (axum::http::StatusCode, String)> {
+    let expiration_days = payload.get("expiration_days").and_then(|v| v.as_i64()).unwrap_or(30);
+    let expires_at = chrono::Utc::now() + chrono::Duration::days(expiration_days);
+
     Ok(Json(serde_json::json!({
-        "api_key": format!("intg_dev_{}", uuid::Uuid::new_v4().to_string().replace('-', ""))
+        "api_key": format!("intg_dev_{}", uuid::Uuid::new_v4().to_string().replace('-', "")),
+        "created_at": chrono::Utc::now().to_rfc3339(),
+        "expires_at": expires_at.to_rfc3339()
     })))
 }
 

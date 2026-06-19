@@ -2,7 +2,7 @@
 title: The Tri-Metric Protocol
 acronyms: [AIS]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [metrics, compliance, control-systems]
 confidence: high

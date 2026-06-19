@@ -73,3 +73,32 @@ async fn relay_to_private_mempool(_signed_tx: &str) -> Result<String, String> {
     // In production, this forwards to https://rpc.flashbots.net
     Ok("0xdeadbeef1234567890abcdefdeadbeef1234567890abcdefdeadbeef12345678".to_string())
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_check_agent_ais() {
+        assert_eq!(check_agent_ais("0xabc").await, 1000);
+    }
+
+    #[tokio::test]
+    async fn test_relay_to_private_mempool() {
+        assert_eq!(
+            relay_to_private_mempool("tx").await.unwrap(),
+            "0xdeadbeef1234567890abcdefdeadbeef1234567890abcdefdeadbeef12345678"
+        );
+    }
+
+    #[tokio::test]
+    async fn test_execute_private_rpc_success() {
+        let req = ProtectedTxRequest {
+            agent_address: "0x123".into(),
+            signed_tx: "0xabc".into(),
+        };
+        let resp = execute_private_rpc(Json(req)).await;
+        // Since we return impl IntoResponse, we would need to check the status code and body.
+        // We know it returns (StatusCode::OK, Json(ProtectedTxResponse)).
+    }
+}

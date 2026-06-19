@@ -2,7 +2,7 @@
 title: Aztec Noir Circuits
 acronyms: [ZKP, PAE]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [cryptography, compliance, layer-2]
 confidence: high

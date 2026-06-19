@@ -10,12 +10,11 @@ export function Sidebar() {
   return (
     <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header" style={{ padding: isCollapsed ? 'var(--space-4) auto' : 'var(--space-6)', justifyContent: isCollapsed ? 'center' : 'space-between', flexDirection: isCollapsed ? 'column' : 'row', gap: isCollapsed ? '12px' : '0' }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
+        <div style={{ display: 'flex', flexDirection: 'column', alignItems: isCollapsed ? 'center' : 'flex-start', gap: '4px' }}>
           <img src="/XibalbaSolutionsLogo.png" alt="Xibalba" style={{ height: '32px' }} />
           {!isCollapsed && (
-            <div>
-              <div style={{ fontSize: '1.1rem', fontWeight: 700, color: '#fff' }}>Xibalba <span style={{ color: 'var(--text-muted)' }}>Solutions</span></div>
-              <div style={{ fontSize: '0.7rem', color: 'var(--primary)', letterSpacing: '0.05em', textTransform: 'uppercase' }}>Integrity Protocol</div>
+            <div style={{ fontSize: '0.65rem', color: 'var(--gold)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 800 }}>
+              Integrity Protocol
             </div>
           )}
         </div>
@@ -58,9 +57,9 @@ export function Sidebar() {
                   borderRadius: 'var(--radius-sm)',
                   cursor: 'pointer',
                   background: selectedAgent?.eth_address === agent.eth_address ? 'var(--surface-hover)' : 'transparent',
-                  border: `1px solid ${selectedAgent?.eth_address === agent.eth_address ? 'rgba(34, 211, 238, 0.3)' : (agent.alias?.toLowerCase().includes('xibalba') ? 'rgba(212, 175, 55, 0.2)' : 'transparent')}`,
+                  border: `1px solid ${selectedAgent?.eth_address === agent.eth_address ? 'rgba(201, 168, 76, 0.4)' : (agent.alias?.toLowerCase().includes('xibalba') ? 'rgba(212, 175, 55, 0.2)' : 'transparent')}`,
                   transition: 'all var(--transition-fast)',
-                  borderLeft: agent.alias?.toLowerCase().includes('xibalba') && !isCollapsed ? '3px solid var(--gold)' : undefined
+                  borderLeft: (selectedAgent?.eth_address === agent.eth_address || agent.alias?.toLowerCase().includes('xibalba')) && !isCollapsed ? '3px solid var(--gold)' : undefined
                 }}
               >
                 {isCollapsed ? (
@@ -82,7 +81,7 @@ export function Sidebar() {
                       </div>
                       <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'flex-end' }}>
                         <StatusBadge ais={agent.current_ais} />
-                        <span style={{ fontSize: '0.6rem', color: 'var(--primary)', fontWeight: 600, marginTop: '2px', textTransform: 'uppercase' }}>
+                        <span style={{ fontSize: '0.6rem', color: 'var(--gold)', fontWeight: 600, marginTop: '2px', textTransform: 'uppercase' }}>
                           {agent.verification_tier === 3 ? 'Inst.' : agent.verification_tier === 2 ? 'Linked' : 'Sov.'}
                         </span>
                       </div>
@@ -90,7 +89,7 @@ export function Sidebar() {
                     
                     <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                       <div className="mono">{agent.eth_address.substring(0, 10)}...</div>
-                      {agent.tee_verified && <ShieldCheck size={14} color="var(--primary)" />}
+                      {agent.tee_verified && <ShieldCheck size={14} color="var(--gold)" />}
                     </div>
                   </div>
                 )}

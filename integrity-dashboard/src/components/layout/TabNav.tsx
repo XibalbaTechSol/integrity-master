@@ -4,7 +4,7 @@ import type { TabId } from '../../types';
 import { useIsMobile } from '../../utils/useIsMobile';
 import { 
   Activity, Users, Layers, ShieldCheck, Hammer, 
-  Coins, Shield, ShoppingCart, BookOpen, Lock, BarChart2, Wallet, Key, ChevronDown, Globe
+  Coins, Shield, ShoppingCart, BookOpen, Lock, BarChart2, Wallet, Key, ChevronDown, Globe, BrainCircuit
 } from 'lucide-react';
 
 const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
@@ -22,6 +22,7 @@ const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
   { id: 'governance', label: 'Governance', icon: <Shield size={16} /> },
   { id: 'compliance', label: 'Compliance', icon: <ShieldCheck size={16} /> },
   { id: 'wallet', label: 'Wallet', icon: <Wallet size={16} /> },
+  { id: 'trajectory', label: 'Agent Thoughts', icon: <BrainCircuit size={16} /> },
   { id: 'advanced', label: 'Advanced', icon: <BookOpen size={16} /> },
   { id: 'apikeys', label: 'API Keys', icon: <Key size={16} /> },
 ];

@@ -1,3 +1,11 @@
+---
+source_files: []
+title: Reputationsbt
+created: 2026-06-19
+updated: 2026-06-19
+type: entity
+confidence: low
+---
 # ReputationSBT.sol (Identity Credential)
 
 While `SovereignAgent.sol` serves as the operational instance, it is paired with an ERC-721 **Soulbound Token (SBT)**.

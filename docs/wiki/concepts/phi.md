@@ -1,3 +1,10 @@
+---
+title: Phi
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # PHI (Protected Health Information)
 
 This page is a redirect to the core system: [Xibalba Shield](../entities/xibalba-shield.md).

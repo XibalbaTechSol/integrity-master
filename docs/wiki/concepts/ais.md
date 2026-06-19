@@ -1,3 +1,10 @@
+---
+title: Ais
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # AIS (Agent Integrity Score)
 
 This page is a redirect to the core concept: [Tri Metric Protocol](tri-metric-protocol.md).

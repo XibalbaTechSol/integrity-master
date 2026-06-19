@@ -99,7 +99,7 @@ export function FactoryPanel() {
               </select>
             </div>
             
-            <div style={{ height: '350px', background: '#0a0a0c', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+            <div style={{ height: '350px', background: 'var(--navy-deep)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
               <textarea 
                 style={{ margin: 0, padding: 'var(--space-4)', fontSize: '0.75rem', color: 'var(--primary)', background: 'transparent', border: 'none', width: '100%', height: '100%', resize: 'none', outline: 'none', fontFamily: 'monospace' }}
                 value={code}

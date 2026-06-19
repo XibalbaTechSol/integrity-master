@@ -2,7 +2,7 @@
 title: Model Contextual Integrity Protocol (MCIP)
 acronyms: [MCIP]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [compliance, cryptography, identity]
 confidence: high

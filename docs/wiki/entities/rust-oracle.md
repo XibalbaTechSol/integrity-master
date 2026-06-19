@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: Rust Axum Oracle (Off-Chain Server)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [cryptography, compliance, control-systems]
 confidence: high

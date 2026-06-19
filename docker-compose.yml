@@ -5,9 +5,21 @@ services:
     ports: ["8080:8080"]
     env_file: ./integrity-oracle/backend/.env
 
+  opa:
+    image: openpolicyagent/opa:latest
+    ports: ["8181:8181"]
+    command: ["run", "--server", "--addr", "0.0.0.0:8181", "--log-level=debug", "/policies"]
+    volumes:
+      - ./bcc_middleware/policies:/policies
+
   bcc-middleware:
     build: ./bcc_middleware
     ports: ["8081:8081"]
+    environment:
+      - OPA_URL=http://opa:8181
+      - INTEGRITY_ORACLE_URL=http://oracle-backend:8080
+    depends_on:
+      - opa
 
   dashboard:
     build: ./integrity-dashboard

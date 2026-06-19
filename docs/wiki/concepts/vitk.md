@@ -1,3 +1,10 @@
+---
+title: Vitk
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # vITK (Voting Power)
 
 This page is a redirect to the core concept: [Ai Proxy Optimism](ai-proxy-optimism.md).

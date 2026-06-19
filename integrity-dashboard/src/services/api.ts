@@ -122,8 +122,16 @@ class ApiService {
   }
 
   // --- Auth / Keys ---
-  async generateApiKey(): Promise<{ api_key: string }> {
-    return this.post('/api-keys/generate', {});
+  async getApiKeys(): Promise<any[]> {
+    return this.fetch('/api-keys');
+  }
+
+  async generateApiKey(expirationDays?: number): Promise<{ api_key: string, expires_at: string }> {
+    return this.post('/api-keys/generate', { expiration_days: expirationDays });
+  }
+
+  async deleteApiKey(key: string): Promise<{ status: string }> {
+    return this.post(`/api-keys/delete`, { api_key: key });
   }
 
   // --- Protocol Stats ---
@@ -235,6 +243,31 @@ class ApiService {
 
   async transferTokens(from: string, to: string, amount: number): Promise<{ status: string, tx_hash: string }> {
     return this.post('/wallet/transfer', { from_address: from, to_address: to, amount_itk: amount });
+  }
+
+  // --- Shield / Smart BAA ---
+  async getBAAs(): Promise<any[]> {
+    return this.fetch('/shield/baas');
+  }
+
+  async proposeBAA(data: any): Promise<any> {
+    return this.post('/shield/baa/propose', data);
+  }
+
+  async signBAA(baaId: string, signature: string): Promise<any> {
+    return this.post(`/shield/baa/${baaId}/sign`, { signature });
+  }
+
+  async getShieldInteractions(): Promise<any[]> {
+    return this.fetch('/shield/interactions');
+  }
+
+  async getComplianceReviewQueue(): Promise<any[]> {
+    return this.fetch('/shield/compliance/review-queue');
+  }
+
+  async resolveComplianceViolation(id: string, action: 'finalize_slash' | 'dismiss'): Promise<any> {
+    return this.post(`/shield/compliance/resolve`, { violation_id: id, action });
   }
 
   // --- Telemetry ---

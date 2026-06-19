@@ -7,11 +7,13 @@ export const NO_CODE_FACTORY_ADDRESS = "0x2e35aDd0ec480A301B02aF2619a55cE6d790d3
 export const BASE_SEPOLIA_CHAIN_ID = 84532;
 export const RPC_URL = "https://sepolia.base.org";
 
-export const IS_PRODUCTION = false; // Toggle for Mainnet migration
+export const IS_PRODUCTION = true; // Set to true for Phase 3 Testnet Cutover
 
 export const API_BASE = import.meta.env.VITE_API_BASE || 
-  ((typeof window !== 'undefined' && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) 
-    ? "http://127.0.0.1:8080" 
-    : "https://integrity-protocol-backend.onrender.com");
+  (IS_PRODUCTION 
+    ? "https://integrity-protocol-backend.onrender.com"
+    : ((typeof window !== 'undefined' && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) 
+      ? "http://127.0.0.1:8080" 
+      : "https://integrity-protocol-backend.onrender.com"));
 
 

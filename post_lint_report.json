@@ -1,0 +1,404 @@
+{
+  "timestamp": "2026-06-19T13:36:35.336060",
+  "project_root": "/home/xibalba/Projects/INTEGRITY",
+  "issues": [
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/tri-metric-protocol.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/integration-guide.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/phi-provenance-devil-advocate-plan.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/identity-ceiling.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/integrity-protocol-sdk-spec.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/ai-proxy-optimism.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/metadata-catalog.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/integrity-protocol-strategy.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/aztec-noir-circuits.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/adoption-strategy.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/business-plan.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/hardware-fingerprinting.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/developing-on-integrity-protocol.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/behavioral-commitment-chain.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/model-contextual-integrity-protocol.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'concepts/generative-ui-security.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/AuditShield.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/StateAnchor.sol.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/StateAnchor.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/itk-token.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/itk-token.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/StakingReputation.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/stablecoin-vault-paymaster.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/stablecoin-vault-paymaster.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/ReputationSBT.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/state-anchor.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/state-anchor.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/xibalba-shield-proposal.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/xibalba-shield-proposal.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/ReputationRegistry.sol.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/ReputationRegistry.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/smart-contracts.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/smart-contracts.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/integrity-registry.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/integrity-registry.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/xibalba-shield.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/xibalba-shield.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/rust-oracle.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/rust-oracle.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/SovereignAgent.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/AgentMarketplace.sol.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/AgentMarketplace.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/VerifiableBridge.sol.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "stale_page",
+      "severity": "low",
+      "detail": "Wiki page 'entities/xibalba-quant.md' was last updated 19 days ago (2026-05-31).",
+      "days_old": 19
+    },
+    {
+      "type": "missing_source_binding",
+      "severity": "medium",
+      "detail": "Entity page 'entities/xibalba-quant.md' is missing 'source_files' frontmatter field."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'ClaimsAdjudicator.sol' exists in contracts/src/ but has no wiki page at entities/ClaimsAdjudicator.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'MedicalCreditLine.sol' exists in contracts/src/ but has no wiki page at entities/MedicalCreditLine.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'OracleRegistry.sol' exists in contracts/src/ but has no wiki page at entities/OracleRegistry.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'SmartBAA.sol' exists in contracts/src/ but has no wiki page at entities/SmartBAA.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'ClinicalTrialBond.sol' exists in contracts/src/ but has no wiki page at entities/ClinicalTrialBond.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'StablecoinPaymaster.sol' exists in contracts/src/ but has no wiki page at entities/StablecoinPaymaster.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'Slasher.sol' exists in contracts/src/ but has no wiki page at entities/Slasher.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'CCIPReputationBridge.sol' exists in contracts/src/ but has no wiki page at entities/CCIPReputationBridge.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'IntegrityToken.sol' exists in contracts/src/ but has no wiki page at entities/IntegrityToken.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'UltraPlonkVerifier.sol' exists in contracts/src/ but has no wiki page at entities/UltraPlonkVerifier.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'IntegrityPaymaster.sol' exists in contracts/src/ but has no wiki page at entities/IntegrityPaymaster.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'IAccount.sol' exists in contracts/src/ but has no wiki page at entities/IAccount.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'AgentCreditFacility.sol' exists in contracts/src/ but has no wiki page at entities/AgentCreditFacility.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'MockITK.sol' exists in contracts/src/ but has no wiki page at entities/MockITK.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'DomainRegistry.sol' exists in contracts/src/ but has no wiki page at entities/DomainRegistry.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'ReputationLendingPool.sol' exists in contracts/src/ but has no wiki page at entities/ReputationLendingPool.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'XibalbaAgentRegistry.sol' exists in contracts/src/ but has no wiki page at entities/XibalbaAgentRegistry.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'AgentFactory.sol' exists in contracts/src/ but has no wiki page at entities/AgentFactory.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'XibalbaNameService.sol' exists in contracts/src/ but has no wiki page at entities/XibalbaNameService.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'EnterpriseRegistry.sol' exists in contracts/src/ but has no wiki page at entities/EnterpriseRegistry.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'IntegrityProtocol.sol' exists in contracts/src/ but has no wiki page at entities/IntegrityProtocol.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'CoveredEntityRegistry.sol' exists in contracts/src/ but has no wiki page at entities/CoveredEntityRegistry.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'MockPaymaster.sol' exists in contracts/src/ but has no wiki page at entities/MockPaymaster.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'SmartBAAFactory.sol' exists in contracts/src/ but has no wiki page at entities/SmartBAAFactory.sol.md."
+    },
+    {
+      "type": "missing_contract_page",
+      "severity": "low",
+      "detail": "Contract 'SmartBAA.sol' exists in contracts/src/ but has no wiki page at entities/SmartBAA.sol.md."
+    },
+    {
+      "type": "empty_directory",
+      "severity": "low",
+      "detail": "Wiki directory 'comparisons/' exists but contains no pages."
+    },
+    {
+      "type": "empty_directory",
+      "severity": "low",
+      "detail": "Wiki directory 'queries/' exists but contains no pages."
+    }
+  ],
+  "stats": {
+    "actual_page_count": 49,
+    "index_entry_count": 49,
+    "claimed_page_count": 49,
+    "issue_counts": {
+      "low": 55,
+      "medium": 17
+    },
+    "total_issues": 72
+  }
+}

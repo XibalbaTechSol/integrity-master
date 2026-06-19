@@ -1,7 +1,7 @@
 ---
 title: Integrity Protocol Metadata Catalog
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [metrics, compliance, cryptography]
 confidence: high

@@ -29,7 +29,7 @@ export function Topbar() {
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1 }}>
         <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', background: 'var(--bg-secondary)', padding: '4px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--glass-border)' }}>
-          <Globe size={14} color="var(--primary)" />
+          <Globe size={14} color="var(--gold)" />
           <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Domain:</span>
           <select 
             value={domain} 

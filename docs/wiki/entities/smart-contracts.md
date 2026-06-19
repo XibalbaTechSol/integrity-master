@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: Smart Contracts (Solidity Core)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [layer-2, tokenomics, identity]
 confidence: high

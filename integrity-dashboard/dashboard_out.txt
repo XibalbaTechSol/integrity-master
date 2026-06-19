@@ -1,0 +1,4 @@
+
+> integrity-dashboard@0.0.0 dev
+> vite --port 5173
+
