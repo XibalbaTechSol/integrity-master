@@ -39,7 +39,7 @@ contract AgentFactoryTest is Test {
         vm.stopPrank();
 
         vm.prank(creator2);
-        address childAgent = factory.createAgent("Child", oracle, parentAgent);
+        address childAgent = factory.createAgent("Child", oracle, creator1);
 
         assertEq(factory.getAgentCount(), 2);
         assertEq(factory.ownerOf(1), creator2);

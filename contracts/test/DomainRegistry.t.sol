@@ -16,8 +16,9 @@ contract DomainRegistryTest is Test {
         (validator, validatorPk) = makeAddrAndKey("validator");
         registry = new DomainRegistry(admin);
         
-        vm.prank(admin);
+        vm.startPrank(admin);
         registry.grantRole(registry.VALIDATOR_ROLE(), validator);
+        vm.stopPrank();
     }
 
     function test_LinkDomain_Success() public {

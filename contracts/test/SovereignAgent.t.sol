@@ -52,7 +52,7 @@ contract SovereignAgentTest is Test {
     }
 
     function test_ValidateUserOp_Success() public {
-        IAccount.UserOperation memory op;
+        UserOperation memory op;
         op.sender = address(agent);
         op.nonce = 0;
         
@@ -71,7 +71,7 @@ contract SovereignAgentTest is Test {
     }
 
     function test_ValidateUserOp_Fail_BadSignature() public {
-        IAccount.UserOperation memory op;
+        UserOperation memory op;
         
         bytes32 userOpHash = keccak256("testHash");
         bytes32 ethSignedHash = MessageHashUtils.toEthSignedMessageHash(userOpHash);
@@ -87,7 +87,7 @@ contract SovereignAgentTest is Test {
     }
 
     function test_ValidateUserOp_NotEntryPoint() public {
-        IAccount.UserOperation memory op;
+        UserOperation memory op;
         bytes32 userOpHash = keccak256("testHash");
         
         vm.expectRevert("SovereignAgent: caller must be EntryPoint");
@@ -123,9 +123,10 @@ contract SovereignAgentTest is Test {
     }
 
     function test_UpdateAIS_NotOracle() public {
-        vm.prank(controller);
+        vm.startPrank(controller);
         vm.expectRevert(abi.encodeWithSignature("AccessControlUnauthorizedAccount(address,bytes32)", controller, agent.ORACLE_ROLE()));
         agent.updateAIS(800, 2);
+        vm.stopPrank();
     }
 
     function test_UpdateAIS_OutOfBounds_Low() public {

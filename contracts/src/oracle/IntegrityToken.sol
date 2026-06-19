@@ -89,7 +89,7 @@ contract IntegrityToken is ERC20, Ownable, AccessControl {
     // Minting (capped)
     // ──────────────────────────────────────────────
 
-    function mint(address to, uint256 amount) external onlyOwner {
+    function mint(address to, uint256 amount) public virtual onlyOwner {
         if (amount == 0) revert ZeroAmount();
         if (totalMinted + amount > MAX_SUPPLY) {
             revert ExceedsMaxSupply(amount, MAX_SUPPLY - totalMinted);
