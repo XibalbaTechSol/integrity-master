@@ -1,7 +1,7 @@
 ---
 title: The Unified Agentic Interface & Generative UI Security
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [security, mcip, ag-ui, a2ui, genui]
 confidence: high

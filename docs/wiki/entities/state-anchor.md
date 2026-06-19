@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: StateAnchor (Solidity Contract)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [layer-2, cryptography]
 confidence: high

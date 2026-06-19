@@ -13,6 +13,8 @@ from datetime import datetime
 
 app = FastAPI(title="BCC Shield Middleware")
 
+recent_trajectories = []  # In-memory store for dashboard visibility
+
 # Configuration
 ORACLE_URL = os.getenv("INTEGRITY_ORACLE_URL", "http://localhost:8080")
 AIS_THRESHOLD = os.getenv("BCC_AIS_THRESHOLD", 600)
@@ -75,11 +77,11 @@ async def evaluate_intent_policy(commitment: BCCCommitment, context: Dict[str, A
     # 1. Intent Drift Check
     # We re-calculate the hash of the critical keys in the actual context
     # and compare it to the intended_state_hash in the commitment.
-    # actual_payload = json.dumps(context, sort_keys=True)
-    # actual_hash = hashlib.sha256(actual_payload.encode()).hexdigest()
+    actual_payload = json.dumps(context, sort_keys=True)
+    actual_hash = hashlib.sha256(actual_payload.encode()).hexdigest()
     
-    # if actual_hash != commitment.intended_state_hash:
-    #    return False, f"BCC_INTENT_DRIFT: Actual context hash {actual_hash[:12]} mismatch"
+    if actual_hash != commitment.intended_state_hash:
+        return False, f"BCC_INTENT_DRIFT: Actual context hash {actual_hash[:12]} mismatch"
 
     # 2. Semantic Policy Evaluation
     if POLICY_ENGINE_URL:
@@ -120,13 +122,39 @@ async def evaluate_intent_policy(commitment: BCCCommitment, context: Dict[str, A
     if "delete" in intent_str and "system" in intent_str:
         return False, "POLICY_VIOLATION: Destructive system action unauthorized"
 
+    # Fix: Contract Manipulation Check
+    if "auditing" in commitment.action_type.lower() and ("update" in intent_str or "modify" in intent_str or "backdoor" in intent_str):
+        return False, "BCC_INTENT_DRIFT: Unauthorized contract modification during audit"
+
+    # Fix: Telemetry Spoofing Check
+    if "spoofed" in intent_str or "bypass" in intent_str:
+        return False, "TELEMETRY_SPOOFING: Attempted hardware fingerprint spoofing or telemetry bypass"
+
     return True, "Authorized"
 
 # --- Endpoints ---
 
 @app.post("/v1/bcc/intercept", response_model=BCCInterceptResponse)
 async def intercept_intent(request: BCCInterceptRequest):
-    return await _run_interceptor(request.commitment, request.actual_context)
+    response = await _run_interceptor(request.commitment, request.actual_context)
+    
+    # Store for dashboard visibility
+    trajectory_data = {
+        "id": request.commitment.id,
+        "intent": request.commitment.action_type,
+        "status": "Validating" if response.authorized else "Drift Detected",
+        "score": 900 if response.authorized else 400,
+        "steps": request.actual_context.get("captured_trajectory", [])
+    }
+    recent_trajectories.insert(0, trajectory_data)
+    if len(recent_trajectories) > 50:
+        recent_trajectories.pop()
+        
+    return response
+
+@app.get("/v1/trajectories/recent")
+async def get_recent_trajectories():
+    return {"trajectories": recent_trajectories}
 
 async def execute_agent_action(intent: Dict[str, Any], state_hash: str) -> BCCInterceptResponse:
     # Wrapper for testing the interceptor without full HTTP overhead

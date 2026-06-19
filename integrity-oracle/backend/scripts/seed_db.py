@@ -5,7 +5,7 @@ from datetime import datetime, timedelta
 import json
 
 # Connection string confirmed in test_conn.py
-CONN_STR = "postgres://postgres:postgres@localhost:5432/integrity"
+CONN_STR = "postgres://xibalba_admin:integrity_secret_123@localhost:5432/integrity_protocol"
 
 def get_connection():
     return psycopg2.connect(CONN_STR)
@@ -15,8 +15,17 @@ def clear_data(cur):
     cur.execute("DELETE FROM ownership_claims")
     cur.execute("DELETE FROM agent_daily_snapshots")
     cur.execute("DELETE FROM xibalba_audits")
+    cur.execute("DELETE FROM market_bids")
+    cur.execute("DELETE FROM market_tasks")
+    cur.execute("DELETE FROM provenance_logs")
     cur.execute("DELETE FROM transaction_logs")
+    cur.execute("DELETE FROM loans")
+    cur.execute("DELETE FROM credit_profiles")
+    cur.execute("DELETE FROM deployed_contracts")
     cur.execute("DELETE FROM agents")
+    cur.execute("DELETE FROM token_transfers")
+    cur.execute("DELETE FROM token_balances")
+    cur.execute("DELETE FROM stability_benchmarks")
 
 def seed_agents(cur):
     print("Seeding agents...")
@@ -37,8 +46,8 @@ def seed_agents(cur):
     
     for alias, tier, ais, entropy in aliases:
         agent_id = str(uuid.uuid4())
-        eth_address = f"0x{uuid.uuid4().hex[:40]}"
-        owner_address = f"0x{uuid.uuid4().hex[:40]}"
+        eth_address = f"0x{uuid.uuid4().hex}{uuid.uuid4().hex[:8]}"
+        owner_address = f"0x{uuid.uuid4().hex}{uuid.uuid4().hex[:8]}"
         metadata = {
             "alias": alias,
             "verification_tier": tier,

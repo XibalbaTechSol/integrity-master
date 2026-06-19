@@ -255,6 +255,8 @@ export type TabId =
   | 'zk'
   | 'factory'
   | 'compliance'
+  | 'shield'
+  | 'oracle'
   | 'credit'
   | 'governance'
   | 'markets'
@@ -262,4 +264,5 @@ export type TabId =
   | 'stability'
   | 'wallet'
   | 'advanced'
+  | 'trajectory'
   | 'apikeys';

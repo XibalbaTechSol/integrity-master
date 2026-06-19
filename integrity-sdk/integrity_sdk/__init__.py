@@ -19,6 +19,7 @@ from .hardware import (
     get_virtualization_env,
 )
 from .integrations import IntegrityOpenAI
+from .evals import TrajectoryEvaluator
 
 __all__ = [
     "IntegrityClient",
@@ -37,4 +38,5 @@ __all__ = [
     "get_hardware_attestation",
     "get_virtualization_env",
     "IntegrityOpenAI",
+    "TrajectoryEvaluator",
 ]

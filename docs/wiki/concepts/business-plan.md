@@ -1,7 +1,7 @@
 ---
 title: Business Plan & Economics
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [tokenomics, compliance]
 confidence: high

@@ -111,6 +111,7 @@ p {
   font-family: 'JetBrains Mono', monospace;
   letter-spacing: -0.02em;
   font-weight: 500;
+  word-break: break-all;
 }
 
 /* Premium Scrollbars */
@@ -623,9 +624,10 @@ p {
   justify-content: space-between;
 }
 
-.flex-column {
+.flex-column, .flex-col {
   display: flex;
   flex-direction: column;
+  min-width: 0;
 }
 
 .gap-2 { gap: 8px; }
@@ -790,19 +792,19 @@ input, select, textarea {
 
 .dash-grid-4 {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
   gap: 24px;
 }
 
 .dash-grid-3 {
   display: grid;
-  grid-template-columns: repeat(3, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 350px), 1fr));
   gap: 32px;
 }
 
 .dash-grid-2 {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 450px), 1fr));
   gap: 32px;
 }
 

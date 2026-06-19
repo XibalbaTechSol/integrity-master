@@ -59,3 +59,14 @@ impl<P: Provider<Ethereum> + Clone> RollupDaemon<P> {
         Ok(receipt.transaction_hash.to_string())
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[test]
+    fn test_rollup_daemon_types() {
+        // Just verify struct layout and compile.
+        let _root = [0u8; 32];
+    }
+}

@@ -11,10 +11,10 @@
   --text-muted: #94a3b8;
   
   /* Accent colors */
-  --primary: #22d3ee;
-  --primary-dim: rgba(34, 211, 238, 0.15);
-  --gold: #f59e0b;
-  --gold-dim: rgba(245, 158, 11, 0.15);
+  --primary: #C9A84C;
+  --primary-dim: rgba(201, 168, 76, 0.15);
+  --gold: #C9A84C;
+  --gold-dim: rgba(201, 168, 76, 0.15);
   --success: #10b981;
   --success-dim: rgba(16, 185, 129, 0.15);
   --violet: #8b5cf6;
@@ -41,7 +41,7 @@
   --radius-xl: 24px;
   
   /* Shadows */
-  --shadow-glow-primary: 0 0 20px rgba(34, 211, 238, 0.1);
+  --shadow-glow-primary: 0 0 20px rgba(201, 168, 76, 0.1);
   --shadow-glow-gold: 0 0 20px rgba(245, 158, 11, 0.1);
   --shadow-glass: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   

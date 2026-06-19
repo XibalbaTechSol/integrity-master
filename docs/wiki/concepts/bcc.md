@@ -1,3 +1,10 @@
+---
+title: Bcc
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # BCC (Behavioral Commitment Chain)
 
 This page is a redirect to the core concept: [Behavioral Commitment Chain](behavioral-commitment-chain.md).

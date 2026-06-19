@@ -1,3 +1,10 @@
+---
+title: Did
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # Decentralized Identifier (DID) & Cryptographic Sovereignty
 
 A W3C-compliant **Decentralized Identifier (DID)** is the core credential standard of the Integrity Protocol, binding an agent's digital signature keys directly to its physical server host to guarantee verifiable execution non-repudiation.

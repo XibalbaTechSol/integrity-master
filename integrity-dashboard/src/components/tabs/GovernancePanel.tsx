@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Panel } from '../shared/Panel';
 import { Shield, ThumbsUp, ThumbsDown, CheckCircle, Clock } from 'lucide-react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { api } from '../../services/api';
 
 interface Proposal {
@@ -68,14 +68,14 @@ export function GovernancePanel() {
 
   useEffect(() => {
     api.getProposals()
-      .then((data: any[]) => {
+      .then((data) => {
         // Map backend schema to frontend schema
         const mappedProposals: Proposal[] = data.map(item => ({
-          id: item.proposal_id || item.id,
+          id: item.id,
           title: item.title,
           category: item.category,
           description: item.description,
-          status: item.status?.toLowerCase() === 'active' ? 'active' : item.status?.toLowerCase() === 'passed' ? 'passed' : 'rejected',
+          status: item.status?.toLowerCase() === 'passed' ? 'passed' : item.status?.toLowerCase() === 'failed' ? 'rejected' : 'active',
           votes_for: item.votes_for || Math.floor(Math.random() * 500000), // mock votes if missing
           votes_against: item.votes_against || Math.floor(Math.random() * 100000),
           created_at: item.created_at
@@ -106,7 +106,7 @@ export function GovernancePanel() {
     try {
       await api.voteProposal(id, type);
       addToast('success', `Vote cast successfully`);
-    } catch (err) {
+    } catch {
       // Simulate optimistic update if backend is offline
       addToast('success', `Vote cast locally (Offline Mode)`);
     }
@@ -139,9 +139,13 @@ export function GovernancePanel() {
     };
 
     try {
-      await api.createProposal(newProp);
+      await api.createProposal({
+        title: newTitle,
+        description: newDesc,
+        category: newCategory
+      });
       addToast('success', 'Proposal submitted to the network');
-    } catch (err) {
+    } catch {
       addToast('success', 'Proposal submitted locally (Offline Mode)');
     }
 
@@ -150,6 +154,7 @@ export function GovernancePanel() {
     setNewDesc('');
     setIsSubmitting(false);
   };
+
 
   const activeProposals = proposals.filter(p => p.status === 'active');
   const pastProposals = proposals.filter(p => p.status !== 'active');
@@ -212,20 +217,20 @@ export function GovernancePanel() {
         <Panel title="Create Proposal" icon={<Shield size={18} />}>
           <form className="flex-col gap-4" onSubmit={handleCreate}>
             <div className="form-group">
-              <label className="form-label">Title</label>
-              <input type="text" className="input" required value={newTitle} onChange={e => setNewTitle(e.target.value)} />
+              <label className="form-label" htmlFor="proposal-title">Title</label>
+              <input id="proposal-title" type="text" className="input" required value={newTitle} onChange={e => setNewTitle(e.target.value)} />
             </div>
             <div className="form-group">
-              <label className="form-label">Category</label>
-              <select className="select" value={newCategory} onChange={e => setNewCategory(e.target.value)}>
+              <label className="form-label" htmlFor="proposal-category">Category</label>
+              <select id="proposal-category" className="select" value={newCategory} onChange={e => setNewCategory(e.target.value)}>
                 <option value="protocol">Protocol Upgrade</option>
                 <option value="economic">Economic Parameter</option>
                 <option value="security">Security Adjustment</option>
               </select>
             </div>
             <div className="form-group">
-              <label className="form-label">Description & Rationale</label>
-              <textarea className="input" rows={4} required value={newDesc} onChange={e => setNewDesc(e.target.value)}></textarea>
+              <label className="form-label" htmlFor="proposal-desc">Description & Rationale</label>
+              <textarea id="proposal-desc" className="input" rows={4} required value={newDesc} onChange={e => setNewDesc(e.target.value)}></textarea>
             </div>
             <button type="submit" className="btn btn-primary" disabled={isSubmitting}>
               Submit Proposal (Requires 100 ITK Stake)

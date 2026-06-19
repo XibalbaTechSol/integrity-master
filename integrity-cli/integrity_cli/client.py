@@ -25,7 +25,7 @@ class IntegrityClient:
                 error_data = response.json()
                 detail = error_data.get("detail", str(e))
                 raise Exception(f"API Error: {detail}") from e
-            except:
+            except ValueError:
                 raise Exception(f"API Error: {response.status_code} {response.reason}") from e
         except Exception as e:
             raise Exception(f"Connection Error: {str(e)}") from e

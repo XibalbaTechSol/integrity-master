@@ -1,7 +1,7 @@
 ---
 title: Behavioral Commitment Chain (BCC) SDK Technical Specification
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [sdk, engineering, bcc, specification]
 confidence: high

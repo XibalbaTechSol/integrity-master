@@ -2,7 +2,7 @@
 title: AI-Proxy Optimism (Xibalba DAO)
 acronyms: [vITK]
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [tokenomics, layer-2, adversarial]
 confidence: high

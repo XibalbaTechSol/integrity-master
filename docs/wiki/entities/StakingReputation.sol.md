@@ -1,3 +1,11 @@
+---
+source_files: []
+title: Stakingreputation
+created: 2026-06-19
+updated: 2026-06-19
+type: entity
+confidence: low
+---
 # StakingReputation.sol (Accountability Ledger)
 
 To ensure Sovereign Agents have economic "skin in the game," this primitive acts as a dynamic accountability ledger.

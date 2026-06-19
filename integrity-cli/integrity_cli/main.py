@@ -21,6 +21,9 @@ app.add_typer(identity_app, name="identity")
 governance_app = typer.Typer(help="Protocol governance and proposals")
 app.add_typer(governance_app, name="governance")
 
+shield_app = typer.Typer(help="Xibalba Shield Compliance and Smart BAAs")
+app.add_typer(shield_app, name="shield")
+
 config_app = typer.Typer(help="Manage CLI configuration")
 app.add_typer(config_app, name="config")
 
@@ -329,38 +332,38 @@ def revoke_identity(
 @governance_app.command("proposals")
 def list_proposals():
     """List active governance proposals."""
-    # Note: Using trust_api.py logic for seeded proposals
     client = IntegrityClient()
     try:
-        # Assuming an endpoint for proposals, or using a known mockable one
-        # For now, let's use a placeholder if the endpoint isn't fully certain
         with console.status("[bold blue]Fetching proposals..."):
-            # Check if there's a governance endpoint in trust_api.py
-            # Based on previous grep, it wasn't obvious, but let's try /v1/protocol/settings or similar
-            # Actually, I'll assume /v1/governance/proposals or similar based on database seed
             proposals = client.get("/v1/governance/proposals")
         
         table = Table(title="Active Governance Proposals")
+        table.add_column("ID", style="dim")
         table.add_column("Title", style="cyan")
-        table.add_column("Category", style="yellow")
-        table.add_column("Risk", style="red")
-        table.add_column("Status", style="green")
+        table.add_column("Votes For", style="green")
+        table.add_column("Votes Against", style="red")
 
         for p in proposals:
             table.add_row(
+                p.get("id"),
                 p.get("title"),
-                p.get("category"),
-                p.get("risk_level"),
-                p.get("status")
+                str(p.get("votes_for")),
+                str(p.get("votes_against"))
             )
         console.print(table)
-    except Exception:
-        # Fallback for demo if endpoint not found
-        console.print("[yellow]Note: Governance API endpoint not found. Showing seeded local data concept.[/yellow]")
-        table = Table(title="Active Governance Proposals (Demo)")
-        table.add_row("Reduce SLA Performance Buffer", "Parameters", "MEDIUM", "ACTIVE")
-        table.add_row("Increase Slash Tax to 10%", "Tokenomics", "HIGH", "ACTIVE")
-        console.print(table)
+    except Exception as e:
+        console.print(f"[bold red]Error fetching proposals:[/bold red] {str(e)}")
+
+@governance_app.command("vote")
+def vote_proposal(proposal_id: str, vote_type: str = typer.Option(..., help="Vote 'for' or 'against'")):
+    """Vote on an active governance proposal."""
+    client = IntegrityClient()
+    try:
+        with console.status(f"[bold blue]Voting {vote_type} on proposal {proposal_id}..."):
+            client.post(f"/v1/governance/proposals/{proposal_id}/vote", json_data={"vote": vote_type})
+        console.print("[bold green]Vote cast successfully.[/bold green]")
+    except Exception as e:
+        console.print(f"[bold red]Error casting vote:[/bold red] {str(e)}")
 
 @governance_app.command("anchor")
 def anchor_state():
@@ -375,5 +378,81 @@ def anchor_state():
     except Exception as e:
         console.print(f"[bold red]Error:[/bold red] {str(e)}")
 
-if __name__ == "__main__":
+# --- Shield Commands ---
+
+@shield_app.command("baas")
+def list_baas():
+    """List active Smart BAAs."""
+    client = IntegrityClient()
+    try:
+        with console.status("[bold blue]Fetching Smart BAAs..."):
+            baas = client.get("/v1/shield/baas")
+        
+        table = Table(title="Smart BAA Registry")
+        table.add_column("ID", style="dim")
+        table.add_column("Business Associate", style="cyan")
+        table.add_column("Status", style="yellow")
+        table.add_column("Stake", style="magenta")
+
+        for b in baas:
+            table.add_row(
+                b.get("id"),
+                b.get("businessAssociate"),
+                b.get("status"),
+                b.get("stakedITK")
+            )
+        console.print(table)
+    except Exception as e:
+        console.print(f"[bold red]Error fetching BAAs:[/bold red] {str(e)}")
+
+@shield_app.command("propose")
+def propose_baa(hospital: str, agent: str, amount: str):
+    """Propose a new Smart BAA."""
+    client = IntegrityClient()
+    try:
+        with console.status("[bold blue]Proposing Smart BAA..."):
+            result = client.post("/v1/shield/baa/propose", json_data={
+                "covered_entity": hospital,
+                "business_associate": agent,
+                "stake_amount": amount,
+                "document_hash": "0xcli_generated_hash",
+                "uri": "ipfs://cli_uri"
+            })
+        console.print("[bold green]Smart BAA Proposed Successfully.[/bold green]")
+        console.print(f"BAA ID: [cyan]{result.get('baaId')}[/cyan]")
+    except Exception as e:
+        console.print(f"[bold red]Error proposing BAA:[/bold red] {str(e)}")
+
+@shield_app.command("queue")
+def compliance_queue():
+    """View pending HIPAA violations in the Compliance Review Queue."""
+    client = IntegrityClient()
+    try:
+        with console.status("[bold blue]Fetching Compliance Review Queue..."):
+            violations = client.get("/v1/shield/compliance/review-queue")
+        
+        if not violations:
+            console.print("[green]No pending violations. Queue is clear.[/green]")
+            return
+
+        table = Table(title="Compliance Review Queue")
+        table.add_column("ID", style="dim")
+        table.add_column("Time", style="cyan")
+        table.add_column("Type", style="red bold")
+        table.add_column("Agent", style="yellow")
+        table.add_column("Detail", style="white")
+
+        for v in violations:
+            table.add_row(
+                v.get("id"),
+                v.get("time"),
+                v.get("type"),
+                v.get("agent"),
+                v.get("detail")
+            )
+        console.print(table)
+    except Exception as e:
+        console.print(f"[bold red]Error fetching queue:[/bold red] {str(e)}")
+
+if __name__ == "__main__":  # pragma: no cover
     app()

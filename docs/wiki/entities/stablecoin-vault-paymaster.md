@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: StablecoinVaultPaymaster
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [tokenomics, layer-2]
 confidence: high

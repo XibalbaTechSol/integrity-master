@@ -1,11 +1,14 @@
 import { useState } from 'react';
 import { Panel } from '../shared/Panel';
-import { Lock, Coins, TrendingUp, AlertTriangle } from 'lucide-react';
-import { useDashboard } from '../../context/DashboardContext';
+import { Lock, Coins, TrendingUp, AlertTriangle, Loader2 } from 'lucide-react';
+import { useDashboard } from '../../context/useDashboard';
 import { api } from '../../services/api';
+import { ethers } from 'ethers';
+import { ITK_TOKEN_ADDRESS, INTEGRITY_PROTOCOL_ADDRESS, IS_PRODUCTION } from '../../constants';
+import ITK_ABI from '../abi/IntegrityToken.json';
 
 export function StakingPanel() {
-  const { selectedAgent, addToast, fetchData } = useDashboard();
+  const { selectedAgent, addToast, fetchData, walletAddress } = useDashboard();
   const [stakeAmount, setStakeAmount] = useState<string>('');
   const [isStaking, setIsStaking] = useState(false);
 
@@ -14,7 +17,30 @@ export function StakingPanel() {
     
     setIsStaking(true);
     try {
-      await api.stake(selectedAgent.eth_address, parseFloat(stakeAmount));
+      if (IS_PRODUCTION && (window as any).ethereum) {
+        const provider = new ethers.BrowserProvider((window as any).ethereum);
+        const signer = await provider.getSigner();
+        const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI.abi, signer);
+        
+        // 1. Check Allowance
+        const amount = ethers.parseEther(stakeAmount);
+        const allowance = await itkContract.allowance(walletAddress, INTEGRITY_PROTOCOL_ADDRESS);
+        
+        if (allowance < amount) {
+          addToast('info', 'Approving ITK for Protocol...');
+          const approveTx = await itkContract.approve(INTEGRITY_PROTOCOL_ADDRESS, amount);
+          await approveTx.wait();
+          addToast('success', 'Allowance granted');
+        }
+
+        // 2. Perform Stake (via API or direct contract call if we have Protocol ABI)
+        // For now, we'll assume the API triggers the protocol event or we can call direct if we add Protocol ABI
+        // Let's use the API as a coordinator for now as it records the action in the Oracle too.
+        await api.stake(selectedAgent.eth_address, parseFloat(stakeAmount));
+      } else {
+        await api.stake(selectedAgent.eth_address, parseFloat(stakeAmount));
+      }
+      
       addToast('success', `Successfully staked ${stakeAmount} ITK for ${selectedAgent.alias}`);
       setStakeAmount('');
       if (fetchData) await fetchData();
@@ -70,8 +96,9 @@ export function StakingPanel() {
             ) : (
               <>
                 <div className="form-group">
-                  <label className="form-label">Amount to Stake (ITK)</label>
+                  <label className="form-label" htmlFor="stake-amount">Amount to Stake (ITK)</label>
                   <input 
+                    id="stake-amount"
                     type="number" 
                     className="input" 
                     placeholder="Min. 100 ITK"

@@ -1,0 +1,222 @@
+[
+  {
+    "agent_id": "cf7b87eb-83bf-4efb-af88-13133838b512",
+    "eth_address": "0x4f5f802227094b8495de20b286e7c7f4ac420cc7",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 450,
+    "last_audit_id": null,
+    "gpu_hours_verified": 65.23,
+    "performance_entropy": 0.1500,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Sovereign_Slacker",
+      "owner_uid": "user_740",
+      "grounding_score": 316,
+      "staked_amount_itk": 526.0,
+      "verification_tier": 1
+    },
+    "owner_address": "0x21f1b07291a942a0ab8c21ebc288a42742af4fe2",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "a59aca5f-1aa8-4e09-9e34-480e32852192",
+    "eth_address": "0xebe3ce05ca104168b8fa0b7c04d9a2162311b748",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 820,
+    "last_audit_id": null,
+    "gpu_hours_verified": 184.82,
+    "performance_entropy": 0.0300,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Verified_Voyager",
+      "owner_uid": "user_681",
+      "grounding_score": 576,
+      "staked_amount_itk": 1123.0,
+      "verification_tier": 2
+    },
+    "owner_address": "0x0773093c13a04085b7cae10897d56fd914da9d00",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "74137937-78eb-48a3-ad66-b8b114ae9898",
+    "eth_address": "0x2a63879003f4425ea4df6a9cd7f025c7c9892ffe",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 1000,
+    "last_audit_id": null,
+    "gpu_hours_verified": 237.97,
+    "performance_entropy": 0.0050,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Institutional_Ironclad",
+      "owner_uid": "user_930",
+      "grounding_score": 840,
+      "staked_amount_itk": 1900.0,
+      "verification_tier": 3
+    },
+    "owner_address": "0x20cef96316ac4ca9abca7bcf299da2ee36539b1d",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "dadacd84-3454-463a-97eb-9dc83debee69",
+    "eth_address": "0xef4a36d457e942a5addaed9571c3f74cfd62aa4c",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 750,
+    "last_audit_id": null,
+    "gpu_hours_verified": 128.91,
+    "performance_entropy": 0.0500,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Quantum_Quill",
+      "owner_uid": "user_936",
+      "grounding_score": 763,
+      "staked_amount_itk": 1238.0,
+      "verification_tier": 2
+    },
+    "owner_address": "0x3c05487c3c584b0881e95eee5d5ae562ab506420",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "7a5ec8ad-d5ae-441d-b563-0b7095cdfff1",
+    "eth_address": "0x76f9be4ad925456d8be8b098e837dc9e323b2299",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 950,
+    "last_audit_id": null,
+    "gpu_hours_verified": 210.71,
+    "performance_entropy": 0.0100,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Cyber_Sentinel",
+      "owner_uid": "user_143",
+      "grounding_score": 867,
+      "staked_amount_itk": 1621.0,
+      "verification_tier": 3
+    },
+    "owner_address": "0xbfdb0eecf0bc4869b0d3d01d9c9aafb6fe5a1a50",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "6db2f307-c758-4b88-9b01-b739f830d5d8",
+    "eth_address": "0x70184817ff94446c9e47eb9e052867481d4a0979",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 300,
+    "last_audit_id": null,
+    "gpu_hours_verified": 135.99,
+    "performance_entropy": 0.2500,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Data_Drifter",
+      "owner_uid": "user_923",
+      "grounding_score": 572,
+      "staked_amount_itk": 597.0,
+      "verification_tier": 1
+    },
+    "owner_address": "0x271c9d9a61a34706a7fc1ff42ea2cb3ab51090fe",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "26bc9359-10f4-455e-88d7-0f4b2ebdac0a",
+    "eth_address": "0x2c073dbc21404637a040c9250e9315c6c37bdad7",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 880,
+    "last_audit_id": null,
+    "gpu_hours_verified": 380.70,
+    "performance_entropy": 0.0200,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Neural_Knight",
+      "owner_uid": "user_598",
+      "grounding_score": 739,
+      "staked_amount_itk": 1253.0,
+      "verification_tier": 2
+    },
+    "owner_address": "0xd8a39bfdef3b480db1f814ebf53ab6d1f8f95283",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "4e3921ba-4bdd-4482-a995-fc82fe670749",
+    "eth_address": "0xce16199816784818a6893aa9490aff342256462e",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 990,
+    "last_audit_id": null,
+    "gpu_hours_verified": 116.79,
+    "performance_entropy": 0.0080,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Ghost_Protocol",
+      "owner_uid": "user_374",
+      "grounding_score": 521,
+      "staked_amount_itk": 1583.0,
+      "verification_tier": 3
+    },
+    "owner_address": "0x14813e2d8abe47199d99995d737db5d667e36f0d",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "378f563f-e511-4a13-97e2-52c15602c875",
+    "eth_address": "0xebcd2848b9d642bf83ab6494dc67ca9edfe57925",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 550,
+    "last_audit_id": null,
+    "gpu_hours_verified": 41.15,
+    "performance_entropy": 0.1200,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Binary_Bard",
+      "owner_uid": "user_968",
+      "grounding_score": 628,
+      "staked_amount_itk": 724.0,
+      "verification_tier": 1
+    },
+    "owner_address": "0x086effcad7f941f0a92da0d06474542848d413ba",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  },
+  {
+    "agent_id": "9bc7c7bb-59af-4053-8673-5d6f249e7ddf",
+    "eth_address": "0xa3f8beacad30471a8512dffab90cae54015060d9",
+    "registration_date": "2026-06-11T11:48:35.960846-05:00",
+    "last_active_at": "2026-06-11T11:48:35.960846-05:00",
+    "current_ais": 790,
+    "last_audit_id": null,
+    "gpu_hours_verified": 458.84,
+    "performance_entropy": 0.0400,
+    "penalty_points": 0.00,
+    "is_active": true,
+    "metadata": {
+      "alias": "Silicon_Sage",
+      "owner_uid": "user_483",
+      "grounding_score": 749,
+      "staked_amount_itk": 1383.0,
+      "verification_tier": 2
+    },
+    "owner_address": "0x72bce44e190a4e5380e9f3c0a612fb33ef8ca928",
+    "staked_itk": 0.0000,
+    "insurance_pool_contribution": 0.0000
+  }
+]

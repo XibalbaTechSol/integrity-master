@@ -1,13 +1,16 @@
 import { useState } from 'react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { Panel } from '../shared/Panel';
-import { Key, Users, ShieldCheck } from 'lucide-react';
+import { Key, Users, ShieldCheck, Search, Link as LinkIcon } from 'lucide-react';
 import { DIDExplorer } from '../legacy-ui/DIDExplorer';
 import { AgentOnboarding } from '../legacy-ui/AgentOnboarding';
+import { XNSSearchService } from '../legacy-ui/XNSSearchService';
+import { ClaimAgentModal } from './ClaimAgentModal';
 
 export function IdentityPanel() {
   const { selectedAgent, fetchData } = useDashboard();
   const [isRegisterModalOpen, setIsRegisterModalOpen] = useState(false);
+  const [isClaimModalOpen, setIsClaimModalOpen] = useState(false);
 
   return (
     <div className="flex-col gap-6">
@@ -25,20 +28,36 @@ export function IdentityPanel() {
         </div>
 
         <div className="flex-col gap-6">
-          <Panel title="Register New Agent" icon={<Users size={18} />}>
+          <Panel title="XNS Search Service" icon={<Search size={18} />}>
+            <XNSSearchService />
+          </Panel>
+
+          <Panel title="Identity Management" icon={<Users size={18} />}>
             <div className="flex-col gap-4">
                <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-                  Deploy a new autonomous agent identity to the network using our interactive secure onboarding flow.
+                  Manage your autonomous agent identities. You can either deploy a new identity or claim ownership of an existing one.
                </p>
-               <button className="btn btn-success" onClick={() => setIsRegisterModalOpen(true)}>
-                 <ShieldCheck size={16} /> Open Registration Flow
-               </button>
+               <div className="flex gap-3">
+                 <button className="btn btn-primary" onClick={() => setIsRegisterModalOpen(true)} style={{ flex: 1 }}>
+                   <ShieldCheck size={16} style={{ marginRight: '8px' }} /> Register New
+                 </button>
+                 <button className="btn btn-outline" onClick={() => setIsClaimModalOpen(true)} style={{ flex: 1 }}>
+                   <LinkIcon size={16} style={{ marginRight: '8px' }} /> Claim Existing
+                 </button>
+               </div>
             </div>
             {isRegisterModalOpen && (
                <AgentOnboarding 
                  isOpen={isRegisterModalOpen} 
                  onClose={() => setIsRegisterModalOpen(false)} 
                  onSuccess={() => { setIsRegisterModalOpen(false); fetchData(); }} 
+               />
+            )}
+            {isClaimModalOpen && (
+               <ClaimAgentModal 
+                 isOpen={isClaimModalOpen} 
+                 onClose={() => setIsClaimModalOpen(false)} 
+                 onSuccess={() => { setIsClaimModalOpen(false); fetchData(); }} 
                />
             )}
           </Panel>

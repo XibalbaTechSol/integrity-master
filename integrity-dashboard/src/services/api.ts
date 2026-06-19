@@ -4,11 +4,86 @@ import type {
   Agent, ProtocolStats, OwnedContract,
   ReputationPoint,
   DIDDocument,
-  MarketTask
+  MarketTask,
+  CreditProfile,
+  GovernanceProposal,
+  ZKProof,
+  ProvenanceEntry,
+  TelemetryReport
 } from '../types';
 
 const BASE_URL = `${API_BASE}/v1`;
 
+export interface RegisterAgentData {
+  eth_address: string;
+  alias: string;
+  model_class: string;
+}
+
+export interface ClaimContractData {
+  contract_address: string;
+  claim_type: string;
+}
+
+export interface DeployContractData {
+  contract_type: string;
+  params: Record<string, unknown>;
+}
+
+export interface ListMarketContractData {
+  contract_address: string;
+  price_itk: number;
+}
+
+export interface BorrowData {
+  amount: number;
+  collateral_contracts: string[];
+  term_days?: number;
+}
+
+export interface RepayData {
+  loan_id: string;
+  amount: number;
+}
+
+export interface FundTaskWithLoanData {
+  creator_agent_id: string;
+  task_id?: string;
+  title: string;
+  reward_itk: number;
+  min_ais_required: number;
+  description: string;
+  auction_duration_sec: number;
+}
+
+export interface CreateProposalData {
+  title: string;
+  description: string;
+  category: string;
+}
+
+export interface CreateMarketTaskData {
+  creator_agent_id: string;
+  title: string;
+  description: string;
+  reward_itk: number;
+  min_ais_required: number;
+  auction_duration_sec: number;
+}
+
+export interface BidOnTaskData {
+  task_id: string;
+  bidder_agent_address: string;
+  bid_amount_itk: number;
+}
+
+export interface StabilityBenchmark {
+  model_name: string;
+  provider_name: string;
+  simulated_ais: number;
+  stability_metric: number;
+  grounding_metric: number;
+}
 
 class ApiService {
   private async fetch<T>(endpoint: string): Promise<T> {
@@ -38,17 +113,25 @@ class ApiService {
     return this.post(`/agent/${address}/identity/challenge`, { claimAddress });
   }
 
-  async claimOwnership(address: string, data: any): Promise<any> {
+  async claimOwnership(address: string, data: Record<string, unknown>): Promise<{ status: string }> {
     return this.post(`/agent/${address}/identity/claim`, data);
   }
 
-  async registerAgent(data: any): Promise<any> {
+  async registerAgent(data: RegisterAgentData): Promise<Agent> {
     return this.post('/agent/register', data);
   }
 
   // --- Auth / Keys ---
-  async generateApiKey(): Promise<{ api_key: string }> {
-    return this.post('/api-keys/generate', {});
+  async getApiKeys(): Promise<any[]> {
+    return this.fetch('/api-keys');
+  }
+
+  async generateApiKey(expirationDays?: number): Promise<{ api_key: string, expires_at: string }> {
+    return this.post('/api-keys/generate', { expiration_days: expirationDays });
+  }
+
+  async deleteApiKey(key: string): Promise<{ status: string }> {
+    return this.post(`/api-keys/delete`, { api_key: key });
   }
 
   // --- Protocol Stats ---
@@ -65,32 +148,32 @@ class ApiService {
     return this.fetch('/contracts/ledger');
   }
 
-  async claimContract(address: string, data: any): Promise<any> {
+  async claimContract(address: string, data: ClaimContractData): Promise<{ status: string }> {
     return this.post(`/agent/${address}/contracts/claim`, data);
   }
 
-  async deployContract(data: any): Promise<{ contract_address: string, status: string }> {
+  async deployContract(data: DeployContractData): Promise<{ contract_address: string, status: string }> {
     return this.post('/contracts/factory/deploy', data);
   }
 
-  async listMarketContract(data: any): Promise<any> {
+  async listMarketContract(data: ListMarketContractData): Promise<{ status: string }> {
     return this.post('/contracts/list-market', data);
   }
 
   // --- Loans ---
-  async getCreditProfile(address: string): Promise<any> {
+  async getCreditProfile(address: string): Promise<CreditProfile> {
     return this.fetch(`/agent/${address}/credit/profile`);
   }
 
-  async borrow(address: string, data: any): Promise<any> {
+  async borrow(address: string, data: BorrowData): Promise<{ loan_id: string, status: string }> {
     return this.post(`/agent/${address}/credit/borrow`, data);
   }
 
-  async repay(address: string, data: any): Promise<any> {
+  async repay(address: string, data: RepayData): Promise<{ status: string }> {
     return this.post(`/agent/${address}/credit/repay`, data);
   }
 
-  async fundTaskWithLoan(data: any): Promise<any> {
+  async fundTaskWithLoan(data: FundTaskWithLoanData): Promise<{ status: string, task_id: string }> {
     return this.post('/market/task/fund-with-loan', data);
   }
 
@@ -100,25 +183,25 @@ class ApiService {
   }
 
   // --- ZK Proofs ---
-  async generateZKProof(address: string, data: any): Promise<any> {
+  async generateZKProof(address: string, data: Record<string, unknown>): Promise<ZKProof> {
     return this.post(`/agent/${address}/zk/generate-proof`, data);
   }
 
   // --- Governance ---
-  async getProposals(): Promise<any[]> {
+  async getProposals(): Promise<GovernanceProposal[]> {
     return this.fetch('/governance/proposals');
   }
 
-  async createProposal(data: any): Promise<any> {
+  async createProposal(data: CreateProposalData): Promise<GovernanceProposal> {
     return this.post('/governance/proposals', data);
   }
 
-  async voteProposal(id: string, vote: string): Promise<any> {
+  async voteProposal(id: string, vote: string): Promise<{ status: string }> {
     return this.post(`/governance/proposals/${id}/vote`, { vote });
   }
 
   // --- Staking ---
-  async stake(address: string, amount_itk: number): Promise<any> {
+  async stake(address: string, amount_itk: number): Promise<{ status: string, staked_amount: number }> {
     return this.post(`/agent/${address}/stake`, { amount_itk });
   }
 
@@ -127,29 +210,29 @@ class ApiService {
     return this.fetch('/market/tasks');
   }
 
-  async createMarketTask(data: any): Promise<any> {
+  async createMarketTask(data: CreateMarketTaskData): Promise<MarketTask> {
     return this.post('/market/task/create', data);
   }
 
-  async bidOnTask(data: any): Promise<any> {
+  async bidOnTask(data: BidOnTaskData): Promise<{ status: string }> {
     return this.post('/market/task/bid', data);
   }
 
-  async settleAuction(taskId: string): Promise<any> {
+  async settleAuction(taskId: string): Promise<{ status: string }> {
     return this.post('/market/task/settle', { task_id: taskId });
   }
 
   // --- Advanced / Provenance ---
-  async getProvenance(address: string): Promise<any[]> {
+  async getProvenance(address: string): Promise<ProvenanceEntry[]> {
     return this.fetch(`/agent/${address}/provenance`);
   }
 
   // --- Stability Benchmarks ---
-  async getBenchmarks(): Promise<any[]> {
+  async getBenchmarks(): Promise<StabilityBenchmark[]> {
     return this.fetch(`/stability/benchmarks`);
   }
 
-  async requestAudit(address: string, type: string): Promise<any> {
+  async requestAudit(address: string, type: string): Promise<{ status: string, audit_id: string }> {
     return this.post('/audit/request', { agent_address: address, audit_type: type });
   }
 
@@ -158,12 +241,37 @@ class ApiService {
     return this.fetch(`/wallet/${address}/balance`);
   }
 
-  async transferTokens(from: string, to: string, amount: number): Promise<any> {
+  async transferTokens(from: string, to: string, amount: number): Promise<{ status: string, tx_hash: string }> {
     return this.post('/wallet/transfer', { from_address: from, to_address: to, amount_itk: amount });
   }
 
+  // --- Shield / Smart BAA ---
+  async getBAAs(): Promise<any[]> {
+    return this.fetch('/shield/baas');
+  }
+
+  async proposeBAA(data: any): Promise<any> {
+    return this.post('/shield/baa/propose', data);
+  }
+
+  async signBAA(baaId: string, signature: string): Promise<any> {
+    return this.post(`/shield/baa/${baaId}/sign`, { signature });
+  }
+
+  async getShieldInteractions(): Promise<any[]> {
+    return this.fetch('/shield/interactions');
+  }
+
+  async getComplianceReviewQueue(): Promise<any[]> {
+    return this.fetch('/shield/compliance/review-queue');
+  }
+
+  async resolveComplianceViolation(id: string, action: 'finalize_slash' | 'dismiss'): Promise<any> {
+    return this.post(`/shield/compliance/resolve`, { violation_id: id, action });
+  }
+
   // --- Telemetry ---
-  async reportTelemetry(data: any): Promise<any> {
+  async reportTelemetry(data: TelemetryReport): Promise<{ status: string }> {
     return this.post('/transactions/report', data);
   }
 }

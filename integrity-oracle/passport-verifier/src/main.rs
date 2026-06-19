@@ -146,3 +146,22 @@ async fn create_eip712_attestation(address: EthersAddress) -> Result<Signature, 
 
     Ok(signature)
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    #[tokio::test]
+    async fn test_query_gitcoin_passport() {
+        let addr = EthersAddress::from_str("0x0000000000000000000000000000000000000000").unwrap();
+        let res = query_gitcoin_passport(addr).await;
+        assert_eq!(res.unwrap(), 30);
+    }
+
+    #[tokio::test]
+    async fn test_create_eip712_attestation_no_env() {
+        let addr = EthersAddress::from_str("0x0000000000000000000000000000000000000000").unwrap();
+        let res = create_eip712_attestation(addr).await;
+        assert!(res.is_err());
+    }
+}

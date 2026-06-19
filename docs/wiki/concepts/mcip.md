@@ -1,3 +1,10 @@
+---
+title: Mcip
+created: 2026-06-19
+updated: 2026-06-19
+type: concept
+confidence: low
+---
 # MCIP (Model Contextual Integrity Protocol)
 
 This page is a redirect to the core concept: [Model Contextual Integrity Protocol](model-contextual-integrity-protocol.md).

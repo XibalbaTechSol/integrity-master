@@ -49,7 +49,6 @@ class IntegrityClient:
         api_domain_prefix: Optional[str] = None,
         bcc_middleware_url: Optional[str] = None,
         framework_url: Optional[str] = None,
-        framework_url: Optional[str] = None,
         domain_id: str = "global",
         mode: str = "production",
         api_key: Optional[str] = None,
@@ -1192,6 +1191,83 @@ class IntegrityClient:
 
     # --- Institutional & Economic Expansion ---
 
+    # --- Auth & Keys ---
+    def get_api_keys(self) -> list:
+        """Retrieves a list of active API keys."""
+        url = f"{self._get_base_url()}/v1/api-keys"
+        response = requests.get(url, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+        
+    def delete_api_key(self, api_key: str) -> dict:
+        """Deletes a specific API key."""
+        url = f"{self._get_base_url()}/v1/api-keys/delete"
+        response = requests.post(url, json={"api_key": api_key}, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+
+    # --- Shield / Smart BAAs ---
+    def get_baas(self) -> list:
+        """Retrieves a list of Smart BAAs."""
+        url = f"{self._get_base_url()}/v1/shield/baas"
+        response = requests.get(url, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+        
+    def propose_baa(self, covered_entity: str, document_hash: str, stake_amount: float, uri: str, signature: str = None) -> dict:
+        """Proposes a new Smart BAA."""
+        url = f"{self._get_base_url()}/v1/shield/baa/propose"
+        payload = {
+            "covered_entity": covered_entity,
+            "business_associate": self._evm_address,
+            "document_hash": document_hash,
+            "stake_amount": stake_amount,
+            "uri": uri
+        }
+        if signature:
+            payload["signature"] = signature
+        response = requests.post(url, json=payload, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+        
+    def get_shield_interactions(self) -> list:
+        """Retrieves Medical Record Interaction Logs."""
+        url = f"{self._get_base_url()}/v1/shield/interactions"
+        response = requests.get(url, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+        
+    def get_compliance_review_queue(self) -> list:
+        """Retrieves pending HIPAA violations for manual review."""
+        url = f"{self._get_base_url()}/v1/shield/compliance/review-queue"
+        response = requests.get(url, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+
+    # --- Governance ---
+    def get_proposals(self) -> list:
+        """Retrieves a list of active governance proposals."""
+        url = f"{self._get_base_url()}/v1/governance/proposals"
+        response = requests.get(url, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+        
+    def vote_proposal(self, proposal_id: str, vote_type: str) -> dict:
+        """Casts a vote on a governance proposal."""
+        url = f"{self._get_base_url()}/v1/governance/proposals/{proposal_id}/vote"
+        response = requests.post(url, json={"vote": vote_type}, timeout=10.0)
+        response.raise_for_status()
+        return response.json()
+        
+    # --- ZK Proofs ---
+    def generate_zk_proof(self, proof_type: str = "ais_threshold") -> dict:
+        """Generates a cryptographic ZK-SNARK proof for an agent."""
+        url = f"{self._get_base_url()}/v1/agent/{self._evm_address}/zk/generate-proof"
+        response = requests.post(url, json={"type": proof_type}, timeout=20.0) # ZK proofs might take longer
+        response.raise_for_status()
+        return response.json()
+
+    # --- Staking ---
     def stake_itk(self, amount: float) -> dict:
         """Stakes ITK tokens for the current agent."""
         url = f"{self._get_base_url()}/v1/agent/{self._evm_address}/stake"

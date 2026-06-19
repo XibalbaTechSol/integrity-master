@@ -1,16 +1,21 @@
 import { useState } from 'react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { Panel } from '../shared/Panel';
 import { ShieldCheck, Cpu, RefreshCw } from 'lucide-react';
 import { api } from '../../services/api';
 import { TransactionStepper } from '../shared/TransactionStepper';
 import type { Step } from '../shared/TransactionStepper';
 
+interface ZKProofResult {
+  proof_hash: string;
+  proof_data: string;
+}
+
 export function ZKProverPanel() {
   const { selectedAgent, addToast } = useDashboard();
   const [proofType, setProofType] = useState('ais_threshold');
   const [isProving, setIsProving] = useState(false);
-  const [proofResult, setProofResult] = useState<any>(null);
+  const [proofResult, setProofResult] = useState<ZKProofResult | null>(null);
 
   const [steps, setSteps] = useState<Step[]>([
     { id: 'witness', label: 'Computing Private Witness...', status: 'pending' },
@@ -31,13 +36,15 @@ export function ZKProverPanel() {
     setProofResult(null);
     setSteps(steps.map(s => ({ ...s, status: 'pending' })));
 
+    const delay = (ms: number) => new Promise(r => setTimeout(r, import.meta.env.MODE === 'test' ? 0 : ms));
+
     try {
       updateStep('witness', 'loading');
-      await new Promise(r => setTimeout(r, 1000));
+      await delay(1000);
       updateStep('witness', 'completed');
 
       updateStep('compile', 'loading');
-      await new Promise(r => setTimeout(r, 1500));
+      await delay(1500);
       updateStep('compile', 'completed');
 
       updateStep('prove', 'loading');
@@ -45,17 +52,17 @@ export function ZKProverPanel() {
       updateStep('prove', 'completed');
 
       updateStep('verify', 'loading');
-      await new Promise(r => setTimeout(r, 1200));
-      setProofResult(res.proof);
+      await delay(1200);
+      setProofResult(res);
       updateStep('verify', 'completed');
 
       addToast('success', 'Zero-knowledge proof generated successfully');
-    } catch (err) {
+    } catch {
       console.warn('Backend offline. Falling back to local simulated proof.');
       
       updateStep('prove', 'completed');
       updateStep('verify', 'loading');
-      await new Promise(r => setTimeout(r, 1000));
+      await delay(1000);
       updateStep('verify', 'completed');
 
       setProofResult({
@@ -80,8 +87,8 @@ export function ZKProverPanel() {
           </div>
           
           <div className="form-group">
-            <label className="form-label">Proof Type</label>
-            <select className="select" value={proofType} onChange={e => setProofType(e.target.value)}>
+            <label className="form-label" htmlFor="proof-type">Proof Type</label>
+            <select id="proof-type" className="select" value={proofType} onChange={e => setProofType(e.target.value)}>
               <option value="ais_threshold">AIS Score Above Threshold</option>
               <option value="accuracy_check">Historical Accuracy Valid</option>
               <option value="contract_owner">Owns Specific Contract</option>

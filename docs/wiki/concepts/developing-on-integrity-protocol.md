@@ -1,7 +1,7 @@
 ---
 title: Developing on top of the Integrity Protocol (10 MVPs & Scenarios)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [development, sdk, blueprints]
 confidence: high

@@ -1,146 +1,201 @@
 // SPDX-License-Identifier: MIT
-pragma solidity ^0.8.20;
+pragma solidity ^0.8.28;
 
 import "forge-std/Test.sol";
-import "../src/SmartBAA.sol";
-import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
-
-contract MockITK is ERC20 {
-    constructor() ERC20("Integrity Token", "ITK") {
-        _mint(msg.sender, 1000000 * 10**18);
-    }
-}
+import "../src/shield/SmartBAA.sol";
+import "../src/shield/StakingReputation.sol";
+import "./mocks/MockERC20.sol";
+import "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 
 contract SmartBAATest is Test {
-    SmartBAA public smartBaa;
-    MockITK public itk;
-    
-    address public coveredEntity = address(0x1);
-    address public businessAssociate = address(0x2);
-    address public oracle = address(0x3);
-    address public controller = address(0x4);
-    
-    bytes32 public documentHash = keccak256("HIPAA_BAA_TEXT_V1");
-    string public uri = "https://xibalba.io/baa/v1";
-    uint256 public stakeAmount = 1000 * 10**18;
+    SmartBAA public baaIsolated;
+    SmartBAA public baaPooled;
+    MockERC20 public token;
+    StakingReputation public vault;
 
-    bytes32 public DOMAIN_SEPARATOR;
-    bytes32 public constant BAA_TYPEHASH = keccak256(
-        "BAA(address coveredEntity,address businessAssociate,bytes32 documentHash,string uri,uint256 stakedITK,address controller)"
-    );
+    address public ce = address(1);
+    address public ba = address(2);
+    address public notRelated = address(3);
+
+    event BAASigned(address indexed ba, SmartBAA.EscrowType escrowType);
+    event BAARevoked(address indexed ce);
+    event Slashed(address indexed ba, uint256 amount);
 
     function setUp() public {
-        itk = new MockITK();
-        smartBaa = new SmartBAA(address(itk), oracle);
-        
-        // Setup initial balance for BA
-        itk.transfer(businessAssociate, 10000 * 10**18);
-        
-        vm.prank(businessAssociate);
-        itk.approve(address(smartBaa), type(uint256).max);
+        token = new MockERC20();
+        vault = new StakingReputation(address(token));
 
-        // The EIP712 contract exposes a DOMAIN_SEPARATOR() function
-        DOMAIN_SEPARATOR = smartBaa.DOMAIN_SEPARATOR();
+        baaIsolated = new SmartBAA(
+            ce,
+            ba,
+            "hash",
+            bytes32(0),
+            1000,
+            address(token),
+            address(vault)
+        );
+
+        baaPooled = new SmartBAA(
+            ce,
+            ba,
+            "hash",
+            bytes32(0),
+            1000,
+            address(token),
+            address(vault)
+        );
+
+        token.mint(ba, 10000);
+        vm.startPrank(ba);
+        token.approve(address(baaIsolated), type(uint256).max);
+        token.approve(address(vault), type(uint256).max);
+        vault.stake(5000);
+        vm.stopPrank();
+
+        vault.setAuthorizedBAA(address(baaPooled), true);
     }
 
-    function testProposeBAA() public {
-        vm.prank(businessAssociate);
-        bytes32 baaId = smartBaa.proposeBAA(coveredEntity, documentHash, uri, stakeAmount, controller);
-        
-        (address ce, address ba, bytes32 hash, string memory u, SmartBAA.BAAStatus status, uint256 stake, uint256 dispute, address ctrl) = smartBaa.baas(baaId);
-        
-        assertEq(ce, coveredEntity);
-        assertEq(ba, businessAssociate);
-        assertEq(hash, documentHash);
-        assertEq(u, uri);
-        assertEq(uint(status), uint(SmartBAA.BAAStatus.Pending));
-        assertEq(stake, stakeAmount);
-        assertEq(dispute, 0);
-        assertEq(ctrl, controller);
-        assertEq(itk.balanceOf(address(smartBaa)), stakeAmount);
+    function testSignBAAIsolated() public {
+        vm.prank(ba);
+        vm.expectEmit(true, false, false, true);
+        emit BAASigned(ba, SmartBAA.EscrowType.ISOLATED);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+
+        assertTrue(baaIsolated.isActive());
+        assertEq(token.balanceOf(address(baaIsolated)), 1000);
     }
 
-    function testSignBAA() public {
-        // Private key 1 corresponds to address(vm.addr(1))
-        address ceAddress = vm.addr(1);
+    function testSignBAAPooled() public {
+        vm.prank(ba);
+        vm.expectEmit(true, false, false, true);
+        emit BAASigned(ba, SmartBAA.EscrowType.POOLED);
+        baaPooled.signBAA(SmartBAA.EscrowType.POOLED);
 
-        vm.prank(businessAssociate);
-        bytes32 baaId = smartBaa.proposeBAA(ceAddress, documentHash, uri, stakeAmount, controller);
+        assertTrue(baaPooled.isActive());
+        assertEq(vault.totalPledgedLiability(ba), 1000);
+    }
 
-        // Generate EIP-712 signature for Covered Entity
-        bytes32 structHash = keccak256(abi.encode(
-            BAA_TYPEHASH,
-            ceAddress,
-            businessAssociate,
-            documentHash,
-            keccak256(bytes(uri)),
-            stakeAmount,
-            controller
-        ));
+    function testSignBAANotBA() public {
+        vm.prank(notRelated);
+        vm.expectRevert("Only Business Associate");
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+    }
 
-        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, structHash));
+    function testSignBAAAlreadyActive() public {
+        vm.startPrank(ba);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+
+        vm.expectRevert("Already active");
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+        vm.stopPrank();
+    }
+
+    function testRevokeIsolated() public {
+        vm.prank(ba);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+
+        uint256 balBefore = token.balanceOf(ba);
+        vm.prank(ce);
+        vm.expectEmit(true, false, false, false);
+        emit BAARevoked(ce);
+        baaIsolated.revoke();
+
+        assertFalse(baaIsolated.isActive());
+        assertEq(token.balanceOf(ba), balBefore + 1000);
+    }
+
+    function testRevokeIsolatedNoBalance() public {
+        SmartBAA baaZero = new SmartBAA(ce, ba, "hash", bytes32(0), 0, address(token), address(vault));
+        vm.prank(ba);
+        baaZero.signBAA(SmartBAA.EscrowType.ISOLATED);
         
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(1, digest);
-        bytes memory signature = abi.encodePacked(r, s, v);
-
-        vm.prank(ceAddress);
-        smartBaa.signBAA(baaId, signature);
-
-        assertEq(uint(smartBaa.getBAAStatus(ceAddress, businessAssociate)), uint(SmartBAA.BAAStatus.Active));
+        vm.prank(ce);
+        baaZero.revoke();
+        assertFalse(baaZero.isActive());
     }
 
-    function testSlashAndRevoke() public {
-        // Private key 1 corresponds to address(vm.addr(1))
-        address ceAddress = vm.addr(1);
+    function testRevokePooled() public {
+        vm.prank(ba);
+        baaPooled.signBAA(SmartBAA.EscrowType.POOLED);
 
-        // Setup signed BAA
-        vm.prank(businessAssociate);
-        bytes32 baaId = smartBaa.proposeBAA(ceAddress, documentHash, uri, stakeAmount, controller);
+        vm.prank(ce);
+        baaPooled.revoke();
 
-        bytes32 structHash = keccak256(abi.encode(
-            BAA_TYPEHASH,
-            ceAddress,
-            businessAssociate,
-            documentHash,
-            keccak256(bytes(uri)),
-            stakeAmount,
-            controller
-        ));
-        bytes32 digest = keccak256(abi.encodePacked("\x19\x01", DOMAIN_SEPARATOR, structHash));
-        (uint8 v, bytes32 r, bytes32 s) = vm.sign(1, digest);
-        bytes memory signature = abi.encodePacked(r, s, v);
-
-        vm.prank(ceAddress);
-        smartBaa.signBAA(baaId, signature);
-
-        // Oracle initiates slash
-        vm.prank(oracle);
-        smartBaa.initiateSlash(baaId, "PHI_EXFILTRATION_DETECTED");
-        assertEq(uint(smartBaa.getBAAStatus(ceAddress, businessAssociate)), uint(SmartBAA.BAAStatus.Breached));
-
-        // Try to finalize early
-        vm.expectRevert("Dispute window still open");
-        smartBaa.finalizeSlash(baaId);
-
-        // Fast forward 3 days
-        vm.warp(block.timestamp + 3 days + 1);
-
-        uint256 ceInitialBalance = itk.balanceOf(ceAddress);
-        smartBaa.finalizeSlash(baaId);
-
-        assertEq(itk.balanceOf(ceAddress), ceInitialBalance + stakeAmount);
-        assertEq(itk.balanceOf(address(smartBaa)), 0);
+        assertFalse(baaPooled.isActive());
+        assertEq(vault.totalPledgedLiability(ba), 0);
     }
 
-    function testRecovery() public {
-        vm.prank(businessAssociate);
-        bytes32 baaId = smartBaa.proposeBAA(coveredEntity, documentHash, uri, stakeAmount, controller);
+    function testRevokeNotCE() public {
+        vm.prank(ba);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
 
-        address newBA = address(0x5);
-        vm.prank(controller);
-        smartBaa.recoverBusinessAssociate(baaId, newBA);
+        vm.prank(notRelated);
+        vm.expectRevert("Only Covered Entity");
+        baaIsolated.revoke();
+    }
 
-        (, address ba,,,,,,) = smartBaa.baas(baaId);
-        assertEq(ba, newBA);
+    function testRevokeNotActive() public {
+        vm.prank(ce);
+        vm.expectRevert("Already inactive");
+        baaIsolated.revoke();
+    }
+
+    function testSlashIsolated() public {
+        vm.prank(ba);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+
+        uint256 balBefore = token.balanceOf(ce);
+        vm.prank(ce);
+        vm.expectEmit(true, false, false, true);
+        emit Slashed(ba, 1000);
+        baaIsolated.slash();
+
+        assertFalse(baaIsolated.isActive());
+        assertEq(token.balanceOf(ce), balBefore + 1000);
+    }
+
+    function testSlashIsolatedInsufficient() public {
+        vm.prank(ba);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+        
+        vm.mockCall(
+            address(token),
+            abi.encodeWithSelector(IERC20.balanceOf.selector, address(baaIsolated)),
+            abi.encode(0)
+        );
+
+        vm.prank(ce);
+        vm.expectRevert("Insufficient isolated collateral");
+        baaIsolated.slash();
+    }
+
+    function testSlashPooled() public {
+        vm.prank(ba);
+        baaPooled.signBAA(SmartBAA.EscrowType.POOLED);
+
+        uint256 balBefore = token.balanceOf(ce);
+        vm.prank(ce);
+        vm.expectEmit(true, false, false, true);
+        emit Slashed(ba, 1000);
+        baaPooled.slash();
+
+        assertFalse(baaPooled.isActive());
+        assertEq(vault.totalPledgedLiability(ba), 0);
+        assertEq(token.balanceOf(ce), balBefore + 1000);
+    }
+
+    function testSlashNotActive() public {
+        vm.prank(ce);
+        vm.expectRevert("BAA not active");
+        baaIsolated.slash();
+    }
+
+    function testSlashNotCE() public {
+        vm.prank(ba);
+        baaIsolated.signBAA(SmartBAA.EscrowType.ISOLATED);
+
+        vm.prank(notRelated);
+        vm.expectRevert("Only Covered Entity");
+        baaIsolated.slash();
     }
 }

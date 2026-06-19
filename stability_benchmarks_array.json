@@ -1,0 +1,23 @@
+[
+  {
+    "model_name": "GPT-4o",
+    "provider_name": "OpenAI",
+    "simulated_ais": 982,
+    "stability_metric": 0.985,
+    "grounding_metric": 0.972
+  },
+  {
+    "model_name": "Claude 3.5 Sonnet",
+    "provider_name": "Anthropic",
+    "simulated_ais": 978,
+    "stability_metric": 0.981,
+    "grounding_metric": 0.965
+  },
+  {
+    "model_name": "Gemini 1.5 Pro",
+    "provider_name": "Google",
+    "simulated_ais": 985,
+    "stability_metric": 0.988,
+    "grounding_metric": 0.982
+  }
+]

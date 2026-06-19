@@ -1,10 +1,11 @@
 import React from 'react';
-import { useDashboard } from '../../context/DashboardContext';
-import { Shield, Wallet, Server, RefreshCw, AlertTriangle } from 'lucide-react';
+import { useDashboard } from '../../context/useDashboard';
+import { Shield, Wallet, Server, RefreshCw, AlertTriangle, Globe } from 'lucide-react';
 
 export function Topbar() {
   const { walletAddress, connectWallet, fetchData, isBackendOffline } = useDashboard();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
+  const [domain, setDomain] = React.useState('global');
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -13,7 +14,7 @@ export function Topbar() {
   };
 
   return (
-    <div className="topbar">
+    <div className="topbar" style={{ flexWrap: 'wrap', height: 'auto', padding: '12px 24px', gap: '12px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
         <Shield size={20} color="var(--gold)" />
         <div>
@@ -26,7 +27,22 @@ export function Topbar() {
         </div>
       </div>
 
-      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)' }}>
+      <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1 }}>
+        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', background: 'var(--bg-secondary)', padding: '4px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--glass-border)' }}>
+          <Globe size={14} color="var(--gold)" />
+          <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Domain:</span>
+          <select 
+            value={domain} 
+            onChange={(e) => setDomain(e.target.value)}
+            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', outline: 'none' }}
+          >
+            <option value="global">Global (Mesh)</option>
+            <option value="shield">Shield (Healthcare)</option>
+            <option value="quant">Quant (Finance)</option>
+            <option value="supply">Logistics (Supply)</option>
+          </select>
+        </div>
+
         {isBackendOffline && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--danger-dim)', color: 'var(--danger)', padding: '4px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
             <AlertTriangle size={14} /> ORACLE DATABASE OFFLINE

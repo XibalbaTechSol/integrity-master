@@ -1,0 +1,292 @@
+import React from 'react';
+import { Shield, Activity, Lock, Code, ExternalLink, Zap, ShieldCheck, Cpu, Fingerprint, Database, Coins, Globe, ArrowRight } from 'lucide-react';
+import { useNavigate } from 'react-router-dom';
+import { motion } from 'framer-motion';
+import { useIsMobile } from '../../utils/useIsMobile';
+
+export const TrustGapSection = () => {
+    const isMobile = useIsMobile();
+    return (
+        <section style={{ padding: isMobile ? '60px 20px' : '120px 60px', background: 'var(--navy-deep)', position: 'relative', overflow: 'hidden' }}>
+            <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                <div style={{ textAlign: 'center', marginBottom: isMobile ? '48px' : '80px' }}>
+                    <span style={{ color: 'var(--gold)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5em', display: 'block', marginBottom: '16px' }}>The Trust Gap</span>
+                    <h2 style={{ fontSize: isMobile ? '2.2rem' : '3.5rem', fontWeight: 800, lineHeight: 1.1, marginBottom: '24px', color: 'white' }}>Agents can reason.<br /><span style={{ color: 'var(--gold)' }}>But can they transact?</span></h2>
+                    <p style={{ color: 'rgba(255,255,255,0.6)', maxWidth: '800px', margin: '0 auto', lineHeight: 1.7, fontSize: isMobile ? '0.95rem' : '1.1rem' }}>
+                        The agentic web is scaling rapidly, but autonomous code lacks verifiable accountability. 
+                        The Integrity Protocol bridges this gap using cryptographic middleware (BCC) and Base L2 settlement to establish immutable reputation.
+                    </p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: isMobile ? '20px' : '32px' }}>
+                    <div style={{ padding: '40px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px' }}>
+                        <div style={{ color: 'var(--gold)', marginBottom: '20px' }}><Shield size={32} /></div>
+                        <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px', color: 'white' }}>Pre-Execution Gating</h4>
+                        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                            Smart contracts verify an agent's Integrity Score (AIS) before allowing a transaction to execute, preventing malicious or hallucinated actions.
+                        </p>
+                    </div>
+                    <div style={{ padding: '40px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px' }}>
+                        <div style={{ color: '#60a5fa', marginBottom: '20px' }}><Activity size={32} /></div>
+                        <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px', color: 'white' }}>Real-time Telemetry</h4>
+                        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                            Agent decisions are continuously monitored via the Behavioral Commitment Chain (BCC), dynamically adjusting their reputation based on performance and entropy.
+                        </p>
+                    </div>
+                    <div style={{ padding: '40px', background: 'rgba(255,255,255,0.01)', border: '1px solid rgba(255,255,255,0.05)', borderRadius: '24px' }}>
+                        <div style={{ color: '#a78bfa', marginBottom: '20px' }}><Lock size={32} /></div>
+                        <h4 style={{ fontSize: '1.2rem', fontWeight: 800, marginBottom: '16px', color: 'white' }}>Base L2 Settlement</h4>
+                        <p style={{ color: 'rgba(255,255,255,0.4)', fontSize: '0.9rem', lineHeight: 1.6, margin: 0 }}>
+                            All reputation proofs and final SLA escrows are settled securely and cheaply on Base L2, ensuring permanent cryptographic accountability.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export const DevQuickstartSection = () => {
+    const isMobile = useIsMobile();
+    const navigate = useNavigate();
+    return (
+        <section style={{ padding: isMobile ? '60px 20px' : '100px 60px', background: 'rgba(212, 175, 55, 0.03)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '40px' : '80px', alignItems: 'center' }}>
+                    <div>
+                        <span style={{ color: 'var(--gold)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', marginBottom: '16px', display: 'block' }}>Developer Experience</span>
+                        <h2 style={{ fontSize: isMobile ? '2.2rem' : '3rem', fontWeight: 800, marginBottom: '24px', lineHeight: 1.1 }}>Start building instantly.<br />No hardware DID required.</h2>
+                        <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, marginBottom: '24px', fontWeight: 500 }}>
+                            Enter the agent economy today with our new <strong>Developer API Key</strong> testing mode. 
+                        </p>
+                        <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: '40px' }}>
+                            We know that provisioning hardware-backed DIDs can slow down development. That's why we've introduced Developer API Keys. Simply generate a key from the dashboard and immediately start routing telemetry to the BCC. For safety, agents using this bypass are mathematically capped at a Trust Level (AIS) of 300, allowing you to build and test safely before moving to mainnet production.
+                        </p>
+                        <div style={{ display: 'flex', gap: '16px' }}>
+                            <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ padding: '16px 32px' }}>
+                                Generate API Key
+                            </button>
+                            <a href="https://github.com/XibalbaTechSol/integrity-protocol/tree/main/docs" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '16px 32px', border: '1px solid rgba(255,255,255,0.1)', color: 'white', textDecoration: 'none' }}>
+                                Read the Docs
+                            </a>
+                        </div>
+                    </div>
+                    <div style={{ background: '#050d18', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '24px', position: 'relative' }}>
+                        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
+                            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#f87171' }} />
+                            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#fbbf24' }} />
+                            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#34d399' }} />
+                        </div>
+                        <pre style={{ margin: 0, color: '#94a3b8', fontSize: '0.85rem', fontFamily: 'monospace', overflowX: 'auto' }}>
+<code style={{ color: '#c9a84c' }}>import</code> {'{'} IntegrityClient {'}'} <code style={{ color: '#c9a84c' }}>from</code> '@xibalba/integrity-sdk';
+
+<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Initialize with your Developer API Key</code>
+<code style={{ color: '#c9a84c' }}>const</code> client = <code style={{ color: '#c9a84c' }}>new</code> IntegrityClient({'{'}
+apiKey: process.env.INTEGRITY_API_KEY,
+network: <code style={{ color: '#10b981' }}>'base-sepolia'</code>
+{'}'});
+
+<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Your agent's AIS is capped at 300 during dev</code>
+<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Ask protocol if transaction is safe</code>
+<code style={{ color: '#c9a84c' }}>const</code> txRequest = <code style={{ color: '#c9a84c' }}>await</code> client.proposeTransaction(uniswapSwap);
+
+<code style={{ color: '#c9a84c' }}>if</code> (txRequest.isApproved) {'{'}
+<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Pre-Execution Gated by BCC!</code>
+<code style={{ color: '#c9a84c' }}>await</code> txRequest.execute();
+{'}'} <code style={{ color: '#c9a84c' }}>else</code> {'{'}
+console.log(<code style={{ color: '#10b981' }}>'Transaction blocked: Trust Ceiling exceeded'</code>);
+{'}'}
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export const ProgrammableEscrowsSection = () => {
+    const isMobile = useIsMobile();
+    const navigate = useNavigate();
+    return (
+        <section style={{ padding: isMobile ? '60px 20px' : '120px 60px', background: 'rgba(5, 13, 24, 0.98)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1.2fr 1fr', gap: isMobile ? '40px' : '100px', alignItems: 'center' }}>
+                    <div>
+                        <span style={{ color: 'var(--gold)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', marginBottom: '16px', display: 'block' }}>Programmable Agent Escrows</span>
+                        <h2 style={{ fontSize: isMobile ? '2.5rem' : '3.5rem', fontWeight: 800, marginBottom: '32px', lineHeight: 1.1 }}>Programmable Trust.<br /><span style={{ color: 'var(--gold)' }}>On-Chain Enforcement.</span></h2>
+                        <p style={{ fontSize: '1.15rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, marginBottom: '32px', fontWeight: 500 }}>
+                            Raw trust scores are valuable, but on-chain enforcement is definitive. The Integrity Protocol features a no-code engine for deploying reputation-backed smart contracts and SLA escrows.
+                        </p>
+                        <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.8, marginBottom: '40px' }}>
+                            Our No-Code Factory allows developers and enterprises to wrap autonomous agent interactions in cryptographically enforceable contracts on Base L2. Whether ensuring an agent meets rigorous performance SLAs before an API payment is released, or dynamically increasing a DeFi borrowing limit based on real-time BCC telemetry, the Integrity Protocol provides the settlement floor for machine-to-machine commerce.
+                        </p>
+
+                        <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '24px', marginBottom: '48px' }}>
+                            <div className="enterprise-card" style={{ padding: '32px', background: 'rgba(255,255,255,0.01)', borderLeft: '4px solid #10b981' }}>
+                                <div style={{ color: '#10b981', marginBottom: '16px' }}><Zap size={24} /></div>
+                                <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>SLA Automated Escrows</h4>
+                                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+                                    Conditionally release ITK task payments only when an agent maintains its AIS score above a defined threshold throughout the execution cycle.
+                                </p>
+                            </div>
+                            <div className="enterprise-card" style={{ padding: '32px', background: 'rgba(255,255,255,0.01)', borderLeft: '4px solid #3b82f6' }}>
+                                <div style={{ color: '#3b82f6', marginBottom: '16px' }}><ShieldCheck size={24} /></div>
+                                <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>Parametric Insurance</h4>
+                                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+                                    Deploy binary-outcome vaults that automatically pay out coverage to beneficiaries if an agent's performance entropy triggers a verifiable fault condition.
+                                </p>
+                            </div>
+                            <div className="enterprise-card" style={{ padding: '32px', background: 'rgba(255,255,255,0.01)', borderLeft: '4px solid #a855f7' }}>
+                                <div style={{ color: '#a855f7', marginBottom: '16px' }}><Cpu size={24} /></div>
+                                <h4 style={{ fontSize: '1.1rem', fontWeight: 800, marginBottom: '8px' }}>Agent-Owned Contracts</h4>
+                                <p style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.6, margin: 0 }}>
+                                    Agents can deploy and natively own their own smart contracts (e.g., DeFi vaults, liquidity pools), programmatically governed by their real-time on-chain trust score.
+                                </p>
+                            </div>
+                        </div>
+
+                        <div style={{ display: 'flex', gap: '20px' }}>
+                            <button 
+                                onClick={() => navigate('/dashboard')}
+                                className="btn btn-primary" 
+                            >
+                                OPEN ESCROWS
+                            </button>
+                            <a 
+                                href="https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/actuarial-automation-factory.md" 
+                                target="_blank" 
+                                rel="noopener noreferrer"
+                                className="btn btn-outline" 
+                                style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'white', textDecoration: 'none' }}
+                            >
+                                READ ESCROW SPECS
+                            </a>
+                        </div>
+                    </div>
+
+                    <div className="enterprise-card" style={{ padding: 0, background: '#050d18', border: '1px solid rgba(212, 175, 55, 0.1)', overflow: 'hidden', boxShadow: '0 40px 100px rgba(0,0,0,0.4)', position: 'relative' }}>
+                        <div style={{ padding: '16px 24px', background: 'rgba(255,255,255,0.02)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <Code size={14} style={{ color: 'var(--gold)' }} />
+                                <span style={{ fontSize: '0.7rem', color: 'rgba(255,255,255,0.4)', fontWeight: 700 }}>contracts/NoCodeFactory.sol</span>
+                            </div>
+                            <div className="badge badge-gold" style={{ fontSize: '0.5rem' }}>EIP-1167 PROXY</div>
+                        </div>
+                        <pre style={{ padding: '32px', margin: 0, overflowX: 'auto', fontSize: '0.85rem', lineHeight: 1.6, color: '#94a3b8', fontFamily: 'JetBrains Mono, monospace' }}>
+                            <code style={{ color: '#c9a84c' }}>function</code> <code style={{ color: '#10b981' }}>deploySLA</code>(<br />
+                            {'  '}address _agent,<br />
+                            {'  '}uint256 _minAIS,<br />
+                            {'  '}uint256 _amount<br />
+                            ) <code style={{ color: '#c9a84c' }}>external</code> returns (address) {'{\n'}
+                            {'  '} <code style={{ color: 'rgba(255,255,255,0.3)' }}>// Pull real-time reputation from registry</code>{'\n'}
+                            {'  '} (uint256 currentAIS, , , ) = registry.getAgent(_agent);{'\n'}
+                            {'  '} <code style={{ color: '#c9a84c' }}>require</code>(currentAIS {'>='} _minAIS);{'\n\n'}
+                            {'  '} <code style={{ color: 'rgba(255,255,255,0.3)' }}>// Clone pre-audited SLA template</code>{'\n'}
+                            {'  '} address proxy = Clones.clone(slaTemplate);{'\n'}
+                            {'  '} AISEscrowSLA(proxy).initialize(_agent, _minAIS);{'\n'}
+                            {'  '} <code style={{ color: '#c9a84c' }}>emit</code> <code style={{ color: '#10b981' }}>SLADeployed</code>(proxy, _agent);{'\n'}
+                            {'  '} <code style={{ color: '#c9a84c' }}>return</code> proxy;{'\n'}
+                            {'}'}
+                        </pre>
+                        <div style={{ padding: '20px 32px', background: 'rgba(212, 175, 55, 0.05)', borderTop: '1px solid rgba(212, 175, 55, 0.1)', display: 'flex', justifyContent: 'center' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
+                                <div className="status-ping">
+                                    <span className="status-ping-inner bg-gold-500"></span>
+                                    <span className="status-ping-dot bg-gold-500"></span>
+                                </div>
+                                <span style={{ fontSize: '0.65rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '0.1em' }}>FACTORY_ORACLE_ACTIVE // BASE_SEPOLIA</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+    );
+};
+
+export const EconomicUseCasesSection = () => {
+    const isMobile = useIsMobile();
+    const navigate = useNavigate();
+    return (
+        <section style={{ padding: isMobile ? '60px 20px' : '120px 60px', background: 'rgba(5, 13, 24, 0.8)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                <div style={{ textAlign: 'center', marginBottom: isMobile ? '40px' : '80px' }}>
+                    <span style={{ color: 'var(--gold)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em' }}>Market Applications</span>
+                    <h2 style={{ fontSize: isMobile ? '2.5rem' : '3.5rem', fontWeight: 800, marginTop: '16px' }}>Economic Utility for the <span style={{ color: 'var(--gold)' }}>Agentic Web.</span></h2>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', maxWidth: '900px', margin: '24px auto 0', lineHeight: 1.7, fontSize: '1.15rem', fontWeight: 500 }}>
+                        The Integrity Protocol isn't just a score; it's a functional primitive that unlocks multi-billion dollar markets for autonomous systems. By converting mathematical reputation into institutional-grade risk ratings, we enable the first scalable infrastructure for insured agent commerce.
+                    </p>
+                    <p style={{ color: 'rgba(255,255,255,0.4)', maxWidth: '850px', margin: '24px auto 0', lineHeight: 1.8, fontSize: '1rem' }}>
+                        Current decentralized ecosystems lack a bridge between raw performance data and financial responsibility. This gap prevents large-scale capital from flowing into the Agentic Web. Xibalba Solutions provides the actuarial feed required for professional underwriters, lenders, and global trade partners to price the risk of autonomous failure and reward consistently high-performing agents with lower costs of capital and priority market access.
+                    </p>
+                </div>
+
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '32px' }}>
+                    {[
+                        {
+                            title: "Autonomous Insurance",
+                            subtitle: "DYNAMIC RISK UNDERWRITING",
+                            desc: "Insurance protocols consume AIS feeds via ERC-8004 hooks to provide real-time risk coverage. High-reputation agents (AAA) qualify for negligible premiums, enabling the first insured autonomous treasury systems. This solves the 'lethal trifecta' of prompt injection, model collapse, and unauthorized actions by providing a neutral record for professional liability claims.",
+                            icon: <ShieldCheck size={32} />,
+                            color: "#10b981",
+                            impact: "95% Reduction in Fraud Exposure"
+                        },
+                        {
+                            title: "Reputation Lending",
+                            subtitle: "SOFT-COLLATERAL CREDIT",
+                            desc: "DeFi lending vaults utilize an agent's verified AIS history as 'soft collateral' to lower traditional over-collateralization requirements. Institutional-grade agents can access deep lines of credit for cross-chain arbitrage and yield farming based on their performance standing, dramatically increasing capital efficiency in a previously anonymous market.",
+                            icon: <Coins size={32} />,
+                            color: "var(--gold)",
+                            impact: "Capital Efficiency Boost: 4.5x"
+                        },
+                        {
+                            title: "Global Agent Commerce",
+                            subtitle: "SYBIL-RESISTANT NETWORKS",
+                            desc: "Using W3C DIDs and ZK-reputation badges, agents can settle trade agreements across fragmented L1/L2 ecosystems without manual KYC for every deal. Verified identity ensures that counterparties are backed by corporate entities, eliminating the risk of Single-Use Exit Scams (SUES) in permissionless global markets.",
+                            icon: <Globe size={32} />,
+                            color: "#60a5fa",
+                            impact: "Permissionless Trust Anchoring"
+                        }
+                    ].map((useCase, i) => (
+                        <motion.div
+                            key={i}
+                            whileHover={{ y: -10 }}
+                            style={{ 
+                                padding: '48px', 
+                                background: 'rgba(255,255,255,0.02)', 
+                                borderRadius: '32px', 
+                                border: '1px solid rgba(255,255,255,0.05)',
+                                display: 'flex',
+                                flexDirection: 'column',
+                                height: '100%'
+                            }}
+                        >
+                            <div style={{ color: useCase.color, marginBottom: isMobile ? '24px' : '32px' }}>
+                                {React.cloneElement(useCase.icon as React.ReactElement, { size: isMobile ? 24 : 32 })}
+                            </div>
+                            <span style={{ color: useCase.color, fontSize: '0.65rem', fontWeight: 900, letterSpacing: '0.2em' }}>{useCase.subtitle}</span>
+                            <h3 style={{ fontSize: isMobile ? '1.4rem' : '1.8rem', fontWeight: 800, margin: '12px 0 20px' }}>{useCase.title}</h3>
+                            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: isMobile ? '0.9rem' : '0.95rem', lineHeight: 1.7, marginBottom: isMobile ? '24px' : '40px', flex: 1 }}>
+                                {useCase.desc}
+                            </p>
+                            <div style={{ paddingTop: '24px', borderTop: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                                <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'rgba(255,255,255,0.3)' }}>PROJECTED IMPACT:</div>
+                                <div style={{ fontSize: '0.8rem', fontWeight: 900, color: 'white' }}>{useCase.impact}</div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
+
+                <div style={{ marginTop: '80px', textAlign: 'center' }}>
+                    <button 
+                        onClick={() => navigate('/blog/autonomous-insurance-markets')}
+                        className="btn btn-outline" 
+                        style={{ padding: '16px 40px', fontSize: '0.8rem', fontWeight: 800 }}
+                    >
+                        EXPLORE MARKET VERTICALS <ArrowRight size={16} style={{ marginLeft: '12px' }} />
+                    </button>
+                </div>
+            </div>
+        </section>
+    );
+};

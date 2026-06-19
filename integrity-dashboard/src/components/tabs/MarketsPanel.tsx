@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { Panel } from '../shared/Panel';
 import { LineChart, Handshake, Terminal, Zap, Plus, RefreshCw } from 'lucide-react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { StatusBadge } from '../shared/StatusBadge';
 import { api } from '../../services/api';
 import type { MarketTask } from '../../types';
@@ -29,21 +29,41 @@ export function MarketsPanel() {
   // Simulation/Execution State
   const [logs, setLogs] = useState<ExecutionLog[]>([]);
 
-  useEffect(() => {
-    fetchTasks();
-  }, []);
-
   const fetchTasks = async () => {
     setLoading(true);
     try {
       const data = await api.getMarketTasks();
-      setTasks(data);
+      setTasks(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error('Failed to fetch tasks:', err);
+      setTasks([]);
     } finally {
       setLoading(false);
     }
   };
+
+  useEffect(() => {
+    let mounted = true;
+    
+    const initialFetch = async () => {
+      setLoading(true);
+      try {
+        const data = await api.getMarketTasks();
+        if (mounted) setTasks(Array.isArray(data) ? data : []);
+      } catch (err) {
+        console.error('Failed to fetch tasks:', err);
+        if (mounted) setTasks([]);
+      } finally {
+        if (mounted) setLoading(false);
+      }
+    };
+    
+    initialFetch();
+    
+    return () => {
+      mounted = false;
+    };
+  }, []);
 
   const addLog = (msg: string) => {
     setLogs(prev => [...prev, { id: Date.now() + Math.random(), time: new Date().toLocaleTimeString(), message: msg }]);
@@ -123,8 +143,9 @@ export function MarketsPanel() {
             </div>
 
             <div className="form-group">
-              <label className="form-label">Task Title</label>
+              <label className="form-label" htmlFor="task-title">Task Title</label>
               <input 
+                id="task-title"
                 className="input" 
                 placeholder="e.g. Data Inference SLA" 
                 value={title}
@@ -134,8 +155,9 @@ export function MarketsPanel() {
 
             <div className="grid-cols-2" style={{ gap: 'var(--space-4)' }}>
               <div className="form-group">
-                <label className="form-label">Reward (ITK)</label>
+                <label className="form-label" htmlFor="task-reward">Reward (ITK)</label>
                 <input 
+                  id="task-reward"
                   type="number" 
                   className="input" 
                   value={reward}
@@ -143,8 +165,9 @@ export function MarketsPanel() {
                 />
               </div>
               <div className="form-group">
-                <label className="form-label">Min. AIS Required</label>
+                <label className="form-label" htmlFor="task-min-ais">Min. AIS Required</label>
                 <input 
+                  id="task-min-ais"
                   type="number" 
                   className="input" 
                   value={minAis}
@@ -177,7 +200,7 @@ export function MarketsPanel() {
 
           {/* Console / Logs Side */}
           <div className="flex-col gap-4">
-            <div style={{ background: '#0a0a0c', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', height: '240px', padding: 'var(--space-3)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
+            <div data-testid="protocol-logs" style={{ background: 'var(--navy-deep)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', height: '240px', padding: 'var(--space-3)', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '8px' }}>
               <div className="flex items-center justify-between" style={{ borderBottom: '1px solid var(--glass-border)', paddingBottom: '4px', marginBottom: '4px' }}>
                 <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                   <Terminal size={14} /> Protocol Logs

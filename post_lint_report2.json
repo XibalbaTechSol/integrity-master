@@ -1,0 +1,140 @@
+{
+  "timestamp": "2026-06-19T13:37:00.832507",
+  "project_root": "/home/xibalba/Projects/INTEGRITY",
+  "issues": [
+    {
+      "type": "counter_mismatch",
+      "severity": "medium",
+      "detail": "WIKI_INDEX.md claims 49 pages, but 73 actually exist."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/SmartBAA.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/IntegrityProtocol.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/SmartBAAFactory.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/UltraPlonkVerifier.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/CCIPReputationBridge.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/Slasher.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/StablecoinPaymaster.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/IntegrityPaymaster.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/XibalbaNameService.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/ClinicalTrialBond.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/MedicalCreditLine.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/DomainRegistry.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/IntegrityToken.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/ReputationLendingPool.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/MockITK.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/OracleRegistry.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/IAccount.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/MockPaymaster.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/ClaimsAdjudicator.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/XibalbaAgentRegistry.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/CoveredEntityRegistry.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/AgentFactory.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/AgentCreditFacility.sol.md' exists but is not listed in WIKI_INDEX.md."
+    },
+    {
+      "type": "orphan_page",
+      "severity": "medium",
+      "detail": "Wiki page 'entities/EnterpriseRegistry.sol.md' exists but is not listed in WIKI_INDEX.md."
+    }
+  ],
+  "stats": {
+    "actual_page_count": 73,
+    "index_entry_count": 49,
+    "claimed_page_count": 49,
+    "issue_counts": {
+      "medium": 25
+    },
+    "total_issues": 25
+  }
+}

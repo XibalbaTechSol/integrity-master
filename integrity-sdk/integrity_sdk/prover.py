@@ -21,11 +21,16 @@ class NoirProver:
         """
         self.current_nonce += 1
         
-        # 1. Aggregate metrics (scaled to 0-1000 for integer circuit math)
-        avg_entropy = int((sum(item.get("entropy", 0) for item in batch) / len(batch)) * 1000)
-        avg_grounding = int((sum(item.get("grounding", 0) for item in batch) / len(batch)) * 1000)
-        avg_accuracy = int((sum(item.get("accuracy", 1.0) for item in batch) / len(batch)) * 1000)
-        max_latency = int(max(item.get("latency_ms", 0) for item in batch))
+        if not batch:
+            avg_entropy = 0
+            avg_grounding = 0
+            avg_accuracy = 1000
+            max_latency = 0
+        else:
+            avg_entropy = int((sum(item.get("entropy", 0) for item in batch) / len(batch)) * 1000)
+            avg_grounding = int((sum(item.get("grounding", 0) for item in batch) / len(batch)) * 1000)
+            avg_accuracy = int((sum(item.get("accuracy", 1.0) for item in batch) / len(batch)) * 1000)
+            max_latency = int(max(item.get("latency_ms", 0) for item in batch))
         
         # 2. Generate the Public Integrity Commitment
         # We use a SHA-256 fallback for the commitment hash to ensure SDK stability

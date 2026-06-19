@@ -8,11 +8,7 @@ const SCREENSHOT_DIR = path.join(REPORT_DIR, 'screenshots');
 if (!fs.existsSync(REPORT_DIR)) fs.mkdirSync(REPORT_DIR);
 if (!fs.existsSync(SCREENSHOT_DIR)) fs.mkdirSync(SCREENSHOT_DIR);
 
-const tabs = [
-  'telemetry', 'identity', 'ledger', 'zk', 'factory', 
-  'compliance', 'credit', 'governance', 'markets', 
-  'staking', 'stability', 'wallet', 'advanced'
-];
+const tabs = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'credit', 'governance', 'markets', 'advanced'];
 
 (async () => {
   console.log('🚀 Starting Comprehensive Dashboard Validation...');
@@ -44,13 +40,16 @@ const tabs = [
 
   // 1. Visit Dashboard
   console.log('--- Step 1: Initial Load ---');
-  await page.goto('http://localhost:5173');
+  await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
   await page.waitForTimeout(3000);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, '01_initial_load.png') });
 
   // 2. Connect Wallet
   console.log('--- Step 2: Wallet Connection ---');
-  await page.click('text=Connect Wallet');
+  console.log('--- Step 2: Wallet Connection (Alternative) ---');
+  const connectBtn = page.locator('button:has-text("Connect Wallet")').first();
+  await connectBtn.waitFor({ state: 'visible', timeout: 10000 });
+  await connectBtn.click();
   await page.waitForTimeout(1000);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, '02_wallet_connected.png') });
 

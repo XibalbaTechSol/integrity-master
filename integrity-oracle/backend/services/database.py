@@ -83,6 +83,7 @@ class Agent(Base):
     
     sync_pending = Column(Boolean, default=False)
     is_active = Column(Boolean, default=True)
+    domain_id = Column(String(50), default="global", index=True) # Multi-tenant isolation
     owner_uid = Column(String(128), nullable=True, index=True) # Firebase UID
     xns_handle = Column(String(100), unique=True, nullable=True, index=True) # e.g. "xibalba.intg"
     agent_metadata = Column(JSON, nullable=True)
@@ -121,6 +122,7 @@ class TransactionLog(Base):
 
     log_id = Column("transaction_id", GUID(), primary_key=True, default=uuid.uuid4)
     agent_id = Column(GUID(), ForeignKey("agents.agent_id"))
+    domain_id = Column(String(50), default="global", index=True)
     on_chain_tx_hash = Column(String(66), unique=True, nullable=False, index=True)
     contract_value_intg = Column(Numeric(24, 18))
     staked_amount_intg = Column(Numeric(24, 18), nullable=True)
@@ -138,6 +140,7 @@ class TelemetryLog(Base):
 
     log_id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     agent_id = Column(GUID(), ForeignKey("agents.agent_id"))
+    domain_id = Column(String(50), default="global", index=True)
     event_type = Column(String(50)) # inference, training, etc.
     latency_ms = Column(Integer)
     tokens_in = Column(Integer, default=0)
@@ -153,6 +156,7 @@ class ReputationSnapshot(Base):
 
     snapshot_id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     agent_id = Column(GUID(), ForeignKey("agents.agent_id"))
+    domain_id = Column(String(50), default="global", index=True)
     timestamp = Column(DateTime(timezone=True), default=datetime.datetime.utcnow)
     ais_score = Column(Integer)
     entropy_score = Column(Integer)

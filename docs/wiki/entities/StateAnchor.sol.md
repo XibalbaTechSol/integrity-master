@@ -1,7 +1,8 @@
 ---
+source_files: []
 title: StateAnchor.sol (Solidity Source)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: entity
 tags: [smart-contract, solidity, anchor]
 confidence: high

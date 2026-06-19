@@ -1,7 +1,7 @@
 ---
 title: PHI Provenance Secure Architecture (Devil's Advocate Audit)
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [phi, cryptography, security, rust, architecture]
 confidence: high

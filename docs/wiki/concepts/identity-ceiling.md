@@ -1,7 +1,7 @@
 ---
 title: Identity Ceiling & Verification Tiers
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [identity, compliance]
 confidence: high

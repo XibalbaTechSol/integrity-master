@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useDashboard } from '../../context/DashboardContext';
+import { useDashboard } from '../../context/useDashboard';
 import { Panel } from '../shared/Panel';
 import { Hammer, Code, RefreshCw } from 'lucide-react';
 import { api } from '../../services/api';
@@ -27,7 +27,8 @@ export function FactoryPanel() {
     SLA: { lang: 'solidity', code: '// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract ServiceLevelAgreement {\n  address public provider;\n  uint256 public minAIS = 800;\n\n  function verifyPerformance() external view returns (bool) {\n    // Oracle-verified logic\n    return true;\n  }\n}' },
     Escrow: { lang: 'solidity', code: '// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract AutonomousEscrow {\n  address public arbiter = 0x67bA5D723E1F5517afF7eb980E2f73a9e17aD556;\n  \n  function release() external {\n    // Released only if AIS > threshold\n  }\n}' },
     RevenueShare: { lang: 'solidity', code: '// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract RevShare {\n  mapping(address => uint256) public shares;\n  \n  function distribute() external {\n    // Split ITK based on equity\n  }\n}' },
-    LoanAgreement: { lang: 'solidity', code: '// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract CollateralizedLoan {\n  address public borrower;\n  uint256 public principal;\n  uint256 public requiredAIS;\n\n  function liquidate() external {\n    // Foreclosure logic if AIS drops\n  }\n}' }
+    LoanAgreement: { lang: 'solidity', code: '// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract CollateralizedLoan {\n  address public borrower;\n  uint256 public principal;\n  uint256 public requiredAIS;\n\n  function liquidate() external {\n    // Foreclosure logic if AIS drops\n  }\n}' },
+    Custom: { lang: 'solidity', code: '// SPDX-License-Identifier: MIT\npragma solidity ^0.8.19;\n\ncontract MyCustomContract {\n  // Implement arbitrary logic here\n}' }
   };
 
   const [code, setCode] = useState(templates.SLA.code);
@@ -39,26 +40,30 @@ export function FactoryPanel() {
     setIsDeploying(true);
     setSteps(steps.map(s => ({ ...s, status: 'pending' })));
 
+    const delay = (ms: number) => new Promise(r => setTimeout(r, import.meta.env.MODE === 'test' ? 0 : ms));
+
     try {
       updateStep('compile', 'loading');
-      await new Promise(r => setTimeout(r, 1500));
+      await delay(1500);
       updateStep('compile', 'completed');
 
       updateStep('prove', 'loading');
-      await new Promise(r => setTimeout(r, 2000));
+      await delay(2000);
       updateStep('prove', 'completed');
 
       updateStep('broadcast', 'loading');
       const res = await api.deployContract({
-        owner_address: selectedAgent.eth_address,
         contract_type: contractType,
-        language,
-        code
+        params: {
+          owner_address: selectedAgent.eth_address,
+          language,
+          code
+        }
       });
       updateStep('broadcast', 'completed');
 
       updateStep('finalize', 'loading');
-      await new Promise(r => setTimeout(r, 1000));
+      await delay(1000);
       updateStep('finalize', 'completed');
 
       addToast('success', `Contract ${contractType} deployed to ${res.contract_address}`);
@@ -76,8 +81,9 @@ export function FactoryPanel() {
         <Panel title="Contract Logic Template" icon={<Code size={18} />}>
           <div className="flex-col gap-4">
             <div className="form-group">
-              <label className="form-label">Contract Type</label>
+              <label className="form-label" htmlFor="contract-type">Contract Type</label>
               <select 
+                id="contract-type"
                 className="select" 
                 value={contractType} 
                 onChange={e => {
@@ -89,13 +95,17 @@ export function FactoryPanel() {
                 <option value="Escrow">Autonomous Escrow</option>
                 <option value="RevenueShare">Revenue Share</option>
                 <option value="LoanAgreement">Loan Agreement</option>
+                <option value="Custom">Custom Arbitrary Contract</option>
               </select>
             </div>
             
-            <div style={{ height: '350px', background: '#0a0a0c', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
-              <pre style={{ margin: 0, padding: 'var(--space-4)', fontSize: '0.75rem', color: 'var(--primary)', height: '100%', overflowY: 'auto' }}>
-                <code>{code}</code>
-              </pre>
+            <div style={{ height: '350px', background: 'var(--navy-deep)', border: '1px solid var(--glass-border)', borderRadius: 'var(--radius-sm)', overflow: 'hidden' }}>
+              <textarea 
+                style={{ margin: 0, padding: 'var(--space-4)', fontSize: '0.75rem', color: 'var(--primary)', background: 'transparent', border: 'none', width: '100%', height: '100%', resize: 'none', outline: 'none', fontFamily: 'monospace' }}
+                value={code}
+                onChange={e => setCode(e.target.value)}
+                spellCheck="false"
+              />
             </div>
           </div>
         </Panel>
@@ -105,8 +115,8 @@ export function FactoryPanel() {
         <Panel title="Deployment Parameters" icon={<Hammer size={18} />}>
           <form className="flex-col gap-4" onSubmit={handleDeploy}>
             <div className="form-group">
-              <label className="form-label">Target Blockchain</label>
-              <select className="select">
+              <label className="form-label" htmlFor="target-blockchain">Target Blockchain</label>
+              <select id="target-blockchain" className="select">
                 <option value="base">Base L2 (Mainnet-Ready)</option>
                 <option value="eth">Ethereum Mainnet</option>
                 <option value="arb">Arbitrum One</option>

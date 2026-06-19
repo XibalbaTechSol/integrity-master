@@ -1,7 +1,7 @@
 ---
 title: Xibalba Integrity SDK Integration Guide
 created: 2026-05-31
-updated: 2026-05-31
+updated: 2026-06-19
 type: concept
 tags: [compliance, cryptography, control-systems]
 confidence: high

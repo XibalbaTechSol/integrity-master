@@ -29,7 +29,7 @@ violation[msg] if {
     some key, pattern in phi_patterns
     # Serialize context to string for full-text scanning
     context_str := json.marshal(input.context)
-    re_match(pattern, context_str)
+    regex.match(pattern, context_str)
     # Block if the action is not a recognized secure clinical operation
     not input.commitment.action_type in {"SECURE_EMR_WRITE", "ZKP_PROVING", "ENCRYPTED_STORAGE"}
     msg := sprintf("HIPAA_TECHNICAL_SAFEGUARD_FAILURE: Potential PHI (%v) detected in non-secure action type '%v'", [key, input.commitment.action_type])
@@ -77,12 +77,29 @@ violation["BCC_INTENT_DRIFT: Destructive action attempted during READ_ONLY commi
     contains(val, "delete")
 }
 
+# Add rule for Contract Manipulation drift
+violation["BCC_INTENT_DRIFT: Unauthorized contract modification during audit"] if {
+    contains(lower(input.commitment.action_type), "auditing")
+    val := lower(json.marshal(input.context))
+    contains(val, "update")
+}
+
 # --- 5. Data Exfiltration Check ---
 # Block any attempt to send data to unknown external endpoints
 violation["HIPAA_TRANSMISSION_VIOLATION: Attempted exfiltration to unauthorized endpoint"] if {
     endpoint := input.context.external_url
     not startswith(endpoint, "https://clinical-api.xibalba.io")
     not startswith(endpoint, "https://hsm.aws.amazon.com")
+}
+
+# --- 6. Telemetry Spoofing Check ---
+violation["TELEMETRY_SPOOFING: Attempted hardware fingerprint spoofing or telemetry bypass"] if {
+    val := lower(json.marshal(input.context))
+    contains(val, "spoofed")
+}
+violation["TELEMETRY_SPOOFING: Attempted hardware fingerprint spoofing or telemetry bypass"] if {
+    val := lower(json.marshal(input.context))
+    contains(val, "bypass")
 }
 
 # --- Metadata Rule for Reporting ---

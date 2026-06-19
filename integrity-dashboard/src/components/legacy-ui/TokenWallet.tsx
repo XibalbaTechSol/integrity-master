@@ -1,18 +1,26 @@
-// @ts-nocheck
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, useCallback } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { ethers } from 'ethers';
 import axios from 'axios';
 import { auth } from '../../firebase';
 import { 
-    Coins, Send, ArrowDownLeft, Loader2, Wallet, 
-    Copy, ShieldCheck, Activity, Landmark, X, ArrowUpRight, ArrowDownRight, Fingerprint
+    Coins, ArrowDownLeft, Loader2, 
+    Copy, ShieldCheck, Landmark, X, ArrowUpRight, ArrowDownRight, Fingerprint
 } from 'lucide-react';
-import { ITK_TOKEN_ADDRESS, XIBALBA_AGENT_ADDRESS, API_BASE } from '../../constants';
-import { useIsMobile } from '../../utils/useIsMobile';
+import { ITK_TOKEN_ADDRESS, API_BASE } from '../../constants';
 import ITK_ABI from '../abi/IntegrityToken.json';
+import type { User } from 'firebase/auth';
 
-export const TokenWallet = ({ user: propUser }: { user?: any }) => {
+interface Transaction {
+    hash: string;
+    from: string;
+    to: string;
+    value: string;
+    isOut: boolean;
+    status: string;
+}
+
+export const TokenWallet = ({ user: propUser }: { user?: User | null }) => {
     const [balance, setBalance] = useState<string>('0.0');
     const [profileBalance, setProfileBalance] = useState<number>(0);
     const [appWalletAddress, setAppWalletAddress] = useState<string | null>(null);
@@ -22,13 +30,11 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
     const [isLoading, setIsLoading] = useState(false);
     const [isFetching, setIsFetching] = useState(true);
     const [isProfileLoading, setIsProfileLoading] = useState(true);
-    const [txHistory, setTxHistory] = useState<any[]>([]);
+    const [txHistory, setTxHistory] = useState<Transaction[]>([]);
     const [activeTab, setActiveTab] = useState<'assets' | 'activity'>('assets');
     const [activeModal, setActiveModal] = useState<'send' | 'receive' | 'loan' | 'stake' | null>(null);
 
-    const isMobile = useIsMobile();
-
-    const fetchProfileData = async () => {
+    const fetchProfileData = useCallback(async () => {
         const user = propUser || auth.currentUser;
         let token = '';
         if (user) {
@@ -51,23 +57,24 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
         } finally {
             setIsProfileLoading(false);
         }
-    };
+    }, [propUser]);
 
-    const fetchWalletData = async () => {
+    const fetchWalletData = useCallback(async () => {
         setIsFetching(true);
         try {
             let activeAddr = '';
-            let activeProvider: any = null;
+            let activeProvider: ethers.BrowserProvider | ethers.JsonRpcProvider | null = null;
+            const ethereum = (window as Window & typeof globalThis & { ethereum?: any }).ethereum;
 
-            if (window.ethereum) {
+            if (ethereum) {
                 try {
-                    const provider = new ethers.BrowserProvider(window.ethereum);
+                    const provider = new ethers.BrowserProvider(ethereum);
                     const accounts = await provider.listAccounts();
                     if (accounts.length > 0) {
                         activeAddr = accounts[0].address;
                         activeProvider = provider;
                     }
-                } catch (e) { console.log("MetaMask fetch skipped"); }
+                } catch (e) { console.log("MetaMask fetch skipped", e); }
             }
 
             if (!activeAddr && appWalletAddress) {
@@ -77,18 +84,18 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
 
             setAddress(activeAddr);
             
-            if (activeProvider) {
-                const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI, activeProvider);
+            if (activeProvider && activeAddr) {
+                const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI.abi, activeProvider);
                 const bal = await itkContract.balanceOf(activeAddr);
                 setBalance(ethers.formatEther(bal));
 
                 try {
-                    const outFilter = itkContract.filters.Transfer(activeAddr, null);
+                    const outFilter = await itkContract.filters.Transfer(activeAddr, null);
                     const outEvents = await itkContract.queryFilter(outFilter, -5000);
-                    const inFilter = itkContract.filters.Transfer(null, activeAddr);
+                    const inFilter = await itkContract.filters.Transfer(null, activeAddr);
                     const inEvents = await itkContract.queryFilter(inFilter, -5000);
 
-                    const allEvents = [...outEvents, ...inEvents]
+                    const allEvents = [...(outEvents as any[]), ...(inEvents as any[])]
                         .sort((a: any, b: any) => b.blockNumber - a.blockNumber)
                         .slice(0, 10)
                         .map((event: any) => ({
@@ -100,25 +107,36 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
                             status: 'FINALIZED'
                         }));
                     setTxHistory(allEvents);
-                } catch (hErr) { setTxHistory([]); }
+                } catch { setTxHistory([]); }
             }
         } catch (e) { console.error("Wallet fetch error:", e); }
         finally { setIsFetching(false); }
-    };
+    }, [appWalletAddress]);
 
     useEffect(() => {
+        let mounted = true;
         const user = propUser || auth.currentUser;
         const mockToken = localStorage.getItem('integrity_mock_token');
         if (user || mockToken) {
-            fetchProfileData();
+            const load = async () => {
+                if (mounted) await fetchProfileData();
+            };
+            load();
         }
-    }, [propUser, appWalletAddress]);
+        return () => { mounted = false; };
+    }, [fetchProfileData, propUser]);
 
     useEffect(() => {
-        if (appWalletAddress || window.ethereum) {
-            fetchWalletData();
+        let mounted = true;
+        const ethereum = (window as Window & typeof globalThis & { ethereum?: any }).ethereum;
+        if (appWalletAddress || ethereum) {
+            const load = async () => {
+                if (mounted) await fetchWalletData();
+            };
+            load();
         }
-    }, [appWalletAddress]);
+        return () => { mounted = false; };
+    }, [appWalletAddress, fetchWalletData]);
 
     const handleTransfer = async (e: React.FormEvent) => {
         e.preventDefault();
@@ -128,8 +146,9 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
         try {
             let signer;
             const user = propUser || auth.currentUser;
-            if (window.ethereum) {
-                const provider = new ethers.BrowserProvider(window.ethereum);
+            const ethereum = (window as Window & typeof globalThis & { ethereum?: any }).ethereum;
+            if (ethereum) {
+                const provider = new ethers.BrowserProvider(ethereum);
                 signer = await provider.getSigner();
             } else if (appWalletAddress) {
                 let token = '';
@@ -151,14 +170,17 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
                 return;
             }
 
-            const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI, signer);
-            const tx = await itkContract.transfer(recipient, ethers.parseEther(amount));
-            await tx.wait();
-            setActiveModal(null);
-            fetchWalletData();
+            if (signer) {
+                const itkContract = new ethers.Contract(ITK_TOKEN_ADDRESS, ITK_ABI.abi, signer);
+                const tx = await itkContract.transfer(recipient, ethers.parseEther(amount));
+                await tx.wait();
+                setActiveModal(null);
+                fetchWalletData();
+            }
         } catch (e: any) { alert(`Error: ${e.message}`); }
         finally { setIsLoading(false); }
     };
+
 
     return (
         <div style={{ maxWidth: 'var(--max-width)', margin: '0 auto', width: '100%' }}>
@@ -194,7 +216,7 @@ export const TokenWallet = ({ user: propUser }: { user?: any }) => {
                             </div>
                         )}
                         <div style={{ fontSize: '0.8rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '0.4em', textTransform: 'uppercase', marginTop: 'var(--space-4)' }}>
-                            ITK (Testnet)
+                            ITK Balance (Testnet)
                         </div>
                     </div>
 
