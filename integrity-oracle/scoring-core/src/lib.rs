@@ -15,8 +15,8 @@ impl Default for TriMetricScoringEngine {
         Self {
             max_score: 1000.0,
             w_trustflow: 0.2833333333333333,
-            w_xibalba: 0.3833333333333333,
-            w_sacrifice: 0.3333333333333334,
+            w_xibalba: 0.38333333333333336,
+            w_sacrifice: 0.3333333333333333,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }
