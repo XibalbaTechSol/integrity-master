@@ -9,4 +9,16 @@ remappings = [
     "forge-std/=/home/xibalba/Projects/INTEGRITY/contracts/lib/forge-std/src/"
 ]
 
+# ── Testnet RPC Endpoints ──────────────────────────────────────────────────────
+[rpc_endpoints]
+sepolia   = "${SEPOLIA_RPC_URL}"
+amoy      = "${AMOY_RPC_URL}"
+localhost = "http://127.0.0.1:8545"
+
+# ── Block Explorer Verifiers ───────────────────────────────────────────────────
+[etherscan]
+sepolia = { key = "${ETHERSCAN_API_KEY}", chain = 11155111 }
+amoy    = { key = "${POLYGONSCAN_API_KEY}", chain = 80002, url = "https://api-amoy.polygonscan.com/api" }
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
+

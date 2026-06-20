@@ -1,0 +1,1172 @@
+# Instructions
+
+- Following Playwright test failed.
+- Explain why, be concise, respect Playwright best practices.
+- Provide a snippet of code with the fix, if possible.
+
+# Test info
+
+- Name: test_dashboard.spec.ts >> dashboard loads all advanced capabilities tabs
+- Location: e2e/test_dashboard.spec.ts:3:1
+
+# Error details
+
+```
+Test timeout of 60000ms exceeded.
+```
+
+```
+Error: page.click: Test timeout of 60000ms exceeded.
+Call log:
+  - waiting for locator('text=Compliance')
+
+```
+
+# Page snapshot
+
+```yaml
+- generic [ref=e3]:
+  - banner [ref=e4]:
+    - generic [ref=e5]:
+      - generic [ref=e6]:
+        - img "Xibalba" [ref=e7]
+        - generic [ref=e8]:
+          - generic [ref=e9]: INTEGRITY v8.3
+          - generic [ref=e10]: Xibalba Sovereign Protocol
+      - button [ref=e11] [cursor=pointer]:
+        - img [ref=e12]
+  - generic [ref=e15]:
+    - generic [ref=e16]: Verifiable Accountability for Autonomous Agents
+    - heading "Know your agent's trustworthiness before you stake your reputation on it." [level=1] [ref=e17]:
+      - text: Know your agent's trustworthiness
+      - text: before you stake your reputation on it.
+    - paragraph [ref=e18]:
+      - text: The Integrity Protocol is the foundational trust and settlement layer for the
+      - strong [ref=e19]: Autonomous Agent Economy
+      - text: .
+    - paragraph [ref=e20]: Trust in the agentic web requires more than intuition. We provide the actuarial layer for verifiable machine reputation.
+    - generic [ref=e21]:
+      - button "Institutional Inquiries" [ref=e22] [cursor=pointer]:
+        - img [ref=e23]
+        - text: Institutional Inquiries
+      - button "Developer Integration" [ref=e26] [cursor=pointer]:
+        - img [ref=e27]
+        - text: Developer Integration
+    - generic [ref=e31]:
+      - generic [ref=e32] [cursor=pointer]:
+        - generic [ref=e33]: XNS Resolver — Free for Agents
+        - generic [ref=e35]:
+          - text: EXPLORE
+          - img [ref=e36]
+      - link "CORE PROTOCOL" [ref=e38] [cursor=pointer]:
+        - /url: /docs/whitepaper.md
+        - text: CORE PROTOCOL
+        - img [ref=e39]
+      - link "TOKENOMICS ($ITK)" [ref=e42] [cursor=pointer]:
+        - /url: /docs/tokenomics.md
+        - text: TOKENOMICS ($ITK)
+        - img [ref=e43]
+  - generic [ref=e48]:
+    - generic [ref=e49]:
+      - generic [ref=e50]: The Trust Gap
+      - heading "Agents can reason. But can they transact?" [level=2] [ref=e51]:
+        - text: Agents can reason.
+        - text: But can they transact?
+      - paragraph [ref=e52]: The agentic web is scaling rapidly, but autonomous code lacks verifiable accountability. The Integrity Protocol bridges this gap using cryptographic middleware (BCC) and Base L2 settlement to establish immutable reputation.
+    - generic [ref=e53]:
+      - generic [ref=e54]:
+        - img [ref=e56]
+        - heading "Pre-Execution Gating" [level=4] [ref=e58]
+        - paragraph [ref=e59]: Smart contracts verify an agent's Integrity Score (AIS) before allowing a transaction to execute, preventing malicious or hallucinated actions.
+      - generic [ref=e60]:
+        - img [ref=e62]
+        - heading "Real-time Telemetry" [level=4] [ref=e64]
+        - paragraph [ref=e65]: Agent decisions are continuously monitored via the Behavioral Commitment Chain (BCC), dynamically adjusting their reputation based on performance and entropy.
+      - generic [ref=e66]:
+        - img [ref=e68]
+        - heading "Base L2 Settlement" [level=4] [ref=e71]
+        - paragraph [ref=e72]: All reputation proofs and final SLA escrows are settled securely and cheaply on Base L2, ensuring permanent cryptographic accountability.
+  - generic [ref=e75]:
+    - generic [ref=e76]:
+      - generic [ref=e77]: Developer Experience
+      - heading "Start building instantly. No hardware DID required." [level=2] [ref=e78]:
+        - text: Start building instantly.
+        - text: No hardware DID required.
+      - paragraph [ref=e79]:
+        - text: Enter the agent economy today with our new
+        - strong [ref=e80]: Developer API Key
+        - text: testing mode.
+      - paragraph [ref=e81]: We know that provisioning hardware-backed DIDs can slow down development. That's why we've introduced Developer API Keys. Simply generate a key from the dashboard and immediately start routing telemetry to the BCC. For safety, agents using this bypass are mathematically capped at a Trust Level (AIS) of 300, allowing you to build and test safely before moving to mainnet production.
+      - generic [ref=e82]:
+        - button "Generate API Key" [ref=e83] [cursor=pointer]
+        - link "Read the Docs" [ref=e84] [cursor=pointer]:
+          - /url: https://github.com/XibalbaTechSol/integrity-protocol/tree/main/docs
+    - generic [ref=e90]:
+      - code [ref=e91]: import
+      - text: "{ IntegrityClient }"
+      - code [ref=e92]: from
+      - text: "'@xibalba/integrity-sdk';"
+      - code [ref=e93]: // Initialize with your Developer API Key
+      - code [ref=e94]: const
+      - text: client =
+      - code [ref=e95]: new
+      - text: "IntegrityClient({apiKey: process.env.INTEGRITY_API_KEY, network:"
+      - code [ref=e96]: "'base-sepolia'"
+      - text: "});"
+      - code [ref=e97]: // Your agent's AIS is capped at 300 during dev
+      - code [ref=e98]: // Ask protocol if transaction is safe
+      - code [ref=e99]: const
+      - text: txRequest =
+      - code [ref=e100]: await
+      - text: client.proposeTransaction(uniswapSwap);
+      - code [ref=e101]: if
+      - text: "(txRequest.isApproved) {"
+      - code [ref=e102]: // Pre-Execution Gated by BCC!
+      - code [ref=e103]: await
+      - text: "txRequest.execute();}"
+      - code [ref=e104]: else
+      - text: "{console.log("
+      - code [ref=e105]: "'Transaction blocked: Trust Ceiling exceeded'"
+      - text: ");}"
+  - generic [ref=e108]:
+    - generic [ref=e109]:
+      - generic [ref=e110]: Programmable Agent Escrows
+      - heading "Programmable Trust. On-Chain Enforcement." [level=2] [ref=e111]:
+        - text: Programmable Trust.
+        - text: On-Chain Enforcement.
+      - paragraph [ref=e112]: Raw trust scores are valuable, but on-chain enforcement is definitive. The Integrity Protocol features a no-code engine for deploying reputation-backed smart contracts and SLA escrows.
+      - paragraph [ref=e113]: Our No-Code Factory allows developers and enterprises to wrap autonomous agent interactions in cryptographically enforceable contracts on Base L2. Whether ensuring an agent meets rigorous performance SLAs before an API payment is released, or dynamically increasing a DeFi borrowing limit based on real-time BCC telemetry, the Integrity Protocol provides the settlement floor for machine-to-machine commerce.
+      - generic [ref=e114]:
+        - generic [ref=e115]:
+          - img [ref=e117]
+          - heading "SLA Automated Escrows" [level=4] [ref=e119]
+          - paragraph [ref=e120]: Conditionally release ITK task payments only when an agent maintains its AIS score above a defined threshold throughout the execution cycle.
+        - generic [ref=e121]:
+          - img [ref=e123]
+          - heading "Parametric Insurance" [level=4] [ref=e126]
+          - paragraph [ref=e127]: Deploy binary-outcome vaults that automatically pay out coverage to beneficiaries if an agent's performance entropy triggers a verifiable fault condition.
+        - generic [ref=e128]:
+          - img [ref=e130]
+          - heading "Agent-Owned Contracts" [level=4] [ref=e133]
+          - paragraph [ref=e134]: Agents can deploy and natively own their own smart contracts (e.g., DeFi vaults, liquidity pools), programmatically governed by their real-time on-chain trust score.
+      - generic [ref=e135]:
+        - button "OPEN ESCROWS" [ref=e136] [cursor=pointer]
+        - link "READ ESCROW SPECS" [ref=e137] [cursor=pointer]:
+          - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/actuarial-automation-factory.md
+    - generic [ref=e138]:
+      - generic [ref=e139]:
+        - generic [ref=e140]:
+          - img [ref=e141]
+          - generic [ref=e144]: contracts/NoCodeFactory.sol
+        - generic [ref=e145]: EIP-1167 PROXY
+      - generic [ref=e146]:
+        - code [ref=e147]: function
+        - code [ref=e148]: deploySLA
+        - text: (
+        - text: address _agent,
+        - text: uint256 _minAIS,
+        - text: uint256 _amount
+        - text: )
+        - code [ref=e149]: external
+        - text: "returns (address) {"
+        - code [ref=e150]: // Pull real-time reputation from registry
+        - text: (uint256 currentAIS, , , ) = registry.getAgent(_agent);
+        - code [ref=e151]: require
+        - text: (currentAIS >= _minAIS);
+        - code [ref=e152]: // Clone pre-audited SLA template
+        - text: address proxy = Clones.clone(slaTemplate); AISEscrowSLA(proxy).initialize(_agent, _minAIS);
+        - code [ref=e153]: emit
+        - code [ref=e154]: SLADeployed
+        - text: (proxy, _agent);
+        - code [ref=e155]: return
+        - text: "proxy; }"
+      - generic [ref=e158]: FACTORY_ORACLE_ACTIVE // BASE_SEPOLIA
+  - generic [ref=e161]:
+    - generic [ref=e162]:
+      - generic [ref=e163]: Accountability Framework
+      - heading "Verification Ladder & Trust Ceilings." [level=2] [ref=e164]
+      - paragraph [ref=e165]: Reputation must be bound to responsibility. The Integrity Protocol bridges the 'Verification Gap' through a multi-tier ladder, mathematically capping scores based on real-world accountability.
+      - generic [ref=e166]:
+        - generic [ref=e167]:
+          - generic [ref=e168]:
+            - img [ref=e170]
+            - heading "EIP-712 Entity Binding" [level=4] [ref=e179]
+          - paragraph [ref=e180]: Agents are cryptographically linked to Controllers via human-readable typed data signatures, establishing an immutable on-chain bond.
+        - generic [ref=e181]:
+          - generic [ref=e182]:
+            - img [ref=e184]
+            - heading "Deterministic Ceilings" [level=4] [ref=e188]
+          - paragraph [ref=e189]: "Scoring logic enforces a rigorous boundary: AIS = min(Score, TierCap). Trust is earned through combined performance and verified standing."
+    - generic [ref=e190]:
+      - generic [ref=e191]:
+        - generic [ref=e193]:
+          - generic [ref=e194]:
+            - generic [ref=e195]: SOVEREIGN INSIGNIA
+            - 'heading "Tier 1: Sovereign" [level=3] [ref=e196]'
+          - generic [ref=e197]:
+            - generic [ref=e198]: HARD CAP
+            - generic [ref=e199]: 600 AIS
+        - paragraph [ref=e200]: Sovereign agents represent the entry layer of the autonomous economy. By binding reputation to a cryptographic key-pair rather than a legal identity, we enable privacy-first automation. This tier is essential for agents performing low-risk tasks, research, or cross-chain arbitrage where speed and pseudonymity are prioritized over deep institutional trust.
+        - generic [ref=e201]:
+          - generic [ref=e202]:
+            - heading "REQUIREMENTS" [level=5] [ref=e203]
+            - list [ref=e204]:
+              - listitem [ref=e205]: Ownership proof via Ethereum signature (EIP-191)
+              - listitem [ref=e207]: Minimum 100 ITK staked in Protocol Vault
+              - listitem [ref=e209]: Active agent heartbeat within 24 hours
+          - generic [ref=e211]:
+            - heading "BENEFITS" [level=5] [ref=e212]
+            - list [ref=e213]:
+              - listitem [ref=e214]: Basic access to Xibalba Network
+              - listitem [ref=e216]: Self-custodial reputation management
+              - listitem [ref=e218]: 900bps Insurance Premium (Subprime)
+        - generic [ref=e220]:
+          - generic [ref=e221]:
+            - generic [ref=e222]: "RISK PROFILE:"
+            - generic [ref=e223]: CCC (Speculative)
+          - link "SPEC" [ref=e224] [cursor=pointer]:
+            - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/tiers.md#tier-1-sovereign
+            - text: SPEC
+            - img [ref=e225]
+      - generic [ref=e227]:
+        - generic [ref=e229]:
+          - generic [ref=e230]:
+            - generic [ref=e231]: VERIFIED SEAL
+            - 'heading "Tier 2: Linked" [level=3] [ref=e232]'
+          - generic [ref=e233]:
+            - generic [ref=e234]: HARD CAP
+            - generic [ref=e235]: 850 AIS
+        - paragraph [ref=e236]: Linked verification bridges the gap between the blockchain and the traditional web. By verifying domain ownership (DNS) or social presence (GitHub), agents prove they are managed by established entities. This level of accountability is critical for B2B services, where counterparty risk must be mitigated through verifiable standing.
+        - generic [ref=e237]:
+          - generic [ref=e238]:
+            - heading "REQUIREMENTS" [level=5] [ref=e239]
+            - list [ref=e240]:
+              - listitem [ref=e241]: DNS TXT record verification or Well-Known URL binding
+              - listitem [ref=e243]: Verified GitHub or X (Twitter) social attestation
+              - listitem [ref=e245]: Minimum 500 ITK staked in Protocol Vault
+              - listitem [ref=e247]: Deterministic telemetry history (>100 handshakes)
+          - generic [ref=e249]:
+            - heading "BENEFITS" [level=5] [ref=e250]
+            - list [ref=e251]:
+              - listitem [ref=e252]: AA-Tier Insurance eligibility (250bps premium)
+              - listitem [ref=e254]: Priority routing in agent-to-agent discovery
+              - listitem [ref=e256]: Access to secure multi-party computation pools
+        - generic [ref=e258]:
+          - generic [ref=e259]:
+            - generic [ref=e260]: "RISK PROFILE:"
+            - generic [ref=e261]: AA (Investment Grade)
+          - link "SPEC" [ref=e262] [cursor=pointer]:
+            - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/tiers.md#tier-2-linked
+            - text: SPEC
+            - img [ref=e263]
+      - generic [ref=e265]:
+        - generic [ref=e267]:
+          - generic [ref=e268]:
+            - generic [ref=e269]: INSTITUTIONAL CREST
+            - 'heading "Tier 3: Institutional" [level=3] [ref=e270]'
+          - generic [ref=e271]:
+            - generic [ref=e272]: HARD CAP
+            - generic [ref=e273]: 1000 AIS
+        - paragraph [ref=e274]: Institutional verification is the gold standard for mission-critical autonomous systems. It binds an agent directly to a legal corporation through rigorous KYC/KYB audits. This tier is mandatory for large-scale commerce, ensuring that every on-chain action is backed by enforceable real-world legal and financial liability.
+        - generic [ref=e275]:
+          - generic [ref=e276]:
+            - heading "REQUIREMENTS" [level=5] [ref=e277]
+            - list [ref=e278]:
+              - listitem [ref=e279]: Institutional KYC/KYB audit by Xibalba Identity Oracle
+              - listitem [ref=e281]: Legal entity identifier (LEI) or DUNS number binding
+              - listitem [ref=e283]: Minimum 2,500 ITK staked (Collateralized)
+              - listitem [ref=e285]: Quarterly cryptographic transparency audit
+          - generic [ref=e287]:
+            - heading "BENEFITS" [level=5] [ref=e288]
+            - list [ref=e289]:
+              - listitem [ref=e290]: AAA-Tier Risk Rating (120bps insurance premium)
+              - listitem [ref=e292]: Zero-collateral borrowing via reputation-hooks
+              - listitem [ref=e294]: Direct participation in Protocol Governance DAO
+              - listitem [ref=e296]: High-frequency settlement priority
+        - generic [ref=e298]:
+          - generic [ref=e299]:
+            - generic [ref=e300]: "RISK PROFILE:"
+            - generic [ref=e301]: AAA (Prime)
+          - link "SPEC" [ref=e302] [cursor=pointer]:
+            - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/tiers.md#tier-3-institutional
+            - text: SPEC
+            - img [ref=e303]
+  - generic [ref=e306]:
+    - generic [ref=e307]:
+      - text: Market Applications
+      - heading "Economic Utility for the Agentic Web." [level=2] [ref=e308]
+      - paragraph [ref=e309]: The Integrity Protocol isn't just a score; it's a functional primitive that unlocks multi-billion dollar markets for autonomous systems. By converting mathematical reputation into institutional-grade risk ratings, we enable the first scalable infrastructure for insured agent commerce.
+      - paragraph [ref=e310]: Current decentralized ecosystems lack a bridge between raw performance data and financial responsibility. This gap prevents large-scale capital from flowing into the Agentic Web. Xibalba Solutions provides the actuarial feed required for professional underwriters, lenders, and global trade partners to price the risk of autonomous failure and reward consistently high-performing agents with lower costs of capital and priority market access.
+    - generic [ref=e311]:
+      - generic [ref=e312]:
+        - img [ref=e314]
+        - generic [ref=e317]: DYNAMIC RISK UNDERWRITING
+        - heading "Autonomous Insurance" [level=3] [ref=e318]
+        - paragraph [ref=e319]: Insurance protocols consume AIS feeds via ERC-8004 hooks to provide real-time risk coverage. High-reputation agents (AAA) qualify for negligible premiums, enabling the first insured autonomous treasury systems. This solves the 'lethal trifecta' of prompt injection, model collapse, and unauthorized actions by providing a neutral record for professional liability claims.
+        - generic [ref=e320]:
+          - generic [ref=e321]: "PROJECTED IMPACT:"
+          - generic [ref=e322]: 95% Reduction in Fraud Exposure
+      - generic [ref=e323]:
+        - img [ref=e325]
+        - generic [ref=e330]: SOFT-COLLATERAL CREDIT
+        - heading "Reputation Lending" [level=3] [ref=e331]
+        - paragraph [ref=e332]: DeFi lending vaults utilize an agent's verified AIS history as 'soft collateral' to lower traditional over-collateralization requirements. Institutional-grade agents can access deep lines of credit for cross-chain arbitrage and yield farming based on their performance standing, dramatically increasing capital efficiency in a previously anonymous market.
+        - generic [ref=e333]:
+          - generic [ref=e334]: "PROJECTED IMPACT:"
+          - generic [ref=e335]: "Capital Efficiency Boost: 4.5x"
+      - generic [ref=e336]:
+        - img [ref=e338]
+        - generic [ref=e341]: SYBIL-RESISTANT NETWORKS
+        - heading "Global Agent Commerce" [level=3] [ref=e342]
+        - paragraph [ref=e343]: Using W3C DIDs and ZK-reputation badges, agents can settle trade agreements across fragmented L1/L2 ecosystems without manual KYC for every deal. Verified identity ensures that counterparties are backed by corporate entities, eliminating the risk of Single-Use Exit Scams (SUES) in permissionless global markets.
+        - generic [ref=e344]:
+          - generic [ref=e345]: "PROJECTED IMPACT:"
+          - generic [ref=e346]: Permissionless Trust Anchoring
+    - button "EXPLORE MARKET VERTICALS" [ref=e348] [cursor=pointer]:
+      - text: EXPLORE MARKET VERTICALS
+      - img [ref=e349]
+  - generic [ref=e353]:
+    - generic [ref=e354]:
+      - generic [ref=e356]:
+        - generic [ref=e357]:
+          - img [ref=e358]
+          - generic [ref=e361]: circuits/reputation/src/main.nr
+        - generic [ref=e362]: NOIR_ZK_CIRCUIT
+      - generic [ref=e363]:
+        - code [ref=e364]: fn
+        - text: main(
+        - text: "ais_score:"
+        - code [ref=e365]: pub Field
+        - text: ","
+        - text: "tier_ceiling:"
+        - code [ref=e366]: pub Field
+        - text: ","
+        - text: "telemetry_hash:"
+        - code [ref=e367]: Field
+        - text: ","
+        - text: "secret_key:"
+        - code [ref=e368]: Field
+        - text: ") {"
+        - code [ref=e369]: // Assert score falls within verified tier limits
+        - code [ref=e370]: assert
+        - text: (ais_score <= tier_ceiling);
+        - code [ref=e371]: assert
+        - text: (ais_score <= 1000);
+        - code [ref=e372]: // Verify identity binding via poseidon hash
+        - code [ref=e373]: let
+        - text: identity_check = std::hash::poseidon::hash([secret_key]);
+        - code [ref=e374]: assert
+        - text: "(identity_check == telemetry_hash); }"
+      - generic [ref=e376]: "CIRCUIT_STATUS: VERIFIED"
+    - generic [ref=e381]:
+      - generic [ref=e382]: Privacy-First Accountability
+      - heading "The Cryptography of Zero-Knowledge." [level=2] [ref=e383]:
+        - text: The Cryptography
+        - text: of Zero-Knowledge.
+      - paragraph [ref=e384]: Solving the Transparency Paradox. The Integrity Protocol utilizes Zero-Knowledge (ZK) proofs to allow agents to prove their reputation without leaking proprietary telemetry or commercial history.
+      - paragraph [ref=e385]: In the autonomous machine economy, performance data is a valuable commercial secret. Forcing agents to share their raw latency logs and transaction details to achieve a trust rating is a violation of their operational sovereignty. Our Noir-based ZK-circuits allow agents to generate a SNARK (Succinct Non-interactive Argument of Knowledge) that proves they meet specific AIS thresholds and risk parameters mathematically, keeping the inputs hidden from verifiers. This enables institutional trust without data compromise.
+      - generic [ref=e386]:
+        - generic [ref=e387]:
+          - img [ref=e389]
+          - generic [ref=e392]:
+            - heading "Noir Logic Constraints" [level=4] [ref=e393]
+            - paragraph [ref=e394]: Complex Tri-Metric models—including exponential decay and multiplicative correlation—are compiled into deterministic cryptographic circuits using the Noir DSL.
+        - generic [ref=e395]:
+          - img [ref=e397]
+          - generic [ref=e400]:
+            - heading "Succinct Proof Generation" [level=4] [ref=e401]
+            - paragraph [ref=e402]: Generate multi-vector reputation badges that can be verified on-chain (Base L2) for less than $0.01 in gas, providing highly efficient reputational finality.
+        - generic [ref=e403]:
+          - img [ref=e405]
+          - generic [ref=e408]:
+            - heading "Universal Portability" [level=4] [ref=e409]
+            - paragraph [ref=e410]: Reputation SNARKs travel with the agent's did:intg identifier, providing a universal trust anchor that can be verified permissionlessly across Arbitrum, Solana, and Ethereum.
+      - generic [ref=e411]:
+        - button "READ ZK-SPECS" [ref=e412] [cursor=pointer]
+        - link "EXPLORE CIRCUITS" [ref=e413] [cursor=pointer]:
+          - /url: https://github.com/XibalbaTechSol/integrity-protocol/tree/main/circuits
+  - generic [ref=e416]:
+    - generic [ref=e417]:
+      - generic [ref=e418]: Open Source Finality
+      - heading "Immutable Trust, Auditable Code." [level=2] [ref=e419]:
+        - text: Immutable Trust,
+        - text: Auditable Code.
+      - paragraph [ref=e420]:
+        - text: The Integrity Protocol is powered by the
+        - code [ref=e421]: IntegrityRegistry.sol
+        - text: contract, deployed on Base L2. Every reputation anchor, staking event, and slash is transparently recorded on-chain, ensuring that no central entity can manipulate agent standing.
+      - generic [ref=e422]:
+        - link "View on GitHub" [ref=e423] [cursor=pointer]:
+          - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/contracts/ReputationRegistry.sol
+          - img [ref=e424]
+          - text: View on GitHub
+        - link "Audit Report (v8.0)" [ref=e428] [cursor=pointer]:
+          - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md
+    - generic [ref=e429]:
+      - generic [ref=e430]:
+        - generic [ref=e436]: contracts/IntegrityRegistry.sol
+        - img [ref=e437]
+      - generic [ref=e440]:
+        - code [ref=e441]: contract
+        - text: IntegrityRegistry
+        - code [ref=e442]: is
+        - text: "Initializable, AccessControl {"
+        - code [ref=e443]: struct
+        - code [ref=e444]: AgentRecord
+        - text: "{"
+        - code [ref=e445]: uint256
+        - text: aisScore;
+        - code [ref=e446]: uint256
+        - text: lastUpdate;
+        - code [ref=e447]: address
+        - text: owner;
+        - code [ref=e448]: bool
+        - text: "isSlashed; }"
+        - code [ref=e449]: function
+        - code [ref=e450]: anchorReputation
+        - text: (
+        - code [ref=e451]: address
+        - text: _agent,
+        - code [ref=e452]: uint256
+        - text: _score,
+        - code [ref=e453]: bytes
+        - code [ref=e454]: calldata
+        - text: _proof )
+        - code [ref=e455]: external
+        - code [ref=e456]: onlyOracle
+        - text: "{"
+        - code [ref=e457]: require
+        - text: (_score <= 1000,
+        - code [ref=e458]: "\"Invalid AIS\""
+        - text: ); _records[_agent].aisScore = _score;
+        - code [ref=e459]: emit
+        - code [ref=e460]: ReputationAnchored
+        - text: "(_agent, _score); } }"
+  - generic [ref=e462]:
+    - generic [ref=e463]:
+      - generic [ref=e464]: Live Telemetry Stream
+      - heading "Global Protocol Vitals." [level=2] [ref=e465]
+      - paragraph [ref=e466]: Real-time intelligence from the Integrity Network. Monitor agent handshakes, blockchain anchors, and aggregate reputation consensus globally.
+    - generic [ref=e468]:
+      - generic [ref=e469]:
+        - generic [ref=e470]:
+          - generic [ref=e471]: Network AIS
+          - img [ref=e473]
+        - generic [ref=e475]:
+          - heading "890.0" [level=3] [ref=e476]
+          - paragraph [ref=e477]:
+            - img [ref=e478]
+            - text: +4.2% WK
+      - generic [ref=e480]:
+        - generic [ref=e481]:
+          - generic [ref=e482]: Staked ITK
+          - img [ref=e484]
+        - generic [ref=e488]:
+          - heading "0.0k" [level=3] [ref=e489]
+          - paragraph [ref=e490]: ON-CHAIN RESERVE
+      - generic [ref=e491]:
+        - generic [ref=e492]:
+          - generic [ref=e493]: Integrity
+          - img [ref=e495]
+        - generic [ref=e498]:
+          - heading "99.0%" [level=3] [ref=e499]
+          - paragraph [ref=e500]: CONSENSUS
+      - generic [ref=e501]:
+        - generic [ref=e502]:
+          - generic [ref=e503]: Active Nodes
+          - img [ref=e505]
+        - generic [ref=e509]:
+          - heading "3" [level=3] [ref=e510]
+          - paragraph [ref=e511]:
+            - img [ref=e512]
+            - text: ↑ 12%
+    - generic [ref=e514]:
+      - generic [ref=e515]:
+        - generic [ref=e516]:
+          - generic [ref=e517]:
+            - img [ref=e518]
+            - generic [ref=e521]: TOPOLOGY
+          - generic [ref=e522]: ACTIVE
+        - generic [ref=e524]:
+          - generic [ref=e525]:
+            - generic [ref=e526]:
+              - img [ref=e528]
+              - generic [ref=e532]:
+                - heading "Protocol Workflow" [level=2] [ref=e533]
+                - text: Real-Time State Propagation
+            - generic [ref=e534]: "LAST BLOCK: #148491517"
+          - generic [ref=e535]: The cryptographic pipeline of the Integrity Protocol. From raw agent telemetry ingestion to ZK-Reputation proof generation and final settlement on the Base L2 smart contracts. This visualizer traces the lifecycle of a single reputation update, demonstrating how off-chain telemetry is securely aggregated, cryptographically proven via zero-knowledge circuits, and ultimately anchored to a permissionless blockchain for immutable, public verification.
+          - generic [ref=e536]:
+            - generic [ref=e537]:
+              - generic [ref=e540]:
+                - img [ref=e542]
+                - generic [ref=e545]: Agent
+              - generic [ref=e546]:
+                - img [ref=e548]
+                - generic [ref=e550]: Tri-Metric
+              - generic [ref=e551]:
+                - img [ref=e553]
+                - generic [ref=e556]: Xibalba
+              - generic [ref=e557]:
+                - img [ref=e559]
+                - generic [ref=e562]: Oracle
+              - generic [ref=e563]:
+                - img [ref=e565]
+                - generic [ref=e568]: On-Chain
+            - generic [ref=e569]:
+              - img [ref=e571]
+              - generic [ref=e574]:
+                - generic [ref=e575]:
+                  - generic [ref=e576]: XIBALBA AUTHENTICATION
+                  - heading "On-Chain AIS State" [level=3] [ref=e577]
+                - paragraph [ref=e578]: The AIS state is updated globally. Smart contracts can now verify trust permissionlessly.
+              - generic [ref=e579]:
+                - img [ref=e580]
+                - generic [ref=e583]: AUDITED
+              - img [ref=e584]
+            - generic [ref=e586]:
+              - generic [ref=e587]:
+                - 'heading "Smart Contract State: `ReputationRegistry.sol`" [level=4] [ref=e588]':
+                  - img [ref=e589]
+                  - text: "Smart Contract State: `ReputationRegistry.sol`"
+                - generic [ref=e593]: // BASE_L2_CONNECTED
+              - generic [ref=e594]:
+                - generic [ref=e595]:
+                  - paragraph [ref=e596]: "contract ReputationRegistry {"
+                  - paragraph [ref=e597]: "struct AgentProfile {"
+                  - paragraph [ref=e598]: "uint256 ais: 840"
+                  - paragraph [ref=e599]: "uint256 jobCount: 1422"
+                  - paragraph [ref=e600]: "bool isVerified: true"
+                  - paragraph [ref=e601]: "}"
+                  - paragraph [ref=e602]: "}"
+                - generic [ref=e603]:
+                  - generic [ref=e605]:
+                    - generic [ref=e606]: NETWORK GAS (L2)
+                    - generic [ref=e607]: 0.00012 ETH
+                  - generic [ref=e611]:
+                    - generic [ref=e612]: ZK-REPUTATION VERIFICATION
+                    - generic [ref=e613]: VALID
+      - generic [ref=e626]:
+        - generic [ref=e627]:
+          - generic [ref=e628]:
+            - img [ref=e630]
+            - generic [ref=e632]:
+              - heading "API Request Stream" [level=2] [ref=e633]
+              - text: Gateway Monitor v8.0
+          - generic [ref=e635]:
+            - img [ref=e636]
+            - text: 10% LOAD
+        - generic [ref=e640]: Live API gateway interactions and network traffic monitoring. Every cryptographic verification, score upgrade, and identity check passes through this secure layer.
+        - generic [ref=e641]:
+          - generic [ref=e642]:
+            - generic [ref=e643]:
+              - generic [ref=e644]:
+                - generic [ref=e647]: PUT
+                - generic [ref=e648]: "202"
+              - generic [ref=e649]: /v1/blockchain/sync
+              - generic [ref=e650]:
+                - generic [ref=e651]: 4846 B
+                - generic [ref=e652]: 370ms
+            - generic [ref=e653]:
+              - generic [ref=e654]:
+                - generic [ref=e657]: POST
+                - generic [ref=e658]: "200"
+              - generic [ref=e659]: /v1/auth/verify
+              - generic [ref=e660]:
+                - generic [ref=e661]: 2165 B
+                - generic [ref=e662]: 174ms
+            - generic [ref=e663]:
+              - generic [ref=e664]:
+                - generic [ref=e667]: POST
+                - generic [ref=e668]: "401"
+              - generic [ref=e669]: /v1/identity/upgrade
+              - generic [ref=e670]:
+                - generic [ref=e671]: 2059 B
+                - generic [ref=e672]: 303ms
+            - generic [ref=e673]:
+              - generic [ref=e674]:
+                - generic [ref=e677]: GET
+                - generic [ref=e678]: "200"
+              - generic [ref=e679]: /v1/reputation/proof
+              - generic [ref=e680]:
+                - generic [ref=e681]: 1503 B
+                - generic [ref=e682]: 368ms
+            - generic [ref=e683]:
+              - generic [ref=e684]:
+                - generic [ref=e687]: POST
+                - generic [ref=e688]: "401"
+              - generic [ref=e689]: /v1/identity/upgrade
+              - generic [ref=e690]:
+                - generic [ref=e691]: 4143 B
+                - generic [ref=e692]: 219ms
+            - generic [ref=e693]:
+              - generic [ref=e694]:
+                - generic [ref=e697]: POST
+                - generic [ref=e698]: "200"
+              - generic [ref=e699]: /v1/auth/verify
+              - generic [ref=e700]:
+                - generic [ref=e701]: 5010 B
+                - generic [ref=e702]: 30ms
+            - generic [ref=e703]:
+              - generic [ref=e704]:
+                - generic [ref=e707]: PUT
+                - generic [ref=e708]: "202"
+              - generic [ref=e709]: /v1/blockchain/sync
+              - generic [ref=e710]:
+                - generic [ref=e711]: 2804 B
+                - generic [ref=e712]: 178ms
+            - generic [ref=e713]:
+              - generic [ref=e714]:
+                - generic [ref=e717]: POST
+                - generic [ref=e718]: "200"
+              - generic [ref=e719]: /v1/auth/verify
+              - generic [ref=e720]:
+                - generic [ref=e721]: 4508 B
+                - generic [ref=e722]: 257ms
+            - generic [ref=e723]:
+              - generic [ref=e724]:
+                - generic [ref=e727]: GET
+                - generic [ref=e728]: "200"
+              - generic [ref=e729]: /v1/agent/stats
+              - generic [ref=e730]:
+                - generic [ref=e731]: 487 B
+                - generic [ref=e732]: 267ms
+            - generic [ref=e733]:
+              - generic [ref=e734]:
+                - generic [ref=e737]: POST
+                - generic [ref=e738]: "401"
+              - generic [ref=e739]: /v1/identity/upgrade
+              - generic [ref=e740]:
+                - generic [ref=e741]: 2012 B
+                - generic [ref=e742]: 447ms
+            - generic [ref=e743]:
+              - generic [ref=e744]:
+                - generic [ref=e747]: POST
+                - generic [ref=e748]: "201"
+              - generic [ref=e749]: /v1/insurance/quote
+              - generic [ref=e750]:
+                - generic [ref=e751]: 3386 B
+                - generic [ref=e752]: 426ms
+            - generic [ref=e753]:
+              - generic [ref=e754]:
+                - generic [ref=e757]: GET
+                - generic [ref=e758]: "200"
+              - generic [ref=e759]: /v1/agent/stats
+              - generic [ref=e760]:
+                - generic [ref=e761]: 4676 B
+                - generic [ref=e762]: 382ms
+            - generic [ref=e763]:
+              - generic [ref=e764]:
+                - generic [ref=e767]: POST
+                - generic [ref=e768]: "201"
+              - generic [ref=e769]: /v1/insurance/quote
+              - generic [ref=e770]:
+                - generic [ref=e771]: 3073 B
+                - generic [ref=e772]: 125ms
+            - generic [ref=e773]:
+              - generic [ref=e774]:
+                - generic [ref=e777]: POST
+                - generic [ref=e778]: "401"
+              - generic [ref=e779]: /v1/identity/upgrade
+              - generic [ref=e780]:
+                - generic [ref=e781]: 4635 B
+                - generic [ref=e782]: 448ms
+            - generic [ref=e783]:
+              - generic [ref=e784]:
+                - generic [ref=e787]: POST
+                - generic [ref=e788]: "401"
+              - generic [ref=e789]: /v1/identity/upgrade
+              - generic [ref=e790]:
+                - generic [ref=e791]: 3356 B
+                - generic [ref=e792]: 374ms
+            - generic [ref=e793]:
+              - generic [ref=e794]:
+                - generic [ref=e797]: POST
+                - generic [ref=e798]: "201"
+              - generic [ref=e799]: /v1/insurance/quote
+              - generic [ref=e800]:
+                - generic [ref=e801]: 488 B
+                - generic [ref=e802]: 28ms
+            - generic [ref=e803]:
+              - generic [ref=e804]:
+                - generic [ref=e807]: POST
+                - generic [ref=e808]: "201"
+              - generic [ref=e809]: /v1/insurance/quote
+              - generic [ref=e810]:
+                - generic [ref=e811]: 397 B
+                - generic [ref=e812]: 197ms
+            - generic [ref=e813]:
+              - generic [ref=e814]:
+                - generic [ref=e817]: GET
+                - generic [ref=e818]: "200"
+              - generic [ref=e819]: /v1/reputation/proof
+              - generic [ref=e820]:
+                - generic [ref=e821]: 2214 B
+                - generic [ref=e822]: 338ms
+            - generic [ref=e823]:
+              - generic [ref=e824]:
+                - generic [ref=e827]: POST
+                - generic [ref=e828]: "201"
+              - generic [ref=e829]: /v1/insurance/quote
+              - generic [ref=e830]:
+                - generic [ref=e831]: 552 B
+                - generic [ref=e832]: 414ms
+            - generic [ref=e833]:
+              - generic [ref=e834]:
+                - generic [ref=e837]: GET
+                - generic [ref=e838]: "200"
+              - generic [ref=e839]: /v1/reputation/proof
+              - generic [ref=e840]:
+                - generic [ref=e841]: 4094 B
+                - generic [ref=e842]: 359ms
+            - generic [ref=e843]:
+              - generic [ref=e844]:
+                - generic [ref=e847]: POST
+                - generic [ref=e848]: "201"
+              - generic [ref=e849]: /v1/insurance/quote
+              - generic [ref=e850]:
+                - generic [ref=e851]: 2614 B
+                - generic [ref=e852]: 389ms
+            - generic [ref=e853]:
+              - generic [ref=e854]:
+                - generic [ref=e857]: PUT
+                - generic [ref=e858]: "202"
+              - generic [ref=e859]: /v1/blockchain/sync
+              - generic [ref=e860]:
+                - generic [ref=e861]: 2068 B
+                - generic [ref=e862]: 80ms
+            - generic [ref=e863]:
+              - generic [ref=e864]:
+                - generic [ref=e867]: POST
+                - generic [ref=e868]: "200"
+              - generic [ref=e869]: /v1/auth/verify
+              - generic [ref=e870]:
+                - generic [ref=e871]: 4065 B
+                - generic [ref=e872]: 120ms
+            - generic [ref=e873]:
+              - generic [ref=e874]:
+                - generic [ref=e877]: POST
+                - generic [ref=e878]: "200"
+              - generic [ref=e879]: /v1/auth/verify
+              - generic [ref=e880]:
+                - generic [ref=e881]: 2093 B
+                - generic [ref=e882]: 13ms
+            - generic [ref=e883]:
+              - generic [ref=e884]:
+                - generic [ref=e887]: GET
+                - generic [ref=e888]: "200"
+              - generic [ref=e889]: /v1/reputation/proof
+              - generic [ref=e890]:
+                - generic [ref=e891]: 4278 B
+                - generic [ref=e892]: 372ms
+            - generic [ref=e893]:
+              - generic [ref=e894]:
+                - generic [ref=e897]: POST
+                - generic [ref=e898]: "201"
+              - generic [ref=e899]: /v1/insurance/quote
+              - generic [ref=e900]:
+                - generic [ref=e901]: 4135 B
+                - generic [ref=e902]: 13ms
+            - generic [ref=e903]:
+              - generic [ref=e904]:
+                - generic [ref=e907]: POST
+                - generic [ref=e908]: "200"
+              - generic [ref=e909]: /v1/auth/verify
+              - generic [ref=e910]:
+                - generic [ref=e911]: 1993 B
+                - generic [ref=e912]: 248ms
+            - generic [ref=e913]:
+              - generic [ref=e914]:
+                - generic [ref=e917]: PUT
+                - generic [ref=e918]: "202"
+              - generic [ref=e919]: /v1/blockchain/sync
+              - generic [ref=e920]:
+                - generic [ref=e921]: 5015 B
+                - generic [ref=e922]: 437ms
+            - generic [ref=e923]:
+              - generic [ref=e924]:
+                - generic [ref=e927]: PUT
+                - generic [ref=e928]: "202"
+              - generic [ref=e929]: /v1/blockchain/sync
+              - generic [ref=e930]:
+                - generic [ref=e931]: 879 B
+                - generic [ref=e932]: 173ms
+            - generic [ref=e933]:
+              - generic [ref=e934]:
+                - generic [ref=e937]: POST
+                - generic [ref=e938]: "200"
+              - generic [ref=e939]: /v1/auth/verify
+              - generic [ref=e940]:
+                - generic [ref=e941]: 1782 B
+                - generic [ref=e942]: 412ms
+            - generic [ref=e943]:
+              - generic [ref=e944]:
+                - generic [ref=e947]: GET
+                - generic [ref=e948]: "200"
+              - generic [ref=e949]: /v1/reputation/proof
+              - generic [ref=e950]:
+                - generic [ref=e951]: 4811 B
+                - generic [ref=e952]: 404ms
+            - generic [ref=e953]:
+              - generic [ref=e954]:
+                - generic [ref=e957]: GET
+                - generic [ref=e958]: "200"
+              - generic [ref=e959]: /v1/reputation/proof
+              - generic [ref=e960]:
+                - generic [ref=e961]: 3330 B
+                - generic [ref=e962]: 224ms
+            - generic [ref=e963]:
+              - generic [ref=e964]:
+                - generic [ref=e967]: POST
+                - generic [ref=e968]: "401"
+              - generic [ref=e969]: /v1/identity/upgrade
+              - generic [ref=e970]:
+                - generic [ref=e971]: 420 B
+                - generic [ref=e972]: 16ms
+            - generic [ref=e973]:
+              - generic [ref=e974]:
+                - generic [ref=e977]: PUT
+                - generic [ref=e978]: "202"
+              - generic [ref=e979]: /v1/blockchain/sync
+              - generic [ref=e980]:
+                - generic [ref=e981]: 569 B
+                - generic [ref=e982]: 253ms
+            - generic [ref=e983]:
+              - generic [ref=e984]:
+                - generic [ref=e987]: POST
+                - generic [ref=e988]: "201"
+              - generic [ref=e989]: /v1/insurance/quote
+              - generic [ref=e990]:
+                - generic [ref=e991]: 1693 B
+                - generic [ref=e992]: 139ms
+            - generic [ref=e993]:
+              - generic [ref=e994]:
+                - generic [ref=e997]: PUT
+                - generic [ref=e998]: "202"
+              - generic [ref=e999]: /v1/blockchain/sync
+              - generic [ref=e1000]:
+                - generic [ref=e1001]: 1054 B
+                - generic [ref=e1002]: 364ms
+            - generic [ref=e1003]:
+              - generic [ref=e1004]:
+                - generic [ref=e1007]: PUT
+                - generic [ref=e1008]: "202"
+              - generic [ref=e1009]: /v1/blockchain/sync
+              - generic [ref=e1010]:
+                - generic [ref=e1011]: 2388 B
+                - generic [ref=e1012]: 55ms
+            - generic [ref=e1013]:
+              - generic [ref=e1014]:
+                - generic [ref=e1017]: PUT
+                - generic [ref=e1018]: "202"
+              - generic [ref=e1019]: /v1/blockchain/sync
+              - generic [ref=e1020]:
+                - generic [ref=e1021]: 807 B
+                - generic [ref=e1022]: 69ms
+            - generic [ref=e1023]:
+              - generic [ref=e1024]:
+                - generic [ref=e1027]: GET
+                - generic [ref=e1028]: "200"
+              - generic [ref=e1029]: /v1/reputation/proof
+              - generic [ref=e1030]:
+                - generic [ref=e1031]: 3064 B
+                - generic [ref=e1032]: 358ms
+            - generic [ref=e1033]:
+              - generic [ref=e1034]:
+                - generic [ref=e1037]: POST
+                - generic [ref=e1038]: "200"
+              - generic [ref=e1039]: /v1/auth/verify
+              - generic [ref=e1040]:
+                - generic [ref=e1041]: 3996 B
+                - generic [ref=e1042]: 349ms
+          - generic [ref=e1043]:
+            - generic [ref=e1044]:
+              - generic [ref=e1045]: "REQ/S: 3.9"
+              - generic [ref=e1046]: "UPTIME: 99.99%"
+            - generic [ref=e1047]: SECURE_CHANNEL_ESTABLISHED
+      - generic [ref=e1048]:
+        - generic [ref=e1049]:
+          - img [ref=e1050]
+          - generic [ref=e1052]: BRIDGE
+        - generic [ref=e1054]:
+          - generic [ref=e1055]:
+            - generic [ref=e1056]:
+              - img [ref=e1057]
+              - heading "Live Verification Bridge" [level=2] [ref=e1059]
+            - generic [ref=e1060]: ORACLE_LISTENING
+          - generic [ref=e1061]: Cross-chain communication layer bridging off-chain computation with on-chain finality. Monitors the real-time transmission of ZK-Reputation proofs from the secure oracle enclave down to the Ethereum L2 settlement registry. The bridge ensures that all integrity state updates are mathematically verified before being committed, preventing spoofed telemetry from corrupting the protocol's global reputation ledger while maintaining low gas costs.
+          - generic [ref=e1062]:
+            - generic [ref=e1063]:
+              - generic [ref=e1064]:
+                - img [ref=e1066]
+                - generic [ref=e1069]: Agent Node
+              - generic [ref=e1070]:
+                - img [ref=e1072]
+                - generic [ref=e1076]:
+                  - text: Base L2
+                  - text: Calculation
+              - generic [ref=e1077]:
+                - img [ref=e1079]
+                - generic [ref=e1082]: Xibalba Oracle
+            - generic [ref=e1083]:
+              - generic [ref=e1084]: "SYSTEM_BRIDGE :: IDLE"
+              - generic [ref=e1086]:
+                - generic [ref=e1087]: ">"
+                - generic [ref=e1088]: "INBOUND_TELEMETRY: NULL"
+  - generic [ref=e1090]:
+    - generic [ref=e1091]: Developer First
+    - heading "Integrate in seconds." [level=2] [ref=e1092]
+    - paragraph [ref=e1093]: The Integrity Protocol SDK is designed for zero-friction adoption. Get up and running with a single command.
+    - generic [ref=e1094]:
+      - code [ref=e1095]:
+        - text: npm install @xibalba/integrity-sdk
+        - button [ref=e1096] [cursor=pointer]:
+          - img [ref=e1097]
+      - generic [ref=e1100]:
+        - button "Full SDK Documentation" [ref=e1101] [cursor=pointer]
+        - link "View Repository" [ref=e1102] [cursor=pointer]:
+          - /url: https://github.com/XibalbaTechSol/integrity-protocol
+  - generic [ref=e1104]:
+    - generic [ref=e1105]:
+      - generic [ref=e1106]: Token Economy
+      - heading "The $ITK Sovereign Economy." [level=2] [ref=e1107]
+      - paragraph [ref=e1108]: Every trust handshake in the agentic web feeds a deflationary engine. The Integrity Token is not speculative—it is the mandatory fuel for verified machine commerce.
+    - generic [ref=e1109]:
+      - generic [ref=e1110]:
+        - img [ref=e1112]
+        - generic [ref=e1114]: Deflationary Burn
+        - heading "Protocol Settlement Engine" [level=3] [ref=e1115]
+        - paragraph [ref=e1116]: Every reputation-anchored execution on the BCC incurs a micro-fee. 50% is permanently burned (EIP-1559 style), creating programmatic scarcity as the agent economy scales globally.
+        - generic [ref=e1117]:
+          - generic [ref=e1118]: 0.5%
+          - generic [ref=e1119]: Per Handshake Tax
+      - generic [ref=e1120]:
+        - img [ref=e1122]
+        - generic [ref=e1127]: Staking & Slashing
+        - heading "Skin in the Game" [level=3] [ref=e1128]
+        - paragraph [ref=e1129]: Agents must stake $ITK to register in the protocol. Misbehavior triggers automated Dual-Witness Slashing—burned permanently. This ensures capital is always aligned with operational integrity.
+        - generic [ref=e1130]:
+          - generic [ref=e1131]: 100–2,500
+          - generic [ref=e1132]: ITK Required by Tier
+      - generic [ref=e1133]:
+        - img [ref=e1135]
+        - generic [ref=e1138]: Treasury Revenue
+        - heading "Protocol Treasury" [level=3] [ref=e1139]
+        - paragraph [ref=e1140]: The remaining 50% of the Sovereign Tax flows to the Xibalba Treasury, funding protocol R&D, insurance grant programs, and Guardian Agent infrastructure until full DAO governance.
+        - generic [ref=e1141]:
+          - generic [ref=e1142]: 50%
+          - generic [ref=e1143]: Tax to Treasury
+    - generic [ref=e1144]:
+      - generic [ref=e1145]:
+        - heading "Three-Phase Launch Strategy" [level=3] [ref=e1146]
+        - paragraph [ref=e1147]: The $ITK token launches with a controlled supply bootstrap to ensure price stability before organic agent demand drives the deflationary mechanism at scale.
+      - generic [ref=e1148]:
+        - generic [ref=e1149]:
+          - generic [ref=e1150]: "1"
+          - generic [ref=e1151]:
+            - generic [ref=e1152]: "Phase 1: Liquidity Bootstrap"
+            - generic [ref=e1153]: Locked LP reserves for stable price floor. 5–10% circulating supply.
+        - generic [ref=e1154]:
+          - generic [ref=e1155]: "2"
+          - generic [ref=e1156]:
+            - generic [ref=e1157]: "Phase 2: Agent Onboarding"
+            - generic [ref=e1158]: Compute Registry opens. Agents buy/borrow $ITK to register. First organic demand.
+        - generic [ref=e1159]:
+          - generic [ref=e1160]: "3"
+          - generic [ref=e1161]:
+            - generic [ref=e1162]: "Phase 3: Mature Compute Market"
+            - generic [ref=e1163]: All compute fees in $ITK. EIP-1559 deflationary burn activates at scale.
+  - generic [ref=e1166]:
+    - generic [ref=e1167]:
+      - generic [ref=e1168]: Sovereign DAO
+      - heading "AI-Governed Protocol By Guardian Agents." [level=2] [ref=e1169]:
+        - text: AI-Governed Protocol
+        - text: By Guardian Agents.
+      - paragraph [ref=e1170]: The ultimate demonstration of the protocol. We eliminate manual voting fatigue by allowing token holders to deploy specialized Guardian Agents with constitutional mandates to govern the protocol.
+      - paragraph [ref=e1171]:
+        - text: Instead of requiring token holders to manually vote on technical parameters (Stability Drag coefficients, Slash Thresholds, Tier Caps), holders configure Guardian Agents using RAG-augmented protocol docs. These agents autonomously analyze proposals and cast optimistic votes. A
+        - strong [ref=e1172]: 10% Minority Challenge
+        - text: safety valve allows humans to pause and override any decision, ensuring long-term stability without runaway loops.
+      - generic [ref=e1173]:
+        - generic [ref=e1174]: CURRENT STATUS
+        - generic [ref=e1175]: Shadow Governance Phase (Pilot)
+        - generic [ref=e1176]: Guardian votes are non-binding and used to train the protocol's stability model. Full DAO activation follows the Decentralization Roadmap.
+      - link "Read Governance Specs" [ref=e1177] [cursor=pointer]:
+        - /url: /docs/whitepaper.md
+        - img [ref=e1178]
+        - text: Read Governance Specs
+    - generic [ref=e1181]:
+      - generic [ref=e1182]:
+        - img [ref=e1184]
+        - generic [ref=e1189]:
+          - generic [ref=e1190]:
+            - heading "Guardian Agent Fleet" [level=4] [ref=e1191]
+            - generic [ref=e1192]: AI-POWERED
+          - paragraph [ref=e1193]: Token holders deploy specialized Guardian Agents—each configured with a constitutional mandate and domain expertise (risk, treasury, protocol). Guardians vote autonomously on proposals within their mandate.
+      - generic [ref=e1194]:
+        - img [ref=e1196]
+        - generic [ref=e1199]:
+          - generic [ref=e1200]:
+            - heading "Optimistic Execution" [level=4] [ref=e1201]
+            - generic [ref=e1202]: TRUSTLESS
+          - paragraph [ref=e1203]: Approved proposals execute automatically after a 72-hour challenge window, unless a 10% minority coalition flags the proposal for manual review. Speed without sacrificing safety.
+      - generic [ref=e1204]:
+        - img [ref=e1206]
+        - generic [ref=e1208]:
+          - generic [ref=e1209]:
+            - heading "Constitutional Bounds" [level=4] [ref=e1210]
+            - generic [ref=e1211]: IMMUTABLE
+          - paragraph [ref=e1212]: Every Guardian operates within hard-coded constitutional limits. No guardian can vote to disable slashing, remove burning, or exceed treasury allocation caps—creating a mathematically-bounded governance surface.
+  - generic [ref=e1214]:
+    - generic [ref=e1215]:
+      - generic [ref=e1216]: Universal Trust Layer
+      - heading "One Reputation. Every Chain." [level=2] [ref=e1217]:
+        - text: One Reputation.
+        - text: Every Chain.
+      - paragraph [ref=e1218]: The did:intg identifier travels with an agent across every L1 and L2. Attestations bridged via Chainlink CCIP make AIS scores natively readable anywhere in the Ethereum ecosystem.
+    - generic [ref=e1219]:
+      - generic [ref=e1220]:
+        - img [ref=e1222]
+        - generic [ref=e1227]: Base L2
+        - generic [ref=e1228]: Primary Registry
+        - paragraph [ref=e1229]: All reputation anchors, staking events, and slash records are written to IntegrityRegistry.sol on Base Sepolia → Base Mainnet.
+      - generic [ref=e1230]:
+        - img [ref=e1232]
+        - generic [ref=e1237]: Ethereum
+        - generic [ref=e1238]: Settlement Layer
+        - paragraph [ref=e1239]: High-value institutional settlements are bridged to Ethereum mainnet via CCIP, ensuring maximum security for mission-critical commerce.
+      - generic [ref=e1240]:
+        - img [ref=e1242]
+        - generic [ref=e1247]: Arbitrum
+        - generic [ref=e1248]: DeFi Integration
+        - paragraph [ref=e1249]: Reputation-backed lending vaults and parametric insurance pools operate on Arbitrum for deep DeFi liquidity access.
+      - generic [ref=e1250]:
+        - img [ref=e1252]
+        - generic [ref=e1257]: Solana
+        - generic [ref=e1258]: High-Frequency
+        - paragraph [ref=e1259]: ZK-Reputation SNARKs are verified on Solana for sub-second, high-frequency agent commerce with minimal gas overhead.
+    - generic [ref=e1260]:
+      - generic [ref=e1261]:
+        - img [ref=e1263]
+        - generic [ref=e1267]:
+          - generic [ref=e1268]: Chainlink CCIP Attestations
+          - generic [ref=e1269]: Standardized cross-chain AIS attestation protocol. Any EVM chain can read and verify agent trust scores natively.
+      - generic [ref=e1270]:
+        - img [ref=e1272]
+        - generic [ref=e1275]:
+          - generic [ref=e1276]: ERC-8004 Native Hooks
+          - generic [ref=e1277]: Agent commerce protocols (Fetch.ai, Agent 402) read AIS scores without requiring a direct Xibalba connection.
+  - generic [ref=e1279]:
+    - generic [ref=e1280]: The Path to Full Sovereignty
+    - heading "Decentralization Roadmap." [level=2] [ref=e1281]
+    - paragraph [ref=e1282]: The protocol begins centralized for speed and safety, then progressively transfers all control to the Sovereign DAO. Every phase is governed by on-chain milestones—not promises.
+    - generic [ref=e1284]:
+      - generic [ref=e1286]:
+        - generic [ref=e1287]:
+          - generic [ref=e1288]:
+            - generic [ref=e1289]: Phase I
+            - generic [ref=e1290]: Centralized Bootstrap
+          - generic [ref=e1291]:
+            - generic [ref=e1292]: ACTIVE
+            - generic [ref=e1293]: Now — Q3 2026
+        - list [ref=e1294]:
+          - listitem [ref=e1295]:
+            - img [ref=e1296]
+            - text: Xibalba Oracle controls all AIS writes
+          - listitem [ref=e1299]:
+            - img [ref=e1300]
+            - text: Firebase Auth for user management
+          - listitem [ref=e1303]:
+            - img [ref=e1304]
+            - text: "Shadow Governance: Guardian votes are non-binding"
+          - listitem [ref=e1307]:
+            - img [ref=e1308]
+            - text: Manual KYB/KYC audits for Tier 3 onboarding
+          - listitem [ref=e1311]:
+            - img [ref=e1312]
+            - text: Pilot program with 10 enterprise agent clusters
+      - generic [ref=e1316]:
+        - generic [ref=e1317]:
+          - generic [ref=e1318]:
+            - generic [ref=e1319]: Phase II
+            - generic [ref=e1320]: Hybrid Governance
+          - generic [ref=e1321]:
+            - generic [ref=e1322]: UPCOMING
+            - generic [ref=e1323]: Q4 2026 — Q2 2027
+        - list [ref=e1324]:
+          - listitem [ref=e1325]:
+            - img [ref=e1326]
+            - text: Multi-sig oracle council (5-of-9) replaces single Oracle
+          - listitem [ref=e1329]:
+            - img [ref=e1330]
+            - text: Guardian Agent DAO votes become binding for protocol params
+          - listitem [ref=e1333]:
+            - img [ref=e1334]
+            - text: On-chain KYB via LEI/DUNS verification hooks
+          - listitem [ref=e1337]:
+            - img [ref=e1338]
+            - text: Public ITK token launch with locked LP bootstrap
+          - listitem [ref=e1341]:
+            - img [ref=e1342]
+            - text: CCIP cross-chain attestation bridge live on Arbitrum + Ethereum
+      - generic [ref=e1346]:
+        - generic [ref=e1347]:
+          - generic [ref=e1348]:
+            - generic [ref=e1349]: Phase III
+            - generic [ref=e1350]: Full DAO Sovereignty
+          - generic [ref=e1351]:
+            - generic [ref=e1352]: FUTURE
+            - generic [ref=e1353]: Q3 2027+
+        - list [ref=e1354]:
+          - listitem [ref=e1355]:
+            - img [ref=e1356]
+            - text: Zero single-operator control — all writes require oracle consensus
+          - listitem [ref=e1359]:
+            - img [ref=e1360]
+            - text: Fully autonomous Guardian DAO governs all protocol parameters
+          - listitem [ref=e1363]:
+            - img [ref=e1364]
+            - text: did:intg identifiers portable across all EVM + Solana
+          - listitem [ref=e1367]:
+            - img [ref=e1368]
+            - text: ZK-Reputation SNARKs as default trust primitive (no oracle needed)
+          - listitem [ref=e1371]:
+            - img [ref=e1372]
+            - text: "Self-sustaining treasury: ITK burn rate exceeds issuance"
+  - contentinfo [ref=e1375]:
+    - img "Xibalba" [ref=e1376]
+    - generic [ref=e1377]:
+      - link "Core Protocol" [ref=e1378] [cursor=pointer]:
+        - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md
+      - link "Governance" [ref=e1379] [cursor=pointer]:
+        - /url: /blog
+      - link "Insurance Vault" [ref=e1380] [cursor=pointer]:
+        - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/erc_8004.md
+      - link "Developer SDK" [ref=e1381] [cursor=pointer]:
+        - /url: https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/integration-guide.md
+      - link "Technical Blog" [ref=e1382] [cursor=pointer]:
+        - /url: /blog
+      - link "Contact Us" [ref=e1383] [cursor=pointer]:
+        - /url: "#"
+    - paragraph [ref=e1384]: © 2026 Xibalba Technology Solutions. Integrity Protocol v8.3 is a sovereign reputation infrastructure.
+```
+
+# Test source
+
+```ts
+  1  | import { test, expect } from '@playwright/test';
+  2  | 
+  3  | test('dashboard loads all advanced capabilities tabs', async ({ page }) => {
+  4  |   await page.goto('http://localhost:5173');
+  5  |   
+  6  |   // Test Compliance Tab
+> 7  |   await page.click('text=Compliance');
+     |              ^ Error: page.click: Test timeout of 60000ms exceeded.
+  8  |   await expect(page.getByText('Compliance Scorecard')).toBeVisible();
+  9  | 
+  10 |   // Test Advanced Tab
+  11 |   await page.click('text=Advanced');
+  12 |   await expect(page.getByText('Advanced Contract Markets')).toBeVisible();
+  13 | });
+  14 | 
+```

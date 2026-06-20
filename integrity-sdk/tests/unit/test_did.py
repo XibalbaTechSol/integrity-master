@@ -1,6 +1,6 @@
 from integrity_sdk import did
 
-def test_did(mocker):
+def test_did(mocker, tmp_path):
     key1 = did._DeterministicKeypair.from_fingerprint("fg")
     assert key1.sign(b"data")
     assert key1.public_bytes_raw()
@@ -21,8 +21,8 @@ def test_did(mocker):
     did_doc = did._build_did_document("did:xibalba:fg", b"pub", "fg")
     assert did_doc["id"] == "did:xibalba:fg"
     
-    did._save_private_key(mocker.MagicMock(), b"")
-    did._save_did_document(mocker.MagicMock(), {})
+    did._save_private_key(tmp_path / "key.pem", b"")
+    did._save_did_document(tmp_path / "doc.json", {})
     
     did.get_hardware_fingerprint()
     
@@ -32,11 +32,13 @@ def test_did(mocker):
     mocker.patch("integrity_sdk.did._HAS_KEYRING", False)
     mock_dir.__truediv__.return_value.exists.return_value = False
     
+    mocker.patch("integrity_sdk.did._save_private_key")
+    mocker.patch("integrity_sdk.did._save_did_document")
     did.load_or_create_did("test_agent")
     did.sign_payload(b"data", agent_id="test_agent")
     
     mock_dir.__truediv__.return_value.exists.return_value = True
-    mocker.patch("builtins.open", mocker.mock_open(read_data='{}'))
+    mock_dir.__truediv__.return_value.read_text.return_value = '{"id":"did:xibalba:fg:test_agent"}'
     did.load_did_document("test_agent")
     
     did.derive_evm_address(b"seed"*8)

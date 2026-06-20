@@ -5,22 +5,15 @@ import "forge-std/Test.sol";
 import "../src/framework/XibalbaAgentRegistry.sol";
 import "../src/oracle/IntegrityToken.sol";
 
-contract MockITK5 is IntegrityToken {
-    constructor() IntegrityToken(address(this)) {}
-    function mint(address to, uint256 amount) external {
-        _mint(to, amount);
-    }
-}
-
 contract XibalbaAgentRegistryTest is Test {
     XibalbaAgentRegistry registry;
-    MockITK5 itk;
+    IntegrityToken itk;
     
     address admin = address(this);
     address agent = address(0x111);
 
     function setUp() public {
-        itk = new MockITK5();
+        itk = new IntegrityToken(admin);
         registry = new XibalbaAgentRegistry(address(itk), admin);
     }
 
@@ -95,10 +88,12 @@ contract XibalbaAgentRegistryTest is Test {
     }
 
     function test_Stake_Success() public {
+        vm.prank(admin);
+        itk.mint(agent, 1000);
+
         vm.startPrank(agent);
         registry.registerAgent("Agent1");
         
-        itk.mint(agent, 1000);
         itk.approve(address(registry), 1000);
         registry.stake(1000);
         vm.stopPrank();
@@ -122,10 +117,12 @@ contract XibalbaAgentRegistryTest is Test {
     }
 
     function test_Unstake_Success() public {
+        vm.prank(admin);
+        itk.mint(agent, 1000);
+
         vm.startPrank(agent);
         registry.registerAgent("Agent1");
         
-        itk.mint(agent, 1000);
         itk.approve(address(registry), 1000);
         registry.stake(1000);
         
@@ -134,7 +131,10 @@ contract XibalbaAgentRegistryTest is Test {
 
         XibalbaAgentRegistry.AgentProfile memory profile = registry.getAgent(agent);
         assertEq(profile.totalStaked, 500);
-        assertEq(itk.balanceOf(agent), 500);
+        // IntegrityToken charges 0.5% fee on all non-exempt transfers.
+        // unstake(500) transfers 500 from registry to agent: fee = floor(500 * 50 / 10000) = 2
+        // Agent receives 498. (Initial 1000 minted, 1000 staked with fee, gets back 498)
+        assertEq(itk.balanceOf(agent), 498);
     }
 
     function test_Unstake_Insufficient() public {

@@ -46,7 +46,7 @@ test.describe('APIKeyPanel Feature', () => {
 
     // Navigate to the page containing the APIKeyPanel
     await page.goto('/dashboard'); 
-    await page.getByText('API Keys').click();
+    await page.getByRole('button', { name: 'API Keys', exact: true }).click();
   });
 
   test('should render the APIKeyPanel correctly with initial state', async ({ page }) => {
