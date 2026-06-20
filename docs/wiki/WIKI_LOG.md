@@ -97,7 +97,7 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
-## [2026-06-20] test | test-sync: Added 39 tests across 5 subprojects
+## [2026-06-20] test | test-sync: Added 38 tests across 5 subprojects
 - `integrity-sdk`: Added unit tests for `client.py`, `extractor.py`, `compliance.py`, and `world_data_fetcher.py`.
 - `bcc_middleware`: Expanded test coverage for `main.py` covering contract manipulation and telemetry spoofing edge cases.
 - `integrity-oracle`: Added `#[cfg(test)]` modules to `oracle-core` and `passport-verifier`.
