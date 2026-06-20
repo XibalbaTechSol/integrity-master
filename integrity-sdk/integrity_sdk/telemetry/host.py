@@ -83,7 +83,8 @@ class HostTelemetrySampler:
         self._last_metrics["path_entropy"] = path_entropy
 
         # 3. Network Flow (IP Entropy)
-        connections = self.process.connections(kind='inet')
+        # NOTE: net_connections() replaces deprecated connections() (psutil >= 6.0, see #N)
+        connections = self.process.net_connections(kind='inet')
         remote_ips = [conn.raddr.ip for conn in connections if conn.raddr]
         ip_entropy = self._calculate_entropy(remote_ips)
         self.ip_entropy_gauge.set(ip_entropy)
