@@ -1,4 +1,3 @@
-import json
 from typing import Optional
 from ..client import IntegrityClient
 

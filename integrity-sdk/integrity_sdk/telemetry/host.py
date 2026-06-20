@@ -3,7 +3,7 @@ import psutil
 import threading
 import time
 import math
-from typing import Set, Dict
+from typing import Dict
 from .core import get_meter
 from .conventions import IntegrityAttributes
 

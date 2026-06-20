@@ -5,7 +5,7 @@ import time
 import os
 import uuid
 import hashlib
-from typing import Optional, Any, Dict, Callable, List
+from typing import Optional, Any, Dict, Callable
 from dataclasses import dataclass, asdict
 
 from .batcher import TelemetryBatcher

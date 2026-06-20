@@ -1,7 +1,5 @@
-import os
-import json
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 from integrity_sdk.client import IntegrityClient
 from integrity_sdk.integrations.compliance import ComplianceProfile
 from integrity_sdk.telemetry.conventions import IntegrityAttributes

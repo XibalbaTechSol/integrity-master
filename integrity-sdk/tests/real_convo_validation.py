@@ -2,7 +2,6 @@ import os
 import sys
 import time
 import psycopg2
-import json
 
 # Setup pathing to import local integrity_sdk
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

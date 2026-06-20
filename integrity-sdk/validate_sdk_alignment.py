@@ -1,7 +1,5 @@
-import os
 import sys
 import time
-import json
 
 # Add SDK to path
 sys.path.append("/home/xibalba/Projects/INTEGRITY/integrity-sdk")

@@ -1,7 +1,4 @@
 import os
-import json
-import base64
-import hashlib
 import logging
 
 logger = logging.getLogger("integrity.security.attestation")

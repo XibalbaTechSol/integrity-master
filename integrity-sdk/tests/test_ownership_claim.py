@@ -1,7 +1,3 @@
-import os
-import time
-import json
-import pytest
 from eth_account import Account
 from eth_account.messages import encode_defunct
 from integrity_sdk.client import IntegrityClient

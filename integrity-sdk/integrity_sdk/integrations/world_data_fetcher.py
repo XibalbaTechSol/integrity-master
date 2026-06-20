@@ -1,6 +1,5 @@
 import requests
-from typing import Dict, Any, Optional
-import time
+from typing import Dict, Any
 import hmac
 import hashlib
 

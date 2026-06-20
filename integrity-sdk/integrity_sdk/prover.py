@@ -1,8 +1,6 @@
 import hashlib
 import time
 import os
-import json
-import subprocess
 
 class NoirProver:
     """

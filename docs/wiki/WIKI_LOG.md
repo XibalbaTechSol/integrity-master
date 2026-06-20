@@ -96,3 +96,9 @@
 
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
+
+## [2026-06-20] chore | cleanup-sync: Pruned 0 branches, removed 2 files, cleaned 64 unused imports
+- Scratch files removed: `integrity-sdk/write_tests.py`, `integrity-sdk/write_tests_2.py` (one-time repair scripts).
+- Branch cleanup: 0 merged remote branches found for pruning.
+- Dead code: Removed 64 unused imports in `integrity-sdk/` and `bcc_middleware/` via `ruff`.
+- Dependencies: Pruned `@testing-library/dom` from `integrity-dashboard/package.json`.
