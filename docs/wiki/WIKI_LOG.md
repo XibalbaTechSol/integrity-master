@@ -97,8 +97,8 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
-## [2026-06-20] chore | cleanup-sync: Pruned 0 branches, removed 2 files, cleaned 64 unused imports
-- Scratch files removed: `integrity-sdk/write_tests.py`, `integrity-sdk/write_tests_2.py` (one-time repair scripts).
-- Branch cleanup: 0 merged remote branches found for pruning.
-- Dead code: Removed 64 unused imports in `integrity-sdk/` and `bcc_middleware/` via `ruff`.
-- Dependencies: Pruned `@testing-library/dom` from `integrity-dashboard/package.json`.
+## [2026-06-20] fix | CI and Linter Refinement
+- Scoring Engine: Fixed Rust Clippy warning by replacing `max(0.0).min(1.0)` with `clamp(0.0, 1.0)` in `scoring-core/src/lib.rs`.
+- Dependencies: Added missing `opentelemetry` packages to `integrity-sdk/pyproject.toml` to resolve ModuleNotFound errors in CI.
+- Dependencies: Moved `pytest-asyncio` to main dependencies in `bcc_middleware/pyproject.toml` for robust environment setup.
+- Dashboard: Pruned `@testing-library/dom` to reduce bundle size and resolve dependency audit findings.

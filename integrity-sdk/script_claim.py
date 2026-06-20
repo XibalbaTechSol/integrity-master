@@ -1,3 +1,4 @@
+import os
 import sys
 
 # Ensure the SDK is in the path

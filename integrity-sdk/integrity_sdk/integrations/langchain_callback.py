@@ -6,7 +6,7 @@ frictionless, automatic zero-knowledge telemetry logging to the Integrity Oracle
 """
 
 import time
-from typing import Any, Dict, List
+from typing import Any, Dict, List, Optional
 try:
     from langchain.callbacks.base import BaseCallbackHandler
     from langchain.schema import LLMResult

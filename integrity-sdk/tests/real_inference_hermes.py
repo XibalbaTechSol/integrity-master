@@ -3,6 +3,7 @@ import sys
 import time
 import sqlite3
 import psycopg2
+from openai import OpenAI
 
 # Setup pathing to import local integrity_sdk
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

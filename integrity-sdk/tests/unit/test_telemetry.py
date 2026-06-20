@@ -1,6 +1,7 @@
 
 from integrity_sdk.telemetry.analyzer import CompositeSignalAnalyzer
 from integrity_sdk.telemetry.host import HostTelemetrySampler
+from integrity_sdk.telemetry.conventions import IntegrityAttributes
 from integrity_sdk.telemetry.core import get_tracer, get_meter
 
 def test_analyzer():

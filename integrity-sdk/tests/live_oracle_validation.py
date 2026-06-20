@@ -15,6 +15,9 @@ import time
 import sqlite3
 import hmac
 import hashlib
+import json
+import urllib.request
+import urllib.error
 
 # Setup pathing
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

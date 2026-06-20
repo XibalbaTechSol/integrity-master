@@ -2,7 +2,7 @@ import asyncio
 import time
 import hashlib
 import json
-from main import BCCCommitment, _run_interceptor
+from main import execute_agent_action, BCCCommitment, _run_interceptor
 
 async def run_scenario_1():
     # Scenario 1: PII Exfiltration

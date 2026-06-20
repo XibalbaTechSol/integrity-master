@@ -1,7 +1,7 @@
 import sys
 import json
 import os
-from typing import Dict, Any
+from typing import Dict, Any, List
 
 # Ensure local imports work
 sys.path.append(os.path.dirname(os.path.dirname(os.path.abspath(__file__))))

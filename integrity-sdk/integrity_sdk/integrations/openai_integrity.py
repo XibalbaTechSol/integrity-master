@@ -1,6 +1,6 @@
 import time
 import math
-from typing import Dict, Optional
+from typing import Any, Dict, Optional, Union, List
 
 # Standard OpenAI client import
 try:

@@ -1,4 +1,5 @@
 from integrity_sdk.bundler import IntegrityBundler
+import pytest
 
 def test_bundler(requests_mock, mocker):
     bundler = IntegrityBundler("0x0000000000000000000000000000000000000000", "http://pm", "http://bun", 1)
