@@ -102,6 +102,16 @@ violation["TELEMETRY_SPOOFING: Attempted hardware fingerprint spoofing or teleme
     contains(val, "bypass")
 }
 
+# SECURITY: Added 2026-06-20 to block Budget Overflow via Small Loops attack vector. See devil-sync-2026-06-20.
+# --- 7. Budget Overflow Gate ---
+violation["BUDGET_OVERFLOW: Transaction exceeds the maximum allowed session budget cap"] if {
+    input.context.action == "transfer_funds"
+    amount := input.context.amount
+    loop_count := input.context.loop_count
+    total := amount * loop_count
+    total > 100
+}
+
 # --- Metadata Rule for Reporting ---
 # This rule is used by the Dashboard to explain why an action was blocked.
 blocking_reasons[msg] if {

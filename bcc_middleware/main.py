@@ -119,6 +119,13 @@ async def evaluate_intent_policy(commitment: BCCCommitment, context: Dict[str, A
         print(f"[BCC DEBUG] SSN MATCH FOUND: {ssn_match.group(0)}")
         return False, "HIPAA_TECHNICAL_SAFEGUARD_FAILURE: Potential PHI (SSN) detected in unencrypted payload"
 
+    # SECURITY: Added 2026-06-20 to block Budget Overflow via Small Loops attack vector. See devil-sync-2026-06-20.
+    if context.get("action") == "transfer_funds":
+        amount = context.get("amount", 0)
+        loop_count = context.get("loop_count", 1)
+        if amount * loop_count > 100:
+            return False, "BUDGET_OVERFLOW: Transaction exceeds the maximum allowed session budget cap of $100"
+
     if "delete" in intent_str and "system" in intent_str:
         return False, "POLICY_VIOLATION: Destructive system action unauthorized"
 

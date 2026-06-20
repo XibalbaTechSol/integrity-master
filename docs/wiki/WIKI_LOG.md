@@ -96,3 +96,7 @@
 
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
+
+## [2026-06-20] security | devil-sync: Tested 4 adversarial scenarios. 3 blocked, 1 breached, 1 patched.
+- Blocked: PHI Exfiltration, Telemetry Spoofing, Intent Drift.
+- Breached & Patched: Budget Overflow via Small Loops (added validation to `main.py` and `OPA_HIPAA_Guardrails.rego`).

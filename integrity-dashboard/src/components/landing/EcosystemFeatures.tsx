@@ -327,7 +327,7 @@ export const RoadmapSection = () => {
     );
 };
 
-export const FooterSection = ({ setIsContactOpen, setContactType }) => {
+export const FooterSection = ({ setIsContactOpen, setContactType }: { setIsContactOpen: (v: boolean) => void; setContactType: (v: 'investor' | 'developer') => void }) => {
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     return (

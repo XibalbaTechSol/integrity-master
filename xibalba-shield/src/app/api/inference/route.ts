@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import crypto from "crypto";
-import { verifyIntegrityScore, anchorAuditLog } from "@/lib/web3/integrityProtocol";
+import { verifyIntegrityScore, verifySmartBAA, anchorAuditLog } from "@/lib/web3/integrityProtocol";
 
 export async function POST(request: Request) {
   try {
@@ -18,11 +18,14 @@ export async function POST(request: Request) {
     }
 
     // 1.5 Verify Smart BAA Status (Cryptographic Firewall)
-    // The proxy queries SmartBAA.isActive() for this specific agent.
-    // If false, the proxy hard-rejects the request before any PHI is processed.
-    const isBAAActive = true; // Mocked for MVP: await verifySmartBAA(agentAddress);
-    if (!isBAAActive) {
-      return NextResponse.json({ error: "Smart BAA inactive or slashed. EMR access denied." }, { status: 403 });
+    // Queries SmartBAAFactory → SmartBAA.isActive() for this specific agent.
+    // Hard-rejects the request before any PHI is processed if BAA is inactive/slashed.
+    const baaCheck = await verifySmartBAA(agentAddress);
+    if (!baaCheck.authorized) {
+      return NextResponse.json({
+        error: "Smart BAA inactive or slashed. EMR access denied.",
+        reason: baaCheck.reason,
+      }, { status: 403 });
     }
 
     // 1.75 BCC Middleware Interception (Pre-Execution Guardrails)

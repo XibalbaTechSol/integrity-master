@@ -1,10 +1,35 @@
 'use client';
-import { useState, useEffect, useCallback } from 'react';
+import { useState, useEffect, useCallback, useRef } from 'react';
 
-interface AuditLog {
+// ─── Types ────────────────────────────────────────────────────────────────────
+
+interface AuditEntry {
+  id: string;
   hash: string;
+  agent: string;
+  action: string;
   time: string;
-  txHash?: string;
+  status: 'ANCHORED' | 'PENDING' | 'BLOCKED';
+  cfBitmask?: number;
+}
+
+interface BAARecord {
+  id: string;
+  ba: string;
+  baAlias: string;
+  ceAlias: string;
+  scope: string;
+  collateral: number;
+  status: 'ACTIVE' | 'PENDING_SIGN' | 'REVOKED' | 'SLASHED';
+  signedAt?: string;
+  contract?: string;
+}
+
+interface MetricTile {
+  label: string;
+  value: string | number;
+  delta?: string;
+  status: 'green' | 'amber' | 'red' | 'blue';
 }
 
 interface InferenceResult {
@@ -13,295 +38,532 @@ interface InferenceResult {
   confidence: number;
 }
 
-export default function Dashboard() {
-  const [metrics, setMetrics] = useState({
-    apiCalls: 12450,
-    activeAgents: 4,
-    itkEfficiency: '99.9%'
-  });
+// ─── Compliance Bitmask Decoder ───────────────────────────────────────────────
 
-  const [logs, setLogs] = useState<AuditLog[]>([]);
-  const [inferenceLoading, setInferenceLoading] = useState(false);
-  const [inferenceResult, setInferenceResult] = useState<InferenceResult | null>(null);
-  const [inferenceAudit, setInferenceAudit] = useState<{ dataHash: string; transactionHash: string } | null>(null);
-  const [clinicalInput, setClinicalInput] = useState('Patient reports persistent sore throat, mild fever (100.4°F), and difficulty swallowing for 3 days.');
-  const [promptInput, setPromptInput] = useState('Summarize the clinical presentation and suggest a billing code.');
+function decodeBitmask(flags: number): string[] {
+  const bits: string[] = [];
+  if (flags & (1 << 0)) bits.push('HIPAA');
+  if (flags & (1 << 1)) bits.push('ZDR');
+  if (flags & (1 << 2)) bits.push('AIR-GAPPED');
+  return bits.length > 0 ? bits : ['UNCLASSIFIED'];
+}
 
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const mockHash = "0x" + Math.random().toString(16).substring(2, 10) + "..." + Math.random().toString(16).substring(2, 10);
-      setLogs(prev => [{ hash: mockHash, time: new Date().toLocaleTimeString() }, ...prev].slice(0, 8));
-      setMetrics(prev => ({ ...prev, apiCalls: prev.apiCalls + 1 }));
-    }, 4000);
-    return () => clearInterval(interval);
-  }, []);
+// ─── Status Pill ──────────────────────────────────────────────────────────────
 
-  const runInference = useCallback(async () => {
-    setInferenceLoading(true);
-    setInferenceResult(null);
-    setInferenceAudit(null);
+function StatusPill({ status }: { status: string }) {
+  const map: Record<string, string> = {
+    ANCHORED: 'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    ACTIVE:   'bg-emerald-500/20 text-emerald-300 border-emerald-500/40',
+    PENDING:  'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    PENDING_SIGN: 'bg-amber-500/20 text-amber-300 border-amber-500/40',
+    BLOCKED:  'bg-red-500/20 text-red-300 border-red-500/40',
+    REVOKED:  'bg-slate-500/20 text-slate-300 border-slate-500/40',
+    SLASHED:  'bg-red-700/30 text-red-200 border-red-600/40',
+  };
+  return (
+    <span className={`inline-flex items-center px-2 py-0.5 rounded-full text-xs font-mono font-semibold border ${map[status] ?? 'bg-slate-500/20 text-slate-300'}`}>
+      {status.replace('_', ' ')}
+    </span>
+  );
+}
 
+// ─── Metric Card ──────────────────────────────────────────────────────────────
+
+function MetricCard({ tile }: { tile: MetricTile }) {
+  const accent: Record<string, string> = {
+    green: 'border-emerald-500/40 shadow-emerald-500/10',
+    amber: 'border-amber-500/40 shadow-amber-500/10',
+    red:   'border-red-500/40 shadow-red-500/10',
+    blue:  'border-sky-500/40 shadow-sky-500/10',
+  };
+  const textAccent: Record<string, string> = {
+    green: 'text-emerald-400',
+    amber: 'text-amber-400',
+    red:   'text-red-400',
+    blue:  'text-sky-400',
+  };
+  return (
+    <div className={`rounded-xl border bg-slate-900/60 backdrop-blur p-5 shadow-lg ${accent[tile.status]}`}>
+      <p className="text-xs font-mono text-slate-400 uppercase tracking-widest mb-2">{tile.label}</p>
+      <p className={`text-3xl font-black ${textAccent[tile.status]}`}>{tile.value}</p>
+      {tile.delta && <p className="text-xs text-slate-500 mt-1">{tile.delta}</p>}
+    </div>
+  );
+}
+
+// ─── Audit Stream ─────────────────────────────────────────────────────────────
+
+function AuditStream({ logs }: { logs: AuditEntry[] }) {
+  return (
+    <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 backdrop-blur shadow-lg overflow-hidden">
+      <div className="px-5 py-4 border-b border-slate-700/60 flex items-center justify-between">
+        <h3 className="text-sm font-semibold text-slate-200">ZK Audit Stream</h3>
+        <span className="flex items-center gap-1.5 text-xs text-emerald-400 font-mono">
+          <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span> LIVE
+        </span>
+      </div>
+      <div className="divide-y divide-slate-800/60 max-h-72 overflow-y-auto">
+        {logs.length === 0 && (
+          <p className="text-center text-slate-500 text-sm py-8 font-mono">Awaiting anchor events…</p>
+        )}
+        {logs.map((entry) => (
+          <div key={entry.id} className="px-5 py-3 flex items-start gap-3 hover:bg-slate-800/40 transition-colors">
+            <div className="flex-1 min-w-0">
+              <div className="flex items-center gap-2 mb-0.5">
+                <StatusPill status={entry.status} />
+                <span className="text-xs text-slate-400 font-mono">{entry.action}</span>
+              </div>
+              <p className="text-xs font-mono text-slate-300 truncate">{entry.hash}</p>
+              <p className="text-xs text-slate-500">{entry.agent} · {entry.time}</p>
+            </div>
+            {entry.cfBitmask !== undefined && (
+              <div className="flex gap-1 flex-wrap justify-end">
+                {decodeBitmask(entry.cfBitmask).map(tag => (
+                  <span key={tag} className="text-[10px] px-1.5 py-0.5 rounded bg-sky-900/40 text-sky-300 font-mono border border-sky-700/30">{tag}</span>
+                ))}
+              </div>
+            )}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── BAA Manager ─────────────────────────────────────────────────────────────
+
+function BAAManager({ baas, onRevoke, onSlash }: { baas: BAARecord[]; onRevoke: (id: string) => void; onSlash: (id: string) => void }) {
+  return (
+    <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 backdrop-blur shadow-lg overflow-hidden">
+      <div className="px-5 py-4 border-b border-slate-700/60">
+        <h3 className="text-sm font-semibold text-slate-200">Smart BAA Registry</h3>
+        <p className="text-xs text-slate-500 mt-0.5">Active cryptographic Business Associate Agreements</p>
+      </div>
+      <div className="divide-y divide-slate-800/60 max-h-72 overflow-y-auto">
+        {baas.map((b) => (
+          <div key={b.id} className="px-5 py-4 hover:bg-slate-800/30 transition-colors">
+            <div className="flex items-start justify-between gap-3">
+              <div className="flex-1 min-w-0">
+                <div className="flex items-center gap-2 mb-1">
+                  <StatusPill status={b.status} />
+                  <span className="text-xs font-mono text-slate-300">{b.baAlias}</span>
+                </div>
+                <p className="text-xs text-slate-500 mb-1">
+                  Scope: <span className="text-slate-400 font-mono">{b.scope}</span>
+                  {' · '}Collateral: <span className="text-emerald-400 font-mono">{b.collateral.toLocaleString()} $ITK</span>
+                </p>
+                {b.contract && (
+                  <p className="text-[10px] text-slate-600 font-mono truncate">{b.contract}</p>
+                )}
+              </div>
+              {b.status === 'ACTIVE' && (
+                <div className="flex gap-2 shrink-0">
+                  <button
+                    onClick={() => onRevoke(b.id)}
+                    className="px-3 py-1 text-xs rounded-lg border border-slate-600 text-slate-300 hover:border-slate-400 hover:text-white transition-colors"
+                  >
+                    Revoke
+                  </button>
+                  <button
+                    onClick={() => onSlash(b.id)}
+                    className="px-3 py-1 text-xs rounded-lg border border-red-700 text-red-400 hover:bg-red-900/30 hover:text-red-300 transition-colors"
+                  >
+                    Slash ⚡
+                  </button>
+                </div>
+              )}
+            </div>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
+// ─── Inference Workbench ──────────────────────────────────────────────────────
+
+function InferenceWorkbench({ onAnchor }: { onAnchor: (entry: AuditEntry) => void }) {
+  const [clinical, setClinical] = useState('Patient reports persistent sore throat, mild fever (100.4°F), and difficulty swallowing for 3 days. No known allergies.');
+  const [prompt, setPrompt] = useState('Summarize the clinical presentation and suggest an ICD-10 billing code.');
+  const [loading, setLoading] = useState(false);
+  const [result, setResult] = useState<InferenceResult | null>(null);
+  const [audit, setAudit] = useState<{ dataHash: string; transactionHash: string } | null>(null);
+  const [error, setError] = useState<string | null>(null);
+
+  const run = useCallback(async () => {
+    setLoading(true);
+    setResult(null);
+    setAudit(null);
+    setError(null);
     try {
       const res = await fetch('/api/inference', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
           agentAddress: '0x71C7656EC7ab88b098defB751B7401B5f6d8976F',
-          clinicalData: { note: clinicalInput },
-          prompt: promptInput,
+          clinicalData: { note: clinical },
+          prompt,
+          complianceMetadata: { hipaaEligible: true, zdrEnabled: true, externalWebAccess: false },
         }),
       });
       const data = await res.json();
-
       if (data.success) {
-        setInferenceResult(data.inference);
-        setInferenceAudit(data.audit);
-        setLogs(prev => [{
-          hash: data.audit.dataHash.substring(0, 18) + '...',
+        setResult(data.inference);
+        setAudit(data.audit);
+        onAnchor({
+          id: `anchor-${Date.now()}`,
+          hash: data.audit.dataHash,
+          agent: '0x71C7...976F',
+          action: 'CLINICAL_SCRIBE',
           time: new Date().toLocaleTimeString(),
-          txHash: data.audit.transactionHash,
-        }, ...prev].slice(0, 8));
-        setMetrics(prev => ({ ...prev, apiCalls: prev.apiCalls + 1 }));
+          status: 'ANCHORED',
+          cfBitmask: data.audit.clearanceFlags ?? 7,
+        });
+      } else {
+        setError(data.error ?? 'Unknown error');
       }
-    } catch (err) {
-      console.error('Inference failed:', err);
+    } catch (e: unknown) {
+      setError(e instanceof Error ? e.message : 'Network error');
     } finally {
-      setInferenceLoading(false);
+      setLoading(false);
     }
-  }, [clinicalInput, promptInput]);
+  }, [clinical, prompt, onAnchor]);
 
   return (
-    <div className="min-h-screen bg-slate-50 text-slate-800 font-sans">
-      {/* Header */}
-      <header className="sticky top-0 z-10 bg-white/80 backdrop-blur-md border-b border-slate-200 px-4 md:px-8 py-4">
-        <div className="max-w-7xl mx-auto flex flex-col md:flex-row justify-between items-center">
-          <h1 className="text-2xl font-bold text-slate-900 mb-2 md:mb-0">
-            <span className="inline-block w-3 h-3 rounded-full bg-teal-500 mr-2 animate-pulse" />
-            Shield <span className="text-teal-600">Command Center</span>
-          </h1>
-          <div className="flex items-center space-x-4">
-            <div className="text-sm font-medium text-slate-500 bg-white px-4 py-2 rounded-full border border-slate-200 shadow-sm">
-              Network: <span className="text-teal-600 font-bold">ITK Testnet</span>
-            </div>
-            <a href="/" className="text-sm text-slate-400 hover:text-teal-600 transition-colors">← Home</a>
-          </div>
+    <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 backdrop-blur shadow-lg overflow-hidden">
+      <div className="px-5 py-4 border-b border-slate-700/60">
+        <h3 className="text-sm font-semibold text-slate-200">ZK Inference Workbench</h3>
+        <p className="text-xs text-slate-500 mt-0.5">PHI is hashed locally — raw data never leaves this terminal</p>
+      </div>
+      <div className="p-5 space-y-4">
+        <div>
+          <label className="block text-xs font-mono text-slate-400 mb-1.5">Clinical Note (PHI — locally blinded)</label>
+          <textarea
+            id="clinical-note-input"
+            className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2.5 text-sm text-slate-200 font-mono placeholder-slate-600 focus:outline-none focus:border-sky-500/60 resize-none"
+            rows={3}
+            value={clinical}
+            onChange={(e) => setClinical(e.target.value)}
+          />
         </div>
-      </header>
-
-      <div className="max-w-7xl mx-auto px-4 md:px-8 py-8">
-        {/* Metrics */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow group">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Secure API Calls</h2>
-            <p className="text-4xl font-bold text-slate-900 tabular-nums">{metrics.apiCalls.toLocaleString()}</p>
-            <div className="mt-2 h-1 w-full bg-slate-100 rounded-full overflow-hidden">
-              <div className="h-full bg-teal-500 rounded-full transition-all duration-1000" style={{ width: '78%' }} />
-            </div>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Active SovereignAgents</h2>
-            <p className="text-4xl font-bold text-slate-900">{metrics.activeAgents}</p>
-            <p className="mt-2 text-xs text-teal-600 font-medium">All agents compliant ✓</p>
-          </div>
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200 hover:shadow-md transition-shadow">
-            <h2 className="text-xs font-semibold text-slate-400 uppercase tracking-widest mb-2">Network Efficiency (ITK)</h2>
-            <p className="text-4xl font-bold text-teal-600">{metrics.itkEfficiency}</p>
-            <p className="mt-2 text-xs text-slate-500">Paymaster gas subsidy active</p>
-          </div>
+        <div>
+          <label className="block text-xs font-mono text-slate-400 mb-1.5">System Prompt</label>
+          <input
+            id="system-prompt-input"
+            type="text"
+            className="w-full rounded-lg border border-slate-700 bg-slate-800/50 px-3 py-2.5 text-sm text-slate-200 font-mono placeholder-slate-600 focus:outline-none focus:border-sky-500/60"
+            value={prompt}
+            onChange={(e) => setPrompt(e.target.value)}
+          />
         </div>
+        <button
+          id="run-inference-btn"
+          onClick={run}
+          disabled={loading}
+          className="w-full py-2.5 rounded-lg bg-sky-600 hover:bg-sky-500 disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm font-semibold transition-colors"
+        >
+          {loading ? 'Running Secure Inference…' : '⚡ Run ZK-Shielded Inference'}
+        </button>
 
-        {/* Secure Inference Widget */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 mb-8 overflow-hidden">
-          <div className="bg-gradient-to-r from-teal-600 to-cyan-600 px-6 py-4">
-            <h2 className="text-lg font-bold text-white">Run Secure Inference</h2>
-            <p className="text-teal-100 text-sm">Submit clinical data through the Zero-Knowledge execution pipeline</p>
+        {error && (
+          <div className="rounded-lg border border-red-700/40 bg-red-900/20 px-4 py-3 text-sm text-red-300 font-mono">
+            ⛔ {error}
           </div>
-          <div className="p-6">
-            <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+        )}
+
+        {result && (
+          <div className="rounded-lg border border-emerald-700/40 bg-emerald-900/10 p-4 space-y-2">
+            <p className="text-xs font-mono text-emerald-400 mb-2">✓ INFERENCE APPROVED & ANCHORED</p>
+            <div className="grid grid-cols-2 gap-3 text-xs">
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">Clinical Data (PHI — never leaves server)</label>
-                <textarea
-                  value={clinicalInput}
-                  onChange={(e) => setClinicalInput(e.target.value)}
-                  className="w-full h-28 p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
-                />
+                <p className="text-slate-500 font-mono">ICD-10 Code</p>
+                <p className="text-white font-bold text-lg font-mono">{result.suggestedBillingCode}</p>
               </div>
               <div>
-                <label className="block text-sm font-semibold text-slate-700 mb-2">AI Prompt</label>
-                <textarea
-                  value={promptInput}
-                  onChange={(e) => setPromptInput(e.target.value)}
-                  className="w-full h-28 p-3 bg-slate-50 border border-slate-200 rounded-lg text-sm text-slate-800 focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-transparent resize-none"
-                />
+                <p className="text-slate-500 font-mono">Confidence</p>
+                <p className="text-emerald-400 font-bold text-lg">{(result.confidence * 100).toFixed(0)}%</p>
               </div>
             </div>
-
-            <button
-              onClick={runInference}
-              disabled={inferenceLoading}
-              className="mt-4 px-6 py-3 bg-teal-600 text-white rounded-lg font-semibold shadow-md hover:bg-teal-700 transition-all disabled:opacity-50 disabled:cursor-not-allowed"
-            >
-              {inferenceLoading ? (
-                <span className="flex items-center"><span className="animate-spin mr-2 h-4 w-4 border-2 border-white border-t-transparent rounded-full" /> Executing...</span>
-              ) : (
-                '⚡ Execute Blind Inference'
-              )}
-            </button>
-
-            {/* Results */}
-            {inferenceResult && (
-              <div className="mt-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
-                <div className="bg-slate-50 border border-slate-200 rounded-lg p-4">
-                  <h3 className="text-sm font-semibold text-slate-700 mb-2">AI Response</h3>
-                  <p className="text-sm text-slate-800 mb-3">{inferenceResult.summary}</p>
-                  <div className="flex space-x-4 text-xs">
-                    <span className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full font-medium">Code: {inferenceResult.suggestedBillingCode}</span>
-                    <span className="bg-blue-100 text-blue-700 px-2 py-1 rounded-full font-medium">Confidence: {(inferenceResult.confidence * 100).toFixed(0)}%</span>
-                  </div>
-                </div>
-                {inferenceAudit && (
-                  <div className="bg-slate-900 rounded-lg p-4 font-mono text-xs">
-                    <h3 className="text-teal-400 font-semibold mb-2">On-Chain Audit Proof</h3>
-                    <div className="text-slate-400 mb-1">Data Hash:</div>
-                    <div className="text-teal-300 break-all mb-3">{inferenceAudit.dataHash}</div>
-                    <div className="text-slate-400 mb-1">Transaction:</div>
-                    <div className="text-cyan-300 break-all">{inferenceAudit.transactionHash}</div>
-                  </div>
-                )}
+            <p className="text-slate-300 text-xs">{result.summary}</p>
+            {audit && (
+              <div className="mt-2 pt-2 border-t border-slate-700">
+                <p className="text-[10px] font-mono text-slate-500 truncate">ZK Hash: {audit.dataHash}</p>
+                <p className="text-[10px] font-mono text-slate-600 truncate">Tx: {audit.transactionHash}</p>
               </div>
             )}
           </div>
-        </div>
-
-        {/* Bottom Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
-          {/* Live Logs */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h2 className="text-lg font-bold text-slate-900 mb-1">Live Blockchain Data Streams</h2>
-            <p className="text-xs text-slate-500 mb-4">AuditShield.sol cryptographic verification logs</p>
-            <div className="bg-slate-900 rounded-lg p-4 font-mono text-xs text-teal-400 h-64 overflow-y-auto shadow-inner">
-              {logs.map((log, i) => (
-                <div key={i} className="mb-2 border-b border-slate-700/50 pb-2">
-                  <span className="text-slate-500">[{log.time}]</span>{' '}
-                  <span className="text-slate-400">LOG_ANCHORED</span>{' '}
-                  <span className="text-teal-300">{log.hash}</span>
-                  {log.txHash && <span className="text-cyan-500 ml-2 text-[10px]">tx:{log.txHash.substring(0, 14)}...</span>}
-                </div>
-              ))}
-              {logs.length === 0 && <div className="text-slate-500 italic">Waiting for transactions...</div>}
-            </div>
-          </div>
-
-          {/* Identity Management */}
-          <div className="bg-white p-6 rounded-xl shadow-sm border border-slate-200">
-            <h2 className="text-lg font-bold text-slate-900 mb-1">Identity Management</h2>
-            <p className="text-xs text-slate-500 mb-4">Deployed SovereignAgents and ReputationSBT integrity</p>
-
-            <div className="space-y-3">
-              <div className="flex justify-between items-center p-4 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer">
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">ScribeAgent-Alpha</h4>
-                  <p className="text-[10px] text-slate-400 font-mono mt-1">0x71C7656EC7ab88b098defB751B7401B5f6d8976F</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-teal-600">98 / 100</div>
-                  <div className="text-[10px] text-teal-600 font-medium">SBT Valid ✓</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer">
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">BillingBot-Beta</h4>
-                  <p className="text-[10px] text-slate-400 font-mono mt-1">0x4B20993Bc481177ec7E8f571ceCaE8A9e22C02db</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-amber-500">82 / 100</div>
-                  <div className="text-[10px] text-amber-600 font-medium">⚠ Slashing Risk</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-slate-50 rounded-lg border border-slate-100 hover:bg-slate-100 transition-colors cursor-pointer">
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">TriageAgent-Gamma</h4>
-                  <p className="text-[10px] text-slate-400 font-mono mt-1">0xdD2FD4581271e230360230F9337D5c0430Bf44C0</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-teal-600">95 / 100</div>
-                  <div className="text-[10px] text-teal-600 font-medium">SBT Valid ✓</div>
-                </div>
-              </div>
-              <div className="flex justify-between items-center p-4 bg-red-50 rounded-lg border border-red-200 hover:bg-red-100 transition-colors cursor-pointer">
-                <div>
-                  <h4 className="font-semibold text-slate-800 text-sm">AmbientScribe-Delta</h4>
-                  <p className="text-[10px] text-slate-400 font-mono mt-1">0x8626f6940E2eb28930eFb4CeF49B2d1F2C9C1199</p>
-                </div>
-                <div className="text-right">
-                  <div className="text-sm font-bold text-red-600">34 / 100</div>
-                  <div className="text-[10px] text-red-600 font-medium">✖ SLASHED — Revoked</div>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* Smart BAA Manager Widget */}
-        <div className="bg-white rounded-xl shadow-sm border border-slate-200 overflow-hidden">
-          <div className="bg-gradient-to-r from-slate-800 to-slate-900 px-6 py-4 flex justify-between items-center">
-            <div>
-              <h2 className="text-lg font-bold text-white">Smart BAA Command & Control</h2>
-              <p className="text-slate-300 text-sm">Active Hybrid Escrow Deployments (SmartBAA.sol)</p>
-            </div>
-            <button className="px-4 py-2 bg-teal-600 text-white rounded text-sm font-semibold hover:bg-teal-500 transition-colors">
-              + Deploy New Smart BAA
-            </button>
-          </div>
-          
-          <div className="p-0 overflow-x-auto">
-            <table className="w-full text-left text-sm text-slate-600">
-              <thead className="bg-slate-50 border-b border-slate-200">
-                <tr>
-                  <th className="p-4 font-semibold text-slate-900">AI Vendor (SovereignAgent)</th>
-                  <th className="p-4 font-semibold text-slate-900">Scope Restriction</th>
-                  <th className="p-4 font-semibold text-slate-900">Escrow Type</th>
-                  <th className="p-4 font-semibold text-slate-900">Pledged Collateral</th>
-                  <th className="p-4 font-semibold text-slate-900">Status</th>
-                  <th className="p-4 font-semibold text-slate-900 text-right">Actions</th>
-                </tr>
-              </thead>
-              <tbody className="divide-y divide-slate-100">
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="p-4 font-mono text-[10px] font-medium text-slate-800">0x71C7...8976F (ScribeAlpha)</td>
-                  <td className="p-4"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs">READ_ONLY</span></td>
-                  <td className="p-4"><span className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs border border-blue-100">POOLED</span></td>
-                  <td className="p-4 font-semibold">$50,000 USDC</td>
-                  <td className="p-4"><span className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full text-xs font-bold">ACTIVE</span></td>
-                  <td className="p-4 text-right">
-                    <button className="text-red-500 hover:text-red-700 font-semibold text-xs transition-colors border border-red-200 hover:bg-red-50 px-3 py-1 rounded">REVOKE & SLASH</button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50 transition-colors">
-                  <td className="p-4 font-mono text-[10px] font-medium text-slate-800">0x4B20...C02db (BillingBeta)</td>
-                  <td className="p-4"><span className="bg-slate-100 text-slate-600 px-2 py-1 rounded text-xs">WRITE_ICD10</span></td>
-                  <td className="p-4"><span className="bg-purple-50 text-purple-600 px-2 py-1 rounded text-xs border border-purple-100">ISOLATED</span></td>
-                  <td className="p-4 font-semibold">$100,000 USDC</td>
-                  <td className="p-4"><span className="bg-teal-100 text-teal-700 px-2 py-1 rounded-full text-xs font-bold">ACTIVE</span></td>
-                  <td className="p-4 text-right">
-                    <button className="text-red-500 hover:text-red-700 font-semibold text-xs transition-colors border border-red-200 hover:bg-red-50 px-3 py-1 rounded">REVOKE & SLASH</button>
-                  </td>
-                </tr>
-                <tr className="hover:bg-slate-50 transition-colors bg-red-50">
-                  <td className="p-4 font-mono text-[10px] font-medium text-red-800">0x8626...C1199 (AmbientDelta)</td>
-                  <td className="p-4"><span className="bg-red-100 text-red-600 px-2 py-1 rounded text-xs">READ_WRITE</span></td>
-                  <td className="p-4"><span className="bg-blue-50 text-blue-600 px-2 py-1 rounded text-xs border border-blue-100">POOLED</span></td>
-                  <td className="p-4 font-semibold text-red-700">$0 USDC (Slashed)</td>
-                  <td className="p-4"><span className="bg-red-100 text-red-700 px-2 py-1 rounded-full text-xs font-bold">REVOKED</span></td>
-                  <td className="p-4 text-right">
-                    <button className="text-slate-400 cursor-not-allowed font-semibold text-xs px-3 py-1 rounded" disabled>SLASHED</button>
-                  </td>
-                </tr>
-              </tbody>
-            </table>
-          </div>
-        </div>
+        )}
       </div>
+    </div>
+  );
+}
+
+// ─── Main Dashboard ───────────────────────────────────────────────────────────
+
+const INITIAL_BAAS: BAARecord[] = [
+  { id: 'baa-1', ba: '0xAI3b...8d2c', baAlias: 'DeepClinical AI (Scribe)', ceAlias: 'Xibalba Regional Medical', scope: 'SCRIBE_AMBIENT', collateral: 50000, status: 'ACTIVE', signedAt: '2025-06-01T09:12:00Z', contract: '0x4a5b6c7d8e9f0a1b2c3d4e5f6a7b8c9d0e1f2a3b' },
+  { id: 'baa-2', ba: '0xRPM9...f44a', baAlias: 'RemoteHeartOS (Wearables)', ceAlias: 'Xibalba Regional Medical', scope: 'RPM_CONTINUOUS', collateral: 25000, status: 'ACTIVE', signedAt: '2025-06-10T14:30:00Z', contract: '0x1a2b3c4d5e6f7a8b9c0d1e2f3a4b5c6d7e8f9a0b' },
+  { id: 'baa-3', ba: '0xBill...cc01', baAlias: 'AutoClaim Pro (Billing)', ceAlias: 'Xibalba Regional Medical', scope: 'BILLING_ADJUDICATION', collateral: 10000, status: 'PENDING_SIGN' },
+];
+
+const INITIAL_LOGS: AuditEntry[] = [
+  { id: 'log-1', hash: '0x8d3f...c2a1', agent: '0xDeepClinical', action: 'SCRIBE_ANCHOR', time: '14:32:01', status: 'ANCHORED', cfBitmask: 7 },
+  { id: 'log-2', hash: '0x1e4b...7f90', agent: '0xDeepClinical', action: 'SCRIBE_ANCHOR', time: '14:28:47', status: 'ANCHORED', cfBitmask: 7 },
+  { id: 'log-3', hash: '0xa12c...3d88', agent: '0xRemoteHeartOS', action: 'RPM_EPOCH', time: '14:25:11', status: 'BLOCKED', cfBitmask: 0 },
+];
+
+export default function Dashboard() {
+  const [logs, setLogs] = useState<AuditEntry[]>(INITIAL_LOGS);
+  const [baas, setBaas] = useState<BAARecord[]>(INITIAL_BAAS);
+  const [activeTab, setActiveTab] = useState<'overview' | 'baas' | 'inference' | 'compliance'>('overview');
+  const [totalAnchors, setTotalAnchors] = useState(12450);
+  const [blockedRequests, setBlockedRequests] = useState(3);
+  const logRef = useRef(0);
+
+  // Simulate live audit stream
+  useEffect(() => {
+    const actions = ['SCRIBE_ANCHOR', 'RPM_EPOCH', 'BILLING_SUBMIT', 'CLAIM_VERIFY'];
+    const agents = ['0xDeepClinical', '0xRemoteHeartOS', '0xAutoClaimPro'];
+    const interval = setInterval(() => {
+      logRef.current += 1;
+      const isBlocked = Math.random() < 0.08;
+      setLogs(prev => [{
+        id: `live-${logRef.current}`,
+        hash: '0x' + Math.random().toString(16).substring(2, 10) + '…' + Math.random().toString(16).substring(2, 6),
+        agent: agents[Math.floor(Math.random() * agents.length)],
+        action: actions[Math.floor(Math.random() * actions.length)],
+        time: new Date().toLocaleTimeString(),
+        status: isBlocked ? 'BLOCKED' : 'ANCHORED',
+        cfBitmask: isBlocked ? 0 : 7,
+      }, ...prev].slice(0, 20));
+      if (isBlocked) setBlockedRequests(n => n + 1);
+      else setTotalAnchors(n => n + 1);
+    }, 5000);
+    return () => clearInterval(interval);
+  }, []);
+
+  const handleRevoke = useCallback((id: string) => {
+    setBaas(prev => prev.map(b => b.id === id ? { ...b, status: 'REVOKED' as const } : b));
+  }, []);
+
+  const handleSlash = useCallback((id: string) => {
+    setBaas(prev => prev.map(b => b.id === id ? { ...b, status: 'SLASHED' as const } : b));
+    setLogs(prev => [{
+      id: `slash-${Date.now()}`,
+      hash: '0x' + Math.random().toString(16).substring(2, 18),
+      agent: 'CCO_OPERATOR',
+      action: 'BAA_SLASH',
+      time: new Date().toLocaleTimeString(),
+      status: 'ANCHORED',
+      cfBitmask: 7,
+    }, ...prev].slice(0, 20));
+  }, []);
+
+  const handleAnchor = useCallback((entry: AuditEntry) => {
+    setLogs(prev => [entry, ...prev].slice(0, 20));
+    setTotalAnchors(n => n + 1);
+  }, []);
+
+  const metrics: MetricTile[] = [
+    { label: 'Total Anchors', value: totalAnchors.toLocaleString(), delta: '+1 live', status: 'blue' },
+    { label: 'Active BAAs', value: baas.filter(b => b.status === 'ACTIVE').length, status: 'green' },
+    { label: 'BCC Blocks (24h)', value: blockedRequests, delta: 'ZK boundary violations', status: blockedRequests > 5 ? 'red' : 'amber' },
+    { label: 'ITK at Stake', value: baas.filter(b => b.status === 'ACTIVE').reduce((s, b) => s + b.collateral, 0).toLocaleString() + ' $ITK', status: 'green' },
+  ];
+
+  const tabs = [
+    { id: 'overview', label: 'Overview' },
+    { id: 'baas', label: 'Smart BAAs' },
+    { id: 'inference', label: 'ZK Workbench' },
+    { id: 'compliance', label: 'Compliance Map' },
+  ] as const;
+
+  const complianceItems = [
+    { ref: '§ 164.312(a)(1)', title: 'Access Control', mechanism: 'ReputationSBT.sol — agent must hold verified SBT with AIS ≥ 300', status: 'PASS' },
+    { ref: '§ 164.312(a)(2)(i)', title: 'Unique User ID', mechanism: 'W3C DID + SmartBAA allowedScope bitmask per agent', status: 'PASS' },
+    { ref: '§ 164.312(b)', title: 'Audit Controls', mechanism: 'AuditShield.sol — every inference anchors a ZK hash on-chain', status: 'PASS' },
+    { ref: '§ 164.312(c)(1)', title: 'PHI Integrity', mechanism: 'sha256(PHI + nonce) never leaves edge — only hash touches L2', status: 'PASS' },
+    { ref: '§ 164.312(d)', title: 'Person Authentication', mechanism: 'EIP-712 signature + hardware-bound KMS attestation', status: 'PASS' },
+    { ref: '§ 164.312(e)(1)', title: 'Transmission Security', mechanism: 'BCC Middleware enforces TLS + OPA HIPAA policy at runtime', status: 'PASS' },
+    { ref: '§ 164.308(b)(1)', title: 'Business Associate Contracts', mechanism: 'SmartBAA.sol — parametric collateral slash on breach', status: 'PASS' },
+    { ref: '§ 164.308(a)(1)', title: 'Security Management', mechanism: 'Integrity Oracle continuously scores agents via Tri-Metric AIS', status: 'MONITORING' },
+  ];
+
+  return (
+    <div className="min-h-screen bg-slate-950 text-slate-100" style={{ fontFamily: 'var(--font-geist-sans, system-ui)' }}>
+      {/* Header */}
+      <header className="border-b border-slate-800 bg-slate-950/90 backdrop-blur sticky top-0 z-10">
+        <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+          <div className="flex items-center gap-3">
+            <div className="w-8 h-8 rounded-lg bg-sky-600 flex items-center justify-center text-white font-black text-sm">X</div>
+            <div>
+              <p className="text-sm font-bold text-white tracking-tight">Xibalba Shield</p>
+              <p className="text-[10px] text-slate-500 font-mono">HIPAA CaaS — CCO Operations Center</p>
+            </div>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="hidden md:flex items-center gap-2 text-xs text-slate-400">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse"></span>
+              Protocol: LIVE
+            </div>
+            <div className="text-xs font-mono text-slate-500 hidden sm:block">
+              {new Date().toLocaleDateString('en-US', { month: 'short', day: '2-digit', year: 'numeric' })}
+            </div>
+            <div className="px-3 py-1.5 rounded-lg border border-emerald-600/40 bg-emerald-900/20 text-emerald-400 text-xs font-mono">
+              COMPLIANT
+            </div>
+          </div>
+        </div>
+
+        {/* Tabs */}
+        <div className="max-w-7xl mx-auto px-6 flex gap-1">
+          {tabs.map(tab => (
+            <button
+              key={tab.id}
+              id={`tab-${tab.id}`}
+              onClick={() => setActiveTab(tab.id)}
+              className={`px-4 py-2.5 text-xs font-semibold border-b-2 transition-colors ${
+                activeTab === tab.id
+                  ? 'border-sky-500 text-sky-400'
+                  : 'border-transparent text-slate-500 hover:text-slate-300'
+              }`}
+            >
+              {tab.label}
+            </button>
+          ))}
+        </div>
+      </header>
+
+      <main className="max-w-7xl mx-auto px-6 py-8">
+
+        {/* OVERVIEW TAB */}
+        {activeTab === 'overview' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-white">Operations Overview</h1>
+              <p className="text-sm text-slate-500 mt-0.5">Real-time cryptographic compliance metrics — Xibalba Regional Medical</p>
+            </div>
+
+            {/* Metric Grid */}
+            <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
+              {metrics.map(tile => <MetricCard key={tile.label} tile={tile} />)}
+            </div>
+
+            {/* Two-column: Audit Stream + BAA Summary */}
+            <div className="grid lg:grid-cols-2 gap-6">
+              <AuditStream logs={logs} />
+              <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 backdrop-blur shadow-lg p-5">
+                <h3 className="text-sm font-semibold text-slate-200 mb-4">BAA Health</h3>
+                <div className="space-y-3">
+                  {baas.map(b => (
+                    <div key={b.id} className="flex items-center justify-between">
+                      <div>
+                        <p className="text-xs text-slate-300 font-semibold">{b.baAlias}</p>
+                        <p className="text-[10px] text-slate-500 font-mono">{b.scope} · {b.collateral.toLocaleString()} $ITK</p>
+                      </div>
+                      <StatusPill status={b.status} />
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* BAAS TAB */}
+        {activeTab === 'baas' && (
+          <div className="space-y-6">
+            <div className="flex items-center justify-between">
+              <div>
+                <h1 className="text-xl font-bold text-white">Smart BAA Registry</h1>
+                <p className="text-sm text-slate-500 mt-0.5">Manage cryptographic Business Associate Agreements</p>
+              </div>
+              <button
+                id="deploy-baa-btn"
+                className="px-4 py-2 rounded-lg bg-sky-600 hover:bg-sky-500 text-white text-sm font-semibold transition-colors"
+                onClick={() => alert('SmartBAAFactory.deploySmartBAA() — Connect wallet to deploy')}
+              >
+                + Deploy BAA
+              </button>
+            </div>
+            <BAAManager baas={baas} onRevoke={handleRevoke} onSlash={handleSlash} />
+            <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 p-5">
+              <h4 className="text-xs font-mono text-slate-400 mb-3 uppercase tracking-widest">Escrow Summary</h4>
+              <div className="grid grid-cols-3 gap-4 text-center">
+                <div>
+                  <p className="text-2xl font-black text-emerald-400">{baas.filter(b => b.status === 'ACTIVE').reduce((s,b) => s+b.collateral, 0).toLocaleString()}</p>
+                  <p className="text-xs text-slate-500 font-mono">$ITK Locked</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-amber-400">{baas.filter(b => b.status === 'PENDING_SIGN').length}</p>
+                  <p className="text-xs text-slate-500 font-mono">Pending Signature</p>
+                </div>
+                <div>
+                  <p className="text-2xl font-black text-red-400">{baas.filter(b => b.status === 'SLASHED').length}</p>
+                  <p className="text-xs text-slate-500 font-mono">Slashed</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* INFERENCE TAB */}
+        {activeTab === 'inference' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-white">ZK Inference Workbench</h1>
+              <p className="text-sm text-slate-500 mt-0.5">Submit clinical data through BCC Middleware — PHI is blinded at the edge</p>
+            </div>
+            <div className="grid lg:grid-cols-2 gap-6">
+              <InferenceWorkbench onAnchor={handleAnchor} />
+              <AuditStream logs={logs.filter(l => l.action.includes('SCRIBE') || l.action.includes('BILLING'))} />
+            </div>
+          </div>
+        )}
+
+        {/* COMPLIANCE TAB */}
+        {activeTab === 'compliance' && (
+          <div className="space-y-6">
+            <div>
+              <h1 className="text-xl font-bold text-white">HIPAA Compliance Map</h1>
+              <p className="text-sm text-slate-500 mt-0.5">45 CFR § 164 Technical Safeguards — live verification status</p>
+            </div>
+            <div className="rounded-xl border border-slate-700/60 bg-slate-900/60 backdrop-blur shadow-lg overflow-hidden">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b border-slate-700 text-left">
+                    <th className="px-5 py-3 text-xs font-mono text-slate-400 uppercase tracking-widest">CFR Ref</th>
+                    <th className="px-5 py-3 text-xs font-mono text-slate-400 uppercase tracking-widest">Safeguard</th>
+                    <th className="px-5 py-3 text-xs font-mono text-slate-400 uppercase tracking-widest hidden md:table-cell">Mechanism</th>
+                    <th className="px-5 py-3 text-xs font-mono text-slate-400 uppercase tracking-widest">Status</th>
+                  </tr>
+                </thead>
+                <tbody className="divide-y divide-slate-800">
+                  {complianceItems.map(item => (
+                    <tr key={item.ref} className="hover:bg-slate-800/30 transition-colors">
+                      <td className="px-5 py-3 font-mono text-xs text-sky-400">{item.ref}</td>
+                      <td className="px-5 py-3 text-sm text-slate-200 font-semibold">{item.title}</td>
+                      <td className="px-5 py-3 text-xs text-slate-500 hidden md:table-cell max-w-xs">{item.mechanism}</td>
+                      <td className="px-5 py-3">
+                        <span className={`text-xs font-mono font-bold ${item.status === 'PASS' ? 'text-emerald-400' : 'text-amber-400'}`}>
+                          {item.status === 'PASS' ? '✓ PASS' : '◎ MONITORING'}
+                        </span>
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+            <div className="grid grid-cols-3 gap-4">
+              {[
+                { label: 'CFR Requirements', value: complianceItems.length, status: 'blue' },
+                { label: 'Fully Compliant', value: complianceItems.filter(i => i.status === 'PASS').length, status: 'green' },
+                { label: 'Monitoring', value: complianceItems.filter(i => i.status !== 'PASS').length, status: 'amber' },
+              ].map(t => <MetricCard key={t.label} tile={{ ...t, status: t.status as 'blue' | 'green' | 'amber' | 'red' }} />)}
+            </div>
+          </div>
+        )}
+      </main>
     </div>
   );
 }

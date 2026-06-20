@@ -14,9 +14,18 @@ impl Default for TriMetricScoringEngine {
     fn default() -> Self {
         Self {
             max_score: 1000.0,
-            w_trustflow: 0.2833333333333333,
-            w_xibalba: 0.38333333333333336,
-            w_sacrifice: 0.3333333333333333,
+            // Mathematical Rationale:
+            // The TriMetricScoringEngine strictly evaluates 3 metrics, meaning `w_staking_age` and `w_volume`
+            // must remain 0.0. Derived from the legacy Python 5-metric scoring engine baseline
+            // (w_trustflow=0.30, w_xibalba=0.30, w_sacrifice=0.20), these are the re-normalized weights
+            // computed proportionally as: new_w_i = old_w_i / sum(old_w_1..3).
+            // Thus, w_trustflow = 0.30 / 0.80 = 0.375
+            // w_xibalba = 0.30 / 0.80 = 0.375
+            // w_sacrifice = 0.20 / 0.80 = 0.25
+            // These exact IEEE-754 f64 literals cleanly sum to 1.0, avoiding precision regressions.
+            w_trustflow: 0.375,
+            w_xibalba: 0.375,
+            w_sacrifice: 0.25,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }

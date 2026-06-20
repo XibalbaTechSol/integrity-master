@@ -4,7 +4,7 @@ import { Menu, X } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { useIsMobile } from '../../utils/useIsMobile';
 
-export const CinematicHeader = ({ setIsContactOpen, setContactType }) => {
+export const CinematicHeader = ({ setIsContactOpen, setContactType }: { setIsContactOpen: (v: boolean) => void; setContactType: (v: 'investor' | 'developer') => void }) => {
     const navigate = useNavigate();
     const [scrolled, setScrolled] = useState(false);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
