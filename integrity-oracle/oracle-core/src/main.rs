@@ -545,3 +545,67 @@ async fn verify_proof_async(payload: TelemetryPayload, pg_pool: &Pool<Postgres>)
         .await;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Validates the agent signature verification logic for authorized agents.
+    #[test]
+    fn test_verify_agent_signature_authorized() {
+        let payload = TelemetryPayload {
+            agent_id: "agent_test".to_string(),
+            domain_id: "test".to_string(),
+            timestamp: Some(123456789),
+            nonce: 1,
+            zk_proof: "proof".to_string(),
+            performer_address: None,
+            signature: None,
+            batch_size: 1,
+            avg_entropy: None,
+            avg_grounding: None,
+            sacrifice: Some(0.0),
+            metadata: None,
+            payload_type: "telemetry".to_string(),
+            deal_id: None,
+            deal_amount: None,
+            latency_ms: None,
+            accuracy_score: None,
+            hitl_intervention: false,
+            gpu_hours_used: 0.0,
+            performance_variance: 0.0,
+            verification_tier: 1,
+        };
+        // agent_ prefix is currently auto-authorized in verify_agent_signature
+        assert!(verify_agent_signature(&payload));
+    }
+
+    /// Validates that signature verification fails when no signature is provided for non-authorized agents.
+    #[test]
+    fn test_verify_agent_signature_missing() {
+        let payload = TelemetryPayload {
+            agent_id: "non_authorized_agent".to_string(),
+            domain_id: "test".to_string(),
+            timestamp: Some(123456789),
+            nonce: 1,
+            zk_proof: "proof".to_string(),
+            performer_address: None,
+            signature: None,
+            batch_size: 1,
+            avg_entropy: None,
+            avg_grounding: None,
+            sacrifice: Some(0.0),
+            metadata: None,
+            payload_type: "telemetry".to_string(),
+            deal_id: None,
+            deal_amount: None,
+            latency_ms: None,
+            accuracy_score: None,
+            hitl_intervention: false,
+            gpu_hours_used: 0.0,
+            performance_variance: 0.0,
+            verification_tier: 1,
+        };
+        assert!(!verify_agent_signature(&payload));
+    }
+}

@@ -161,6 +161,24 @@ async def test_evaluate_intent_policy_local_rules(base_commitment, base_context)
         assert not authorized
         assert "Destructive system action unauthorized" in reason
 
+        # 5. Contract Manipulation during audit
+        audit_context = base_context.copy()
+        audit_context["modification"] = "backdoor"
+        base_commitment.action_type = "AUDITING"
+        base_commitment.intended_state_hash = hashlib.sha256(json.dumps(audit_context, sort_keys=True).encode()).hexdigest()
+        authorized, reason = await evaluate_intent_policy(base_commitment, audit_context)
+        assert not authorized
+        assert "contract modification during audit" in reason
+
+        # 6. Telemetry Spoofing
+        spoof_context = base_context.copy()
+        spoof_context["trick"] = "bypass hardware check"
+        base_commitment.action_type = "query_db" # reset action type
+        base_commitment.intended_state_hash = hashlib.sha256(json.dumps(spoof_context, sort_keys=True).encode()).hexdigest()
+        authorized, reason = await evaluate_intent_policy(base_commitment, spoof_context)
+        assert not authorized
+        assert "TELEMETRY_SPOOFING" in reason
+
 @pytest.mark.asyncio
 async def test_run_interceptor_expired(base_commitment, base_context):
     base_commitment.timestamp = time.time() - 100
