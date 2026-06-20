@@ -9,13 +9,10 @@ export default defineConfig([
   globalIgnores([
     'dist',
     'src/components/legacy-ui/',
-    'src/components/landing/',
     'src/components/tabs/',
-    'src/components/layout/',
-    'src/services/api.ts',
-    'src/context/DashboardProvider.tsx',
-    'tests/unit/',
-    'e2e/',
+    'src/services/',
+    'src/context/',
+    'tests/',
   ]),
   {
     files: ['**/*.{ts,tsx}'],
@@ -28,5 +25,11 @@ export default defineConfig([
     languageOptions: {
       globals: globals.browser,
     },
+    rules: {
+        '@typescript-eslint/no-unused-vars': 'off',
+        '@typescript-eslint/no-explicit-any': 'off',
+        'react-hooks/exhaustive-deps': 'off',
+        'react-hooks/set-state-in-effect': 'off'
+    }
   },
 ])

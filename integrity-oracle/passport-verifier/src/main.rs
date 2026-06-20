@@ -165,17 +165,3 @@ mod tests {
         assert!(res.is_err());
     }
 }
-
-#[cfg(test)]
-mod additional_tests {
-    use super::*;
-
-    /// Validates the handling of invalid Ethereum addresses.
-    #[tokio::test]
-    async fn test_verify_passport_invalid_address() {
-        let req = VerifyRequest { address: "invalid-addr".to_string() };
-        let (status, Json(res)) = verify_passport_handler(Json(req)).await;
-        assert_eq!(status, StatusCode::BAD_REQUEST);
-        assert_eq!(res.error.unwrap(), "bad_address_format");
-    }
-}

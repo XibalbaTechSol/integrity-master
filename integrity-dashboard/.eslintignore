@@ -1,6 +1,0 @@
-src/components/legacy-ui/
-src/components/landing/
-src/services/api.ts
-src/context/DashboardProvider.tsx
-tests/unit/
-e2e/

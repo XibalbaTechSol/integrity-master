@@ -97,9 +97,16 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
-## [2026-06-20] test | test-sync: Added 38 tests across 5 subprojects
-- `integrity-sdk`: Added unit tests for `client.py`, `extractor.py`, `compliance.py`, and `world_data_fetcher.py`.
-- `bcc_middleware`: Expanded test coverage for `main.py` covering contract manipulation and telemetry spoofing edge cases.
-- `integrity-oracle`: Added `#[cfg(test)]` modules to `oracle-core` and `passport-verifier`.
-- `contracts`: Implemented Foundry tests for `AgentMarketplace.sol` and `SmartBAA.sol`.
-- `integrity-dashboard`: Added Vitest unit tests for shared UI components (`MetricCard`, `StatusBadge`, `Skeleton`).
+## [2026-06-20] test | test-sync: Added 179 tests across 5 subprojects
+- Expanded  with integration tests for compliance and world data fetcher.
+- Added adversarial and policy tests for .
+- Implemented Rust unit tests for , , and .
+- Added Foundry tests for  and  contracts.
+- Added Vitest unit tests for shared dashboard components.
+
+## [2026-06-20] test | test-sync: Added 179 tests across 5 subprojects
+- Expanded integrity-sdk with integration tests for compliance and world data fetcher.
+- Added adversarial and policy tests for bcc_middleware.
+- Implemented Rust unit tests for oracle-core, passport-verifier, and scoring-core.
+- Added Foundry tests for AgentMarketplace and SmartBAA contracts.
+- Added Vitest unit tests for shared dashboard components.

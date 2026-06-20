@@ -1,5 +1,5 @@
-import requests
 import json
+import requests
 from typing import Dict, Any, Optional
 import time
 import hmac

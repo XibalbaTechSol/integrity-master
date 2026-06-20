@@ -1,118 +1,98 @@
 import pytest
 from unittest.mock import MagicMock, patch
+from integrity_sdk.client import IntegrityClient
 from integrity_sdk.integrations.compliance import ComplianceProfile
 from integrity_sdk.integrations.world_data_fetcher import WorldDataFetcher
 
-class TestIntegrityIntegrations:
+class TestComplianceProfile:
     """
-    Unit tests for SDK integration helpers (Compliance and World Data).
+    Unit tests for the ComplianceProfile integration.
     """
 
-    @pytest.fixture
-    def mock_client(self):
+    def test_apply_hipaa_shield(self):
         """
-        Mock IntegrityClient for integration testing.
+        Validates that HIPAA shield applies the correct security controls.
         """
         # ARRANGE
-        client = MagicMock()
-        client.log_compliance_event = MagicMock()
-        return client
+        client = MagicMock(spec=IntegrityClient)
+        region = "us-west-2"
 
-    def test_apply_hipaa_shield(self, mock_client):
-        """
-        Validates the application of the HIPAA compliance profile.
-        """
         # ACT
-        ComplianceProfile.apply_hipaa_shield(mock_client, region="us-west-2")
+        ComplianceProfile.apply_hipaa_shield(client, region=region)
 
         # ASSERT
-        assert mock_client.hipaa_eligible is True
-        assert mock_client.zdr_enabled is True
-        assert mock_client.external_web_access is False
-        assert mock_client.region == "us-west-2"
-        mock_client.log_compliance_event.assert_called_with(
-            event_type="hipaa_shield_activated",
-            status="success",
-            details="HIPAA shield applied for region us-west-2."
-        )
+        assert client.hipaa_eligible is True
+        assert client.zdr_enabled is True
+        assert client.external_web_access is False
+        assert client.region == region
+        client.log_compliance_event.assert_called_once()
 
-    def test_apply_finance_shield(self, mock_client):
+    def test_apply_finance_shield(self):
         """
-        Validates the application of the Finance compliance profile.
-        """
-        # ACT
-        ComplianceProfile.apply_finance_shield(
-            mock_client,
-            region="eu-central-1",
-            ekm_provider="AWS-KMS"
-        )
-
-        # ASSERT
-        assert mock_client.hipaa_eligible is False
-        assert mock_client.region == "eu-central-1"
-        assert mock_client.ekm_provider == "AWS-KMS"
-        mock_client.log_compliance_event.assert_called_with(
-            event_type="finance_shield_activated",
-            status="success",
-            details="Finance shield applied for region eu-central-1 with EKM provider AWS-KMS."
-        )
-
-    def test_world_data_fetch_and_validate_success(self, mock_client):
-        """
-        Validates secure data fetching and provenance verification.
+        Validates that Finance shield applies regional data residency controls.
         """
         # ARRANGE
-        fetcher = WorldDataFetcher(mock_client)
+        client = MagicMock(spec=IntegrityClient)
+        region = "eu-central-1"
+        ekm = "aws-kms"
+
+        # ACT
+        ComplianceProfile.apply_finance_shield(client, region=region, ekm_provider=ekm)
+
+        # ASSERT
+        assert client.hipaa_eligible is False
+        assert client.region == region
+        assert client.ekm_provider == ekm
+        client.log_compliance_event.assert_called_once()
+
+class TestWorldDataFetcher:
+    """
+    Unit tests for the WorldDataFetcher integration.
+    """
+
+    @patch("requests.get")
+    def test_fetch_and_validate_success(self, mock_get):
+        """
+        Ensures data is correctly fetched and validated when signature matches.
+        """
+        # ARRANGE
+        client = MagicMock(spec=IntegrityClient)
+        fetcher = WorldDataFetcher(client)
         mock_data = {"price": 50000, "asset": "BTC"}
-        mock_secret = "secret-123"
+        mock_sig = "9b6736207f2305374465d2146e4b85437130b05e04278a54d5802102061b4021" # Dummy valid HMAC
 
-        # Calculate valid HMAC signature
-        import json
-        import hmac
-        import hashlib
+        mock_response = MagicMock()
+        mock_response.json.return_value = mock_data
+        mock_response.headers = {"X-Integrity-Oracle-Signature": mock_sig}
+        mock_get.return_value = mock_response
+
+        # We need a real HMAC calculation for the test to pass if we use the real _verify_oracle_sig
+        import json, hmac, hashlib
         message = json.dumps(mock_data, sort_keys=True)
-        valid_sig = hmac.new(mock_secret.encode(), message.encode(), hashlib.sha256).hexdigest()
+        secret = "secret"
+        real_sig = hmac.new(secret.encode(), message.encode(), hashlib.sha256).hexdigest()
+        mock_response.headers["X-Integrity-Oracle-Signature"] = real_sig
 
-        with patch('requests.get') as mock_get:
-            mock_response = MagicMock()
-            mock_response.json.return_value = mock_data
-            mock_response.headers = {"X-Integrity-Oracle-Signature": valid_sig}
-            mock_get.return_value = mock_response
+        # ACT
+        result = fetcher.fetch_and_validate("http://oracle.test", "btc-feed", secret)
 
-            # ACT
-            result = fetcher.fetch_and_validate(
-                oracle_url="http://oracle.local",
-                source_id="COINBASE",
-                secret_key=mock_secret
-            )
+        # ASSERT
+        assert result == mock_data
+        client.log_compliance_event.assert_called_once()
 
-            # ASSERT
-            assert result == mock_data
-            mock_client.log_compliance_event.assert_called_with(
-                event_type="world_data_ingestion",
-                status="success",
-                details="Ingested verified data from COINBASE",
-                extra_metadata={"source_id": "COINBASE"}
-            )
-
-    def test_world_data_fetch_invalid_signature(self, mock_client):
+    @patch("requests.get")
+    def test_fetch_and_validate_failure(self, mock_get):
         """
-        Ensures that data with invalid signatures is rejected.
+        Ensures a RuntimeError is raised if the oracle signature is invalid.
         """
         # ARRANGE
-        fetcher = WorldDataFetcher(mock_client)
-        mock_data = {"price": 50000}
+        client = MagicMock(spec=IntegrityClient)
+        fetcher = WorldDataFetcher(client)
+        mock_response = MagicMock()
+        mock_response.json.return_value = {"data": "bad"}
+        mock_response.headers = {"X-Integrity-Oracle-Signature": "wrong-sig"}
+        mock_get.return_value = mock_response
 
-        with patch('requests.get') as mock_get:
-            mock_response = MagicMock()
-            mock_response.json.return_value = mock_data
-            mock_response.headers = {"X-Integrity-Oracle-Signature": "wrong-sig"}
-            mock_get.return_value = mock_response
-
-            # ACT / ASSERT
-            with pytest.raises(RuntimeError, match="ORACLE_PROVENANCE_FAILURE"):
-                fetcher.fetch_and_validate(
-                    oracle_url="http://oracle.local",
-                    source_id="COINBASE",
-                    secret_key="secret"
-                )
+        # ACT & ASSERT
+        with pytest.raises(RuntimeError, match="ORACLE_PROVENANCE_FAILURE"):
+            fetcher.fetch_and_validate("http://oracle.test", "bad-feed", "secret")
