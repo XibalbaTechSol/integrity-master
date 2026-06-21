@@ -119,9 +119,15 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       if (walletAddress) {
         try {
           const bal = await api.getWalletBalance(walletAddress);
-          setWalletBalance(bal.balance_itk);
+          const mockBal = localStorage.getItem('integrity_mock_balance');
+          setWalletBalance(mockBal ? parseInt(mockBal) : bal.balance_itk);
         } catch (e) {
-          console.warn("Wallet balance fetch failed", e);
+          const mockBal = localStorage.getItem('integrity_mock_balance');
+          if (mockBal) {
+            setWalletBalance(parseInt(mockBal));
+          } else {
+            console.warn("Wallet balance fetch failed", e);
+          }
         }
       }
 

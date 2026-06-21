@@ -1,9 +1,8 @@
 import React from 'react';
 import { motion } from 'framer-motion';
-import { Mail, Code, ArrowRight, FileText, ExternalLink } from 'lucide-react';
 import { useIsMobile } from '../../utils/useIsMobile';
 
-export const HeroSection = ({ setContactType, setIsContactOpen, setIsRegistryOpen }: { setContactType?: (v: 'investor' | 'developer') => void; setIsContactOpen?: (v: boolean) => void; setIsRegistryOpen: (v: boolean) => void }) => {
+export const HeroSection = ({ onLogin }: { onLogin: (provider: 'google' | 'github') => void }) => {
     const isMobile = useIsMobile();
 
     return (
@@ -17,116 +16,53 @@ export const HeroSection = ({ setContactType, setIsContactOpen, setIsRegistryOpe
                     initial={{ opacity: 0, y: 20 }}
                     animate={{ opacity: 1, y: 0 }}
                 >
-                    <span style={{ color: 'var(--gold)', fontSize: isMobile ? '0.65rem' : '0.85rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: isMobile ? '0.3em' : '0.6em', marginBottom: '12px', display: 'block' }}>Verifiable Accountability for Autonomous Agents</span>
+                    <span style={{ color: 'var(--gold)', fontSize: isMobile ? '0.65rem' : '0.85rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: isMobile ? '0.3em' : '0.6em', marginBottom: '12px', display: 'block' }}>
+                        Verifiable Accountability for Autonomous Agents
+                    </span>
 
                     <h1 style={{ fontSize: isMobile ? '1.8rem' : 'clamp(2rem, 5vw, 4rem)', marginBottom: '24px', fontFamily: 'Playfair Display, serif', lineHeight: 1.1, letterSpacing: '-0.02em', padding: isMobile ? '0 10px' : '0' }}>
-                        Know your agent's trustworthiness <br /><span style={{ color: 'var(--gold)' }}>before you stake your reputation on it.</span>
+                        The Architectural Layer for the <br /><span style={{ color: 'var(--gold)' }}>Booming Agentic Economy</span>
                     </h1>
                     <p style={{ fontSize: isMobile ? '0.95rem' : '1.15rem', color: 'rgba(255,255,255,0.85)', maxWidth: '900px', margin: '0 auto 32px', lineHeight: 1.7, fontWeight: 500, padding: isMobile ? '0 10px' : '0' }}>
-                        The Integrity Protocol is the foundational trust and settlement layer for the <strong>Autonomous Agent Economy</strong>.
+                        Integrity Protocol provides the definitive trust assessment layer to verify machine reliability, grounding, and commercial accountability.
                     </p>
                     <p style={{ fontSize: isMobile ? '0.85rem' : '1rem', color: 'rgba(255,255,255,0.4)', maxWidth: '850px', margin: '0 auto 48px', lineHeight: 1.8, padding: isMobile ? '0 10px' : '0' }}>
-                        {isMobile ? 
-                            "Trust in the agentic web requires more than intuition. We provide the actuarial layer for verifiable machine reputation." :
-                            "In a decentralized economy managed by autonomous agents, trust is the scarcest resource. Our protocol provides the definitive Tri-Metric assessment layer—anchored on Base L2—to verify machine reliability, grounding, and commercial accountability before agents execute high-stakes smart contracts. No more black boxes, only cryptographic certainty."
-                        }
+                        No more black boxes. Empower your agents with cryptographic certainty before they execute high-stakes smart contracts.
                     </p>
+
                     <div style={{ display: 'flex', gap: '20px', justifyContent: 'center', flexDirection: isMobile ? 'column' : 'row', padding: isMobile ? '0 20px' : '0' }}>
                         <button 
-                            onClick={() => { setContactType('investor'); setIsContactOpen(true); }} 
+                            onClick={() => onLogin('google')} 
                             className="btn btn-primary" 
-                            style={{ padding: isMobile ? '16px 24px' : '20px 48px', fontSize: '0.9rem' }}
+                            style={{ padding: isMobile ? '16px 24px' : '20px 48px', fontSize: '0.9rem', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                         >
-                            <Mail size={18} /> Institutional Inquiries
+                            <svg viewBox="0 0 24 24" width="18" height="18" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" fill="#4285F4"/>
+                                <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" fill="#34A853"/>
+                                <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" fill="#FBBC05"/>
+                                <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" fill="#EA4335"/>
+                            </svg>
+                            Login with Google
                         </button>
+                        
                         <button 
-                            onClick={() => { setContactType('developer'); setIsContactOpen(true); }} 
+                            onClick={() => onLogin('github')} 
                             className="btn btn-outline" 
-                            style={{ border: '1.5px solid rgba(255,255,255,0.2)', color: 'white', padding: isMobile ? '16px 24px' : '20px 48px', fontSize: '0.9rem', background: 'transparent', cursor: 'pointer', borderRadius: '12px' }}
+                            style={{ border: '1.5px solid rgba(255,255,255,0.2)', color: 'white', padding: isMobile ? '16px 24px' : '20px 48px', fontSize: '0.9rem', background: 'transparent', cursor: 'pointer', borderRadius: '12px', display: 'flex', alignItems: 'center', justifyContent: 'center', gap: '10px' }}
                         >
-                            <Code size={18} /> Developer Integration
+                            <svg viewBox="0 0 24 24" width="18" height="18" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                                <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
+                            </svg>
+                            Login with GitHub
                         </button>
                     </div>
 
-                    {/* XNS Callout */}
-                    <motion.div 
-                        initial={{ opacity: 0 }}
-                        animate={{ opacity: 1 }}
-                        transition={{ delay: 0.5 }}
-                        style={{ marginTop: '60px', display: 'flex', flexDirection: 'column', alignItems: 'center' }}
-                    >
-                        <div style={{ display: 'flex', flexDirection: isMobile ? 'column' : 'row', alignItems: 'center', gap: isMobile ? '16px' : '20px' }}>
-                            <div style={{ 
-                                display: 'flex', 
-                                alignItems: 'center', 
-                                gap: isMobile ? '8px' : '16px', 
-                                padding: isMobile ? '10px 16px' : '12px 24px', 
-                                background: 'rgba(212, 175, 55, 0.08)', 
-                                border: '1px solid rgba(212, 175, 55, 0.15)', 
-                                borderRadius: '100px',
-                                cursor: 'pointer',
-                                transition: 'background 0.3s',
-                                maxWidth: '100%',
-                                overflow: 'hidden'
-                            }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.12)'}
-                                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.08)'}
-                                onClick={() => setIsRegistryOpen(true)}
-                            >
-                                <span style={{ fontSize: isMobile ? '0.65rem' : '0.75rem', fontWeight: 800, color: 'var(--gold)', letterSpacing: '0.05em', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}>
-                                    XNS Resolver — <span style={{ opacity: 0.8 }}>Free for Agents</span>
-                                </span>
-                                <div style={{ width: '1px', height: '14px', background: 'rgba(212, 175, 55, 0.3)', flexShrink: 0 }} />
-                                <span style={{ fontSize: isMobile ? '0.6rem' : '0.7rem', fontWeight: 800, color: 'white', display: 'flex', alignItems: 'center', gap: '6px', flexShrink: 0 }}>
-                                    EXPLORE <ArrowRight size={14} />
-                                </span>
-                            </div>
-                            
-                            <a 
-                                href="/docs/whitepaper.md" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                style={{ 
-                                    fontSize: isMobile ? '0.65rem' : '0.75rem', 
-                                    fontWeight: 800, 
-                                    color: 'rgba(255,255,255,0.4)', 
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    transition: 'color 0.3s'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.color = 'white'}
-                                onMouseLeave={(e) => e.currentTarget.style.color = 'rgba(255,255,255,0.4)'}
-                            >
-                                CORE PROTOCOL <FileText size={14} />
-                            </a>
-                            
-                            <a 
-                                href="/docs/tokenomics.md" 
-                                target="_blank" 
-                                rel="noopener noreferrer"
-                                style={{ 
-                                    fontSize: isMobile ? '0.65rem' : '0.75rem', 
-                                    fontWeight: 800, 
-                                    color: 'var(--gold)', 
-                                    textDecoration: 'none',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    transition: 'color 0.3s',
-                                    background: 'rgba(212, 175, 55, 0.1)',
-                                    padding: '8px 16px',
-                                    borderRadius: '8px',
-                                    border: '1px solid rgba(212, 175, 55, 0.3)'
-                                }}
-                                onMouseEnter={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.2)'}
-                                onMouseLeave={(e) => e.currentTarget.style.background = 'rgba(212, 175, 55, 0.1)'}
-                            >
-                                TOKENOMICS ($ITK) <ExternalLink size={14} />
-                            </a>
-                        </div>
-                    </motion.div>
+                    <div style={{ marginTop: '24px' }}>
+                        <span style={{ fontSize: '0.85rem', color: 'var(--gold)', fontWeight: 600, background: 'rgba(212, 175, 55, 0.1)', padding: '6px 12px', borderRadius: '100px', border: '1px solid rgba(212, 175, 55, 0.2)', display: 'inline-block' }}>
+                            🎉 Create an account and receive 100,000 $ITK testnet tokens automatically!
+                        </span>
+                    </div>
+
                 </motion.div>
             </div>
         </section>
