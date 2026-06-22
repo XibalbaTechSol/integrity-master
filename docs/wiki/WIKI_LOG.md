@@ -96,3 +96,7 @@
 
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
+
+## [2026-06-22] update | Tri-Metric Weight Optimization
+- Optimized tri-metric weights (`w_trustflow`, `w_xibalba`, `w_sacrifice`) in `integrity-oracle/scoring-core/src/lib.rs`.
+- Weights updated using orthogonal projection to strictly minimize Euclidean distance to legacy targets while summing to 1.0.
