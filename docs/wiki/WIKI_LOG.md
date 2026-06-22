@@ -96,3 +96,6 @@
 
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
+## [2026-06-22] update | Tri-Metric Weight Optimization
+- Updated `integrity-oracle/scoring-core/src/lib.rs` to optimize weights for the TriMetricScoringEngine using Lagrange multipliers.
+- New weights: w_trustflow=0.36666666666666664, w_xibalba=0.36666666666666664, w_sacrifice=0.26666666666666666.

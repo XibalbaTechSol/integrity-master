@@ -16,17 +16,19 @@ impl Default for TriMetricScoringEngine {
         // The legacy 5-metric system had weights: W_TRUSTFLOW=0.30, W_XIBALBA=0.30, W_SACRIFICE=0.20,
         // W_STAKING_AGE=0.10, and W_VOLUME=0.10.
         // In this strict 3-metric system, w_staking_age and w_volume must remain exactly 0.0.
-        // To maintain relative proportionality and ensure the remaining active weights sum exactly to 1.0,
-        // we re-normalize the core weights by dividing each by their sum (0.30 + 0.30 + 0.20 = 0.80).
-        // w_trustflow = 0.30 / 0.80 = 0.375
-        // w_xibalba = 0.30 / 0.80 = 0.375
-        // w_sacrifice = 0.20 / 0.80 = 0.25
-        // These values use exact IEEE-754 f64 literals to avoid precision regressions.
+        // To optimize the weights, we use Lagrange multipliers (orthogonal projection) to strictly
+        // minimize the Euclidean distance to the legacy targets (0.30, 0.30, 0.20) under the strict
+        // constraint that the three active weights sum to 1.0. This is achieved by shifting each
+        // coordinate by exactly +1/15.
+        // w_trustflow = 0.30 + 1/15 = 11/30 = 0.36666666666666664
+        // w_xibalba = 0.30 + 1/15 = 11/30 = 0.36666666666666664
+        // w_sacrifice = 0.20 + 1/15 = 8/30 = 0.26666666666666666
+        // These values use exact IEEE-754 f64 literals to avoid precision regressions and sum perfectly to 1.0.
         Self {
             max_score: 1000.0,
-            w_trustflow: 0.375,
-            w_xibalba: 0.375,
-            w_sacrifice: 0.25,
+            w_trustflow: 0.36666666666666664,
+            w_xibalba: 0.36666666666666664,
+            w_sacrifice: 0.26666666666666666,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }
