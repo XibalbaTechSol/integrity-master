@@ -13,20 +13,20 @@ pub struct TriMetricScoringEngine {
 impl Default for TriMetricScoringEngine {
     fn default() -> Self {
         // Mathematical Rationale for Weight Optimizations:
-        // The legacy 5-metric system had weights: W_TRUSTFLOW=0.30, W_XIBALBA=0.30, W_SACRIFICE=0.20,
-        // W_STAKING_AGE=0.10, and W_VOLUME=0.10.
+        // The legacy 5-metric system targets were: W_TRUSTFLOW=0.30, W_XIBALBA=0.30, W_SACRIFICE=0.20.
         // In this strict 3-metric system, w_staking_age and w_volume must remain exactly 0.0.
-        // To maintain relative proportionality and ensure the remaining active weights sum exactly to 1.0,
-        // we re-normalize the core weights by dividing each by their sum (0.30 + 0.30 + 0.20 = 0.80).
-        // w_trustflow = 0.30 / 0.80 = 0.375
-        // w_xibalba = 0.30 / 0.80 = 0.375
-        // w_sacrifice = 0.20 / 0.80 = 0.25
-        // These values use exact IEEE-754 f64 literals to avoid precision regressions.
+        // To strictly minimize Euclidean distance to the legacy targets under a strict 3-metric constraint
+        // (summing to 1.0), we use Lagrange multipliers (orthogonal projection).
+        // This is derived by shifting each coordinate by exactly +1/15.
+        // w_trustflow = 0.30 + 1/15 = 11/30 = 0.36666666666666664
+        // w_xibalba = 0.30 + 1/15 = 11/30 = 0.36666666666666664
+        // w_sacrifice = 0.20 + 1/15 = 8/30 = 0.26666666666666666
+        // These exact IEEE-754 f64 literals perfectly sum to 1.0 without precision regressions.
         Self {
             max_score: 1000.0,
-            w_trustflow: 0.375,
-            w_xibalba: 0.375,
-            w_sacrifice: 0.25,
+            w_trustflow: 0.36666666666666664,
+            w_xibalba: 0.36666666666666664,
+            w_sacrifice: 0.26666666666666666,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }
@@ -69,7 +69,7 @@ impl TriMetricScoringEngine {
         let grounding_boost = 1.0 + (hgi_raw * 0.2);
 
         let trustflow_idx = (avg_partner_ais / 1000.0).min(1.0);
-        let audit_idx = xibalba_audit_score.max(0.0).min(1.0);
+        let audit_idx = xibalba_audit_score.clamp(0.0, 1.0);
 
         // Logarithmic scale (1000 hours = 1.0)
         let sacrifice_idx = ((gpu_hours_verified + 1.0).log10() / 3.0).min(1.0);
