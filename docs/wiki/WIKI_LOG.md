@@ -97,8 +97,8 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
-## [2026-06-20] fix | CI and Linter Refinement
-- Scoring Engine: Fixed Rust Clippy warning by replacing `max(0.0).min(1.0)` with `clamp(0.0, 1.0)` in `scoring-core/src/lib.rs`.
-- Dependencies: Added missing `opentelemetry` packages to `integrity-sdk/pyproject.toml` to resolve ModuleNotFound errors in CI.
-- Dependencies: Moved `pytest-asyncio` to main dependencies in `bcc_middleware/pyproject.toml` for robust environment setup.
-- Dashboard: Pruned `@testing-library/dom` to reduce bundle size and resolve dependency audit findings.
+## [2026-06-22] Optimization | Optimize Tri-Metric Weights
+* Updated the `TriMetricScoringEngine` default implementation in `integrity-oracle/scoring-core/src/lib.rs`.
+* Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
+* The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
+* New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
