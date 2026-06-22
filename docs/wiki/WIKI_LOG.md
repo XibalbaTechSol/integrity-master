@@ -96,3 +96,9 @@
 
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
+
+## [2026-06-22] modify | TriMetricScoringEngine Weight Optimization
+* Updated `w_trustflow`, `w_xibalba`, and `w_sacrifice` in `integrity-oracle/scoring-core/src/lib.rs` to optimize tri-metric weights.
+* Minimized Euclidean distance to the legacy 5-metric system targets (0.30, 0.30, 0.20) under a strict 3-metric constraint (summing to 1.0) using Lagrange multipliers (orthogonal projection).
+* Weights shifted uniformly by +1/15, resulting in `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, and `w_sacrifice = 0.26666666666666666`.
+* Detailed mathematical rationale added to source code comments.
