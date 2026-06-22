@@ -97,12 +97,9 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
-## [2026-06-20] test | test-sync: Added 179 tests across 5 subprojects
-- Expanded  with integration tests for compliance and world data fetcher.
-- Added adversarial and policy tests for .
-- Implemented Rust unit tests for , , and .
-- Added Foundry tests for  and  contracts.
-- Added Vitest unit tests for shared dashboard components.
+## [2026-06-20] security | devil-sync: Tested 4 adversarial scenarios. 3 blocked, 1 breached, 1 patched.
+- Blocked: PHI Exfiltration, Telemetry Spoofing, Intent Drift.
+- Breached & Patched: Budget Overflow via Small Loops (added validation to `main.py` and `OPA_HIPAA_Guardrails.rego`).
 
 ## [2026-06-20] test | test-sync: Added 179 tests across 5 subprojects
 - Expanded integrity-sdk with integration tests for compliance and world data fetcher.

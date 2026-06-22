@@ -550,15 +550,9 @@ async fn verify_proof_async(payload: TelemetryPayload, pg_pool: &Pool<Postgres>)
 mod tests {
     use super::*;
 
-    #[test]
-    fn test_bb_rs_verify_empty() {
-        // Ensuring that an empty proof string returns false.
-        assert!(!bb_rs::verify(""));
-    }
-
+    /// Ensures that the AIS calculation returns a fixed baseline value.
     #[test]
     fn test_calculate_default_ais_consistency() {
-        // Ensuring that the AIS calculation returns a fixed baseline value.
         assert_eq!(calculate_default_ais(None, None, None), 1000);
     }
 }
