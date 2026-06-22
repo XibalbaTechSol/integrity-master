@@ -96,3 +96,7 @@
 
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
+## [2024-06-22] Update | Tri-Metric Weight Optimizations
+* Adjusted `w_trustflow`, `w_xibalba`, and `w_sacrifice` in `integrity-oracle/scoring-core/src/lib.rs` to strictly minimize Euclidean distance to the legacy 5-metric system targets (0.30, 0.30, 0.20) using Lagrange multipliers under a strict 3-metric constraint (summing to 1.0).
+* Re-calculated weights and used exact IEEE-754 f64 literals (11/30, 11/30, 8/30) to avoid precision regressions.
+* Addressed Clippy suggestion by replacing `.max(0.0).min(1.0)` with `.clamp(0.0, 1.0)` for the audit index bounding.
