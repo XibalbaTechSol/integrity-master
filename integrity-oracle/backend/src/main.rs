@@ -52,6 +52,7 @@ pub struct CoreMetrics {
 
 /// The Payload Dispatcher: Extracts core protocol metrics from domain-specific payloads.
 fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics {
+    #[allow(clippy::field_reassign_with_default)]
     let mut metrics = CoreMetrics::default();
 
     // Core common fields (best-effort extraction)
@@ -95,7 +96,7 @@ fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics
                         .and_then(|v| v.as_f64())
                         .map(|v| v as f32)
                 })
-                .unwrap_or(0.05) as f32;
+                .unwrap_or(0.05f32);
             metrics.sacrifice = (payload
                 .get("gpu_hours_used")
                 .and_then(|v| v.as_f64())
@@ -119,7 +120,7 @@ fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics
                         .and_then(|v| v.as_f64())
                         .map(|v| v as f32)
                 })
-                .unwrap_or(0.01) as f32;
+                .unwrap_or(0.01f32);
             metrics.grounding = 0.50; // Quants are mostly autonomous
             metrics.sacrifice = (payload
                 .get("gpu_hours_used")
@@ -1389,6 +1390,7 @@ async fn ingest_telemetry(
             .domain_id
             .clone()
             .unwrap_or_else(|| "global".to_string());
+        #[allow(clippy::field_reassign_with_default)]
         let mut metrics = CoreMetrics::default();
         metrics.entropy = payload
             .avg_entropy
@@ -1417,7 +1419,7 @@ async fn ingest_telemetry(
             payload
                 .metadata
                 .as_ref()
-                .map(|m| compute_clearance_flags(m))
+                .map(compute_clearance_flags)
         });
 
         (
