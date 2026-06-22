@@ -69,7 +69,7 @@ impl TriMetricScoringEngine {
         let grounding_boost = 1.0 + (hgi_raw * 0.2);
 
         let trustflow_idx = (avg_partner_ais / 1000.0).min(1.0);
-        let audit_idx = xibalba_audit_score.max(0.0).min(1.0);
+        let audit_idx = xibalba_audit_score.clamp(0.0, 1.0);
 
         // Logarithmic scale (1000 hours = 1.0)
         let sacrifice_idx = ((gpu_hours_verified + 1.0).log10() / 3.0).min(1.0);
