@@ -84,7 +84,7 @@ pub mod verification {
 pub struct MerkleTree;
 
 impl MerkleTree {
-    pub fn calculate_root(hashes: Vec<String>) -> String {
+    pub fn calculate_root(_hashes: Vec<String>) -> String {
         "0xmockroot".to_string()
     }
 }

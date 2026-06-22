@@ -1,10 +1,6 @@
 import boto3
 import os
-import json
-from eth_account import Account
-from eth_account.messages import encode_defunct
 from hexbytes import HexBytes
-import rlp
 from eth_keys import keys
 from eth_utils import to_checksum_address, keccak
 

@@ -1,9 +1,7 @@
 import json
 import os
-import datetime
 from typing import Optional, List, Dict, Any
-from sqlalchemy.orm import Session
-from database import SessionLocal, Agent, UserProfile, ReputationSnapshot
+from database import SessionLocal, Agent
 
 # Xibalba Solutions: Hermes Identity Gateway (v1.0)
 # Facilitates immediate distribution by linking Hermes Project identities.

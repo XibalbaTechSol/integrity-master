@@ -50,6 +50,7 @@ pub struct CoreMetrics {
     pub accuracy_score: f32,
 }
 
+#[allow(clippy::field_reassign_with_default)]
 /// The Payload Dispatcher: Extracts core protocol metrics from domain-specific payloads.
 fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics {
     let mut metrics = CoreMetrics::default();
@@ -95,7 +96,7 @@ fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics
                         .and_then(|v| v.as_f64())
                         .map(|v| v as f32)
                 })
-                .unwrap_or(0.05) as f32;
+                .unwrap_or(0.05);
             metrics.sacrifice = (payload
                 .get("gpu_hours_used")
                 .and_then(|v| v.as_f64())
@@ -119,7 +120,7 @@ fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics
                         .and_then(|v| v.as_f64())
                         .map(|v| v as f32)
                 })
-                .unwrap_or(0.01) as f32;
+                .unwrap_or(0.01);
             metrics.grounding = 0.50; // Quants are mostly autonomous
             metrics.sacrifice = (payload
                 .get("gpu_hours_used")
@@ -1389,35 +1390,38 @@ async fn ingest_telemetry(
             .domain_id
             .clone()
             .unwrap_or_else(|| "global".to_string());
-        let mut metrics = CoreMetrics::default();
-        metrics.entropy = payload
-            .avg_entropy
-            .or(Some(payload.performance_variance))
-            .unwrap_or(0.05);
-        metrics.grounding = payload
-            .avg_grounding
-            .unwrap_or(if payload.hitl_intervention {
-                0.95
-            } else {
-                0.50
-            });
-        metrics.sacrifice = (payload.gpu_hours_used / 100.0).min(1.0);
-        metrics.deal_id = payload.deal_id.unwrap_or_else(|| {
-            payload
-                .timestamp
-                .map(|t| format!("tx_{}", t))
-                .unwrap_or_else(|| "default".to_string())
-        });
-        metrics.deal_amount = payload.deal_amount.unwrap_or(0.0);
-        metrics.latency_ms = payload.latency_ms.unwrap_or(0);
-        metrics.accuracy_score = payload.accuracy_score.unwrap_or(1.0);
+
+        let metrics = CoreMetrics {
+            entropy: payload
+                .avg_entropy
+                .or(Some(payload.performance_variance))
+                .unwrap_or(0.05),
+            grounding: payload
+                .avg_grounding
+                .unwrap_or(if payload.hitl_intervention {
+                    0.95
+                } else {
+                    0.50
+                }),
+            sacrifice: (payload.gpu_hours_used / 100.0).min(1.0),
+            deal_id: payload.deal_id.unwrap_or_else(|| {
+                payload
+                    .timestamp
+                    .map(|t| format!("tx_{}", t))
+                    .unwrap_or_else(|| "default".to_string())
+            }),
+            deal_amount: payload.deal_amount.unwrap_or(0.0),
+            latency_ms: payload.latency_ms.unwrap_or(0),
+            accuracy_score: payload.accuracy_score.unwrap_or(1.0),
+            ..Default::default()
+        };
 
         let zdr = payload.zdr_enabled;
         let clearance = payload.clearance_flags.map(|c| c as i32).or_else(|| {
             payload
                 .metadata
                 .as_ref()
-                .map(|m| compute_clearance_flags(m))
+                .map(compute_clearance_flags)
         });
 
         (

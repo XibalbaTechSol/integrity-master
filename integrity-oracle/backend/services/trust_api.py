@@ -11,7 +11,7 @@ from data_ingestor import IntegrityDataIngestor
 from dispute_resolver import XibalbaDisputeResolver
 from blockchain_service import IntegrityBlockchainService
 from hermes_gateway import HermesGateway
-from database import SessionLocal, Agent, TransactionLog, Base, engine as db_engine, UserProfile, GlobalSettings, LoanLedger, ContactInquiry, GovernanceProposal, MarketTask, AgentEquity, UserContract
+from database import SessionLocal, Agent, TransactionLog, Base, engine as db_engine, UserProfile, GlobalSettings, LoanLedger, ContactInquiry, GovernanceProposal, MarketTask, AgentEquity
 from eth_account import Account
 
 # --- Market Models ---
@@ -33,7 +33,6 @@ class AgentEquityBuyRequest(BaseModel):
     price_itk: float
 from eth_account.messages import encode_defunct
 from fastapi.responses import JSONResponse
-from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -44,8 +43,6 @@ import hashlib
 import time
 import json
 from decimal import Decimal
-import smtplib
-from email.mime.text import MIMEText
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
@@ -213,10 +210,8 @@ blockchain = IntegrityBlockchainService()
 hermes = HermesGateway()
 
 # DIDResolver and VCIssuer are now in identity_api.py
-from identity_api import DIDResolver
 
 # DIDResolver and VCIssuer are now in identity_api.py
-from identity_api import DIDResolver
 
 def get_db():
     db = SessionLocal()

@@ -1,10 +1,9 @@
-import time
 import uuid
 import datetime
 import requests
 import os
 from sqlalchemy.orm import Session
-from database import SessionLocal, Agent, TransactionLog, TelemetryLog, ReputationSnapshot
+from database import SessionLocal, Agent, TransactionLog, ReputationSnapshot
 from verification_engine import AutonomousVerificationEngine
 from scoring_engine import TriMetricScoringEngine
 from blockchain_service import IntegrityBlockchainService

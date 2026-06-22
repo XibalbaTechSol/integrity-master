@@ -1,5 +1,4 @@
 import statistics
-import math
 
 class AutonomousVerificationEngine:
     """

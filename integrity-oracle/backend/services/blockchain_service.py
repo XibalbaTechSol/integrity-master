@@ -2,7 +2,6 @@ import os
 import json
 from web3 import Web3
 from eth_account import Account
-from eth_account.signers.local import LocalAccount
 from .kms_service import KmsService
 
 # Xibalba Solutions: Production-Grade Blockchain & Signing Service (v2.0)

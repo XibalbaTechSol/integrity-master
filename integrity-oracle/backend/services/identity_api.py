@@ -17,7 +17,7 @@ All endpoints are prefixed under /v1/identity/ with backward-compatible aliases.
 from fastapi import APIRouter, HTTPException, Depends, Header
 from sqlalchemy.orm import Session
 from pydantic import BaseModel
-from typing import Optional, List, Dict, Any
+from typing import Optional, Dict, Any
 from database import SessionLocal, Agent, ReputationSnapshot
 import datetime
 import hashlib
