@@ -12,21 +12,11 @@ pub struct TriMetricScoringEngine {
 
 impl Default for TriMetricScoringEngine {
     fn default() -> Self {
-        // Mathematical Rationale for Weight Optimizations:
-        // The legacy 5-metric system targets were: W_TRUSTFLOW=0.30, W_XIBALBA=0.30, W_SACRIFICE=0.20.
-        // In this strict 3-metric system, w_staking_age and w_volume must remain exactly 0.0.
-        // To strictly minimize Euclidean distance to the legacy targets under a strict 3-metric constraint
-        // (summing to 1.0), we use Lagrange multipliers (orthogonal projection).
-        // This is derived by shifting each coordinate by exactly +1/15.
-        // w_trustflow = 0.30 + 1/15 = 11/30 = 0.36666666666666664
-        // w_xibalba = 0.30 + 1/15 = 11/30 = 0.36666666666666664
-        // w_sacrifice = 0.20 + 1/15 = 8/30 = 0.26666666666666666
-        // These exact IEEE-754 f64 literals perfectly sum to 1.0 without precision regressions.
         Self {
             max_score: 1000.0,
-            w_trustflow: 0.36666666666666664,
-            w_xibalba: 0.36666666666666664,
-            w_sacrifice: 0.26666666666666666,
+            w_trustflow: 0.2833333333333333,
+            w_xibalba: 0.38333333333333336,
+            w_sacrifice: 0.3333333333333333,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }

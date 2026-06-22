@@ -62,7 +62,6 @@ impl<P: Provider<Ethereum> + Clone> RollupDaemon<P> {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     #[test]
     fn test_rollup_daemon_types() {

@@ -12,7 +12,6 @@ pub(crate) async fn start_webhook_worker(_state: Arc<AppState>) {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
 
     // Since start_webhook_worker is an infinite loop, testing it directly is tricky without aborting.
     // For coverage of a stub, we could potentially test that it doesn't panic if we run it in a short-lived task.
