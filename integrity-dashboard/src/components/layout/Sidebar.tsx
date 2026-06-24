@@ -20,6 +20,8 @@ export function Sidebar() {
         </div>
         <button 
           onClick={() => setIsCollapsed(!isCollapsed)} 
+          aria-label={isCollapsed ? "Expand sidebar" : "Collapse sidebar"}
+          aria-expanded={!isCollapsed}
           style={{ background: 'none', border: 'none', color: 'var(--text-muted)', cursor: 'pointer', padding: '4px' }}
         >
           {isCollapsed ? <ChevronRight size={18} /> : <ChevronLeft size={18} />}
