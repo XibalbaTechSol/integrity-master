@@ -1,4 +1,10 @@
 
-> integrity-dashboard@0.0.0 dev
-> vite --port 5173
+> integrity-dashboard@0.0.0 dev /app/integrity-dashboard
+> vite
 
+
+  VITE v8.1.0  ready in 345 ms
+
+  ➜  Local:   http://localhost:5173/
+  ➜  Network: use --host to expose
+12:55:30 PM [vite] (client) [optimizer] bundling dependencies...
