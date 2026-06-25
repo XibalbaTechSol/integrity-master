@@ -105,3 +105,6 @@
 - Pre-fetched agents in `scan_all` to build an `agent_map`.
 - Updated `check_sla_breach` signature to accept `agent: Agent = None`.
 - Used `agent_map` inside `scan_all` loop to pass `Agent` object directly to `check_sla_breach`.
+* New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+## [2024-06-25] update | Testing Telemetry Analyzer
+- Added 7 unit test functions to `integrity-sdk/tests/unit/test_telemetry.py` to cover calculation methods in `CompositeSignalAnalyzer`.
