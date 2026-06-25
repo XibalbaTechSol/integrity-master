@@ -1,3 +1,6 @@
+import pytest
+import os
+from pathlib import Path
 from integrity_sdk import did
 
 def test_did(mocker, tmp_path):
@@ -42,3 +45,24 @@ def test_did(mocker, tmp_path):
     did.load_did_document("test_agent")
     
     did.derive_evm_address(b"seed"*8)
+
+def test_ensure_dir_permission_error(mocker, tmp_path):
+    mocker.patch("pathlib.Path.mkdir", side_effect=PermissionError("Mocked PermissionError"))
+    with pytest.raises(PermissionError):
+        did._ensure_dir(tmp_path / "did_dir")
+
+def test_save_private_key_write_permission_error(mocker, tmp_path):
+    mocker.patch("pathlib.Path.write_bytes", side_effect=PermissionError("Mocked PermissionError"))
+    with pytest.raises(PermissionError):
+        did._save_private_key(tmp_path / "key.pem", b"data")
+
+def test_save_private_key_chmod_permission_error(mocker, tmp_path):
+    mocker.patch("pathlib.Path.write_bytes")
+    mocker.patch("os.chmod", side_effect=PermissionError("Mocked PermissionError"))
+    with pytest.raises(PermissionError):
+        did._save_private_key(tmp_path / "key.pem", b"data")
+
+def test_save_did_document_permission_error(mocker, tmp_path):
+    mocker.patch("pathlib.Path.write_text", side_effect=PermissionError("Mocked PermissionError"))
+    with pytest.raises(PermissionError):
+        did._save_did_document(tmp_path / "doc.json", {})
