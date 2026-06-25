@@ -258,7 +258,7 @@ class DIDResolver:
 #  Verifiable Credential Issuer
 # ============================================================
 
-from .kms_service import KmsService
+from kms_service import KmsService
 
 class VCIssuer:
     """

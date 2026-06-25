@@ -3,8 +3,19 @@ import os
 import psutil
 import subprocess
 from typing import Dict, Any, Optional
+from dataclasses import dataclass
+
+
+@dataclass
+class NormalizeConfig:
+    provider: str
+    raw_data: Any
+    latency_ms: Optional[float] = None
+    ttft_ms: Optional[float] = None
+    enable_full_recording: bool = False
 
 class InferenceMetadataExtractor:
+
     """
     Standardised extractor to parse, normalize, and extract premium cognitive 
     telemetry from any inference provider or pipeline.
@@ -42,7 +53,7 @@ class InferenceMetadataExtractor:
                 extracted["token_logprobs"] = token_logprobs
 
         # Auto-compute pricing heuristics if possible (OpenAI defaults)
-        model = extracted.get("model_name", "").lower()
+        model = (extracted.get("model_name") or "").lower()
         if "gpt-4o" in model:
             extracted["estimated_cost_usd"] = (
                 (extracted.get("prompt_tokens", 0) * 0.000005) + 
@@ -282,47 +293,43 @@ class InferenceMetadataExtractor:
     @classmethod
     def normalize(
         cls,
-        provider: str,
-        raw_data: Any,
-        latency_ms: Optional[float] = None,
-        ttft_ms: Optional[float] = None,
-        enable_full_recording: bool = False
+        config: NormalizeConfig
     ) -> Dict[str, Any]:
         """
         Ingests data from any source pipeline and returns a standardized, 
         normalized dictionary containing high-value inference metrics.
         """
         normalized = {
-            "provider": provider,
+            "provider": config.provider,
             "timestamp": time.time(),
         }
 
         # Extract provider specific fields
-        provider_clean = provider.lower().strip()
+        provider_clean = config.provider.lower().strip()
         if provider_clean in ["openai", "together", "fireworks", "groq", "anyscale"]:
-            if isinstance(raw_data, dict):
-                normalized.update(cls.extract_openai(raw_data))
+            if isinstance(config.raw_data, dict):
+                normalized.update(cls.extract_openai(config.raw_data))
         elif provider_clean == "anthropic":
-            if isinstance(raw_data, dict):
-                normalized.update(cls.extract_anthropic(raw_data))
+            if isinstance(config.raw_data, dict):
+                normalized.update(cls.extract_anthropic(config.raw_data))
         elif provider_clean in ["huggingface", "transformers"]:
-            normalized.update(cls.extract_huggingface(raw_data, model_name="local-hf-transformer"))
+            normalized.update(cls.extract_huggingface(config.raw_data, model_name="local-hf-transformer"))
         else:
             # Fallback for custom or direct dict pipelines
-            if isinstance(raw_data, dict):
-                normalized.update(raw_data)
+            if isinstance(config.raw_data, dict):
+                normalized.update(config.raw_data)
 
         # Handle latency statistics
-        if latency_ms is not None:
-            normalized["latency_ms"] = round(latency_ms, 2)
+        if config.latency_ms is not None:
+            normalized["latency_ms"] = round(config.latency_ms, 2)
             completion_tokens = normalized.get("completion_tokens", 0) or 0
             if completion_tokens > 0:
-                normalized["tokens_per_second"] = round(completion_tokens / (latency_ms / 1000.0), 2)
+                normalized["tokens_per_second"] = round(completion_tokens / (config.latency_ms / 1000.0), 2)
         
-        if ttft_ms is not None:
-            normalized["time_to_first_token_ms"] = round(ttft_ms, 2)
+        if config.ttft_ms is not None:
+            normalized["time_to_first_token_ms"] = round(config.ttft_ms, 2)
 
         # Inject real-time hardware status
-        normalized["environment"] = cls.extract_system_telemetry(enable_full_recording=enable_full_recording)
+        normalized["environment"] = cls.extract_system_telemetry(enable_full_recording=config.enable_full_recording)
 
         return normalized
