@@ -63,6 +63,7 @@ impl<P: Provider<Ethereum> + Clone> RollupDaemon<P> {
 #[cfg(test)]
 mod tests {
 
+
     #[test]
     fn test_rollup_daemon_types() {
         // Just verify struct layout and compile.

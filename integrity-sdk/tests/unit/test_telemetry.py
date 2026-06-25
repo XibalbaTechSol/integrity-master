@@ -36,30 +36,89 @@ def test_core():
     tracer = get_tracer("test")
     meter = get_meter("test")
 
-def test_host_calculate_entropy():
-    import math
-    # ARRANGE
-    sampler = HostTelemetrySampler(0.1)
+def test_calc_recon_risk():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_recon_risk({"path_entropy": 0.0}) == 0.0
+    assert analyzer._calc_recon_risk({"path_entropy": 2.5}) == 0.5
+    assert analyzer._calc_recon_risk({"path_entropy": 10.0}) == 1.0
 
-    # ACT & ASSERT
-    # Empty list
-    assert sampler._calculate_entropy([]) == 0.0
+    analyzer.record_tool_call("ls", {}, "result", 0.5)
+    assert analyzer._calc_recon_risk({"path_entropy": 1.0}) == 0.4
+    assert analyzer._calc_recon_risk({"path_entropy": 5.0}) == 1.0
 
-    # Single item
-    assert sampler._calculate_entropy(["192.168.1.1"]) == 0.0
+def test_calc_compute_spoof_risk():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_compute_spoof_risk() == 0.0
 
-    # Identical items
-    assert sampler._calculate_entropy(["10.0.0.1", "10.0.0.1", "10.0.0.1"]) == 0.0
+    analyzer.record_inference("p", "c", {"inter_token_jitter_ms": 10.0}, {})
+    assert analyzer._calc_compute_spoof_risk() == 0.1
 
-    # Two unique items uniformly distributed (entropy = 1.0)
-    assert sampler._calculate_entropy(["A", "B"]) == 1.0
+    analyzer.record_inference("p", "c", {"inter_token_jitter_ms": 2.0}, {})
+    assert analyzer._calc_compute_spoof_risk() == 0.7
 
-    # Four unique items uniformly distributed (entropy = 2.0)
-    assert sampler._calculate_entropy(["A", "B", "C", "D"]) == 2.0
+def test_calc_cognitive_fatigue():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_cognitive_fatigue() == 0.0
 
-    # Non-uniform distribution
-    # List: ["A", "A", "A", "B"]
-    # P(A) = 0.75, P(B) = 0.25
-    # Entropy = -(0.75 * log2(0.75) + 0.25 * log2(0.25)) = 0.8112781244591328
-    entropy = sampler._calculate_entropy(["A", "A", "A", "B"])
-    assert math.isclose(entropy, 0.8112781244591328, rel_tol=1e-9)
+    for i in range(4):
+        analyzer.record_inference("p", "c", {"grounding": 0.8}, {})
+    assert analyzer._calc_cognitive_fatigue() == 0.0
+
+    analyzer.record_inference("p", "c", {"grounding": 0.8}, {})
+    assert analyzer._calc_cognitive_fatigue() == 0.0
+
+    analyzer = CompositeSignalAnalyzer()
+    for g in [0.9, 0.9, 0.9, 0.7, 0.5, 0.5, 0.5]:
+        analyzer.record_inference("p", "c", {"grounding": g}, {})
+    assert abs(analyzer._calc_cognitive_fatigue() - 0.8) < 1e-6
+
+    analyzer = CompositeSignalAnalyzer()
+    for g in [0.5, 0.5, 0.5, 0.7, 0.9, 0.9, 0.9]:
+        analyzer.record_inference("p", "c", {"grounding": g}, {})
+    assert analyzer._calc_cognitive_fatigue() == 0.0
+
+def test_calc_lateral_movement_prob():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_lateral_movement_prob({}) == 0.0
+
+    analyzer.record_inference("p", "hello world", {}, {})
+    assert analyzer._calc_lateral_movement_prob({"ip_entropy": 0.0}) == 0.0
+
+    analyzer.record_inference("p", "I will connect to the server", {}, {})
+    assert analyzer._calc_lateral_movement_prob({"ip_entropy": 0.0}) == 0.5
+    assert analyzer._calc_lateral_movement_prob({"ip_entropy": 1.5}) == 1.0
+
+def test_calc_energy_efficiency():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_energy_efficiency() == 1.0
+
+    analyzer.record_inference("p", "c", {"tokens_per_sec": 10.0}, {"cpu_percent": 0.0})
+    assert analyzer._calc_energy_efficiency() == 1.0
+
+    analyzer.record_inference("p", "c", {"tokens_per_sec": 10.0}, {"cpu_percent": 99.0})
+    assert abs(analyzer._calc_energy_efficiency() - 0.01) < 1e-6
+
+def test_calc_semantic_contradiction():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_semantic_contradiction() == 0.0
+
+    analyzer.record_tool_call("t", {}, "error: not found", 0.0)
+    analyzer.record_inference("p", "success, I did it", {}, {})
+    assert analyzer._calc_semantic_contradiction() == 1.0
+
+    analyzer.record_tool_call("t", {}, "ok", 0.0)
+    assert analyzer._calc_semantic_contradiction() == 0.0
+
+    analyzer.record_tool_call("t", {}, "error: not found", 0.0)
+    analyzer.record_inference("p", "it failed", {}, {})
+    assert analyzer._calc_semantic_contradiction() == 0.0
+
+def test_calc_blast_radius():
+    analyzer = CompositeSignalAnalyzer()
+    assert analyzer._calc_blast_radius() == 0.0
+
+    analyzer.record_tool_call("t", {}, "res", 5.0)
+    assert analyzer._calc_blast_radius() == 0.5
+
+    analyzer.record_tool_call("t", {}, "res", 15.0)
+    assert analyzer._calc_blast_radius() == 1.0

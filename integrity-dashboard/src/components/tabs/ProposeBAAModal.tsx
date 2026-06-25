@@ -117,7 +117,7 @@ export function ProposeBAAModal({ isOpen, onClose, onSuccess }: ProposeBAAModalP
             <Shield size={20} color="var(--gold)" />
             <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>Propose Smart BAA</h3>
           </div>
-          <button onClick={onClose} className="btn btn-icon"><X size={20} /></button>
+          <button onClick={onClose} className="btn btn-icon" aria-label="Close modal"><X size={20} /></button>
         </div>
 
         <form onSubmit={handlePropose} style={{ padding: 'var(--space-8)' }} className="flex-col gap-6">
