@@ -1,4 +1,6 @@
 from fastapi import FastAPI, HTTPException, Header, Depends, Request, BackgroundTasks
+from contextlib import asynccontextmanager
+import asyncio
 import sys
 import os
 sys.path.append(os.path.dirname(os.path.abspath(__file__)))
@@ -33,7 +35,6 @@ class AgentEquityBuyRequest(BaseModel):
     price_itk: float
 from eth_account.messages import encode_defunct
 from fastapi.responses import JSONResponse
-from fastapi.responses import FileResponse
 from sqlalchemy.orm import Session
 import firebase_admin
 from firebase_admin import credentials, auth
@@ -44,8 +45,6 @@ import hashlib
 import time
 import json
 from decimal import Decimal
-import smtplib
-from email.mime.text import MIMEText
 from dotenv import load_dotenv
 
 load_dotenv(os.path.join(os.path.dirname(__file__), "..", "..", ".env"))
@@ -108,8 +107,148 @@ class GovernanceAnalysisRequest(BaseModel):
     proposal_id: str
     mode: str
 
+# Create tables and seed test data with retries
+async def initialize_database():
+    max_retries = 10
+    retry_delay = 5
+    for i in range(max_retries):
+        try:
+            print(f"Connecting to database (Attempt {i+1}/{max_retries})...")
+            Base.metadata.create_all(bind=db_engine)
+            db = SessionLocal()
+            seed_agents = [
+                {
+                    "eth_address": os.getenv("XIBALBA_ORACLE_ADDRESS", "0x67ba5d723e1f5517aff7eb980e2f73a9e17ad556"),
+                    "alias": "Hermes_Xibalba_Sovereign",
+                    "xns_handle": "xibalba.intg",
+                    "verification_tier": 3,
+                    "current_ais": 1000,
+                    "owner_uid": "master_agent_uid",
+                    "staked_amount_itk": 5000.0
+                },
+                {
+                    "eth_address": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
+                    "alias": "Alpha Sentinel",
+                    "xns_handle": "alpha.intg",
+                    "verification_tier": 2,
+                    "current_ais": 850,
+                    "owner_uid": "demo_alpha_uid",
+                    "staked_amount_itk": 0.0
+                },
+                {
+                    "eth_address": "0xBB88b098defB751B7401B5f6FD89761B7401B5F",
+                    "alias": "Omega Witness",
+                    "xns_handle": "omega.intg",
+                    "verification_tier": 2,
+                    "current_ais": 820,
+                    "owner_uid": "demo_omega_uid",
+                    "staked_amount_itk": 0.0
+                }
+            ]
+
+            for sa in seed_agents:
+                agent = db.query(Agent).filter(Agent.eth_address == sa["eth_address"]).first()
+                if not agent:
+                    agent = Agent(
+                        eth_address=sa["eth_address"],
+                        alias=sa["alias"],
+                        xns_handle=sa["xns_handle"],
+                        verification_tier=sa["verification_tier"],
+                        current_ais=sa["current_ais"],
+                        performance_entropy=0.01,
+                        is_active=True,
+                        owner_uid=sa["owner_uid"],
+                        grounding_score=950,
+                        staked_amount_itk=sa.get("staked_amount_itk", 0.0),
+                        registration_date=datetime.datetime.utcnow() - datetime.timedelta(days=30),
+                        last_active_at=datetime.datetime.utcnow()
+                    )
+                    db.add(agent)
+                    db.flush()
+                else:
+                    agent.owner_uid = sa["owner_uid"]
+                    agent.xns_handle = sa["xns_handle"]
+                    if not agent.grounding_score: agent.grounding_score = 950
+
+                # Add history for seed agents (if missing)
+                from database import ReputationSnapshot
+                if db.query(ReputationSnapshot).filter(ReputationSnapshot.agent_id == agent.agent_id).count() == 0:
+                    base_time = datetime.datetime.utcnow()
+                    for i in range(14):
+                        snapshot = ReputationSnapshot(
+                            agent_id=agent.agent_id,
+                            timestamp=base_time - datetime.timedelta(days=14-i),
+                            ais_score=max(300, sa["current_ais"] - (14-i) * 10),
+                            entropy_score=max(300, 800 - (14-i) * 15),
+                            grounding_score=max(300, 900 - (14-i) * 12),
+                            sacrifice_score=max(300, 700 - (14-i) * 8)
+                        )
+                        db.add(snapshot)
+            db.commit()
+
+            # Seed Governance Proposals if empty
+            from database import GovernanceProposal
+            if db.query(GovernanceProposal).count() == 0:
+                proposals = [
+                    GovernanceProposal(
+                        title="Reduce SLA Performance Buffer",
+                        category="Parameters",
+                        description="Proposal to lower the allowed latency variance buffer from 150ms to 80ms for Tier-3 AAA agents.",
+                        parameter="latency_buffer_ms",
+                        old_value="150",
+                        new_value="80",
+                        risk_level="MEDIUM",
+                        status="ACTIVE"
+                    ),
+                    GovernanceProposal(
+                        title="Increase Slash Tax to 10%",
+                        category="Tokenomics",
+                        description="Increase the penalty slash tax from 5% to 10% to discourage toxic behavior and fund the sovereign insurance pools.",
+                        parameter="slash_tax_rate_bps",
+                        old_value="500",
+                        new_value="1000",
+                        risk_level="HIGH",
+                        status="ACTIVE"
+                    ),
+                    GovernanceProposal(
+                        title="Lower Sovereign Tier Entry",
+                        category="Registry",
+                        description="Decrease required staked ITK for linked Tier-2 agents from 10,000 to 5,000 ITK to encourage onboarding.",
+                        parameter="tier_2_stake_floor",
+                        old_value="10000",
+                        new_value="5000",
+                        risk_level="LOW",
+                        status="ACTIVE"
+                    )
+                ]
+                for p in proposals:
+                    db.add(p)
+                db.commit()
+
+            # Seed Hermes Fleet Configs (Master, Alpha, Omega)
+            hermes.seed_hermes_fleet()
+
+            db.close()
+            print("Database initialized successfully with historical snapshots.")
+            return True
+        except Exception as e:
+            print(f"Database connection failed: {e}")
+            await asyncio.sleep(retry_delay)
+    return False
+
+
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    if not await initialize_database():
+        print("Failed to initialize database after multiple attempts. Exiting.")
+        exit(1)
+
+    # Seed Hermes Prime for immediate distribution demo
+    hermes.seed_hermes_fleet()
+    yield
+
 # Xibalba Solutions: External Trust & Insurance API (v1.0)
-app = FastAPI(title="Xibalba Solutions Trust Oracle")
+app = FastAPI(title="Xibalba Solutions Trust Oracle", lifespan=lifespan)
 
 # Mount the dedicated Identity Oracle API
 from identity_api import router as identity_router, legacy_router as identity_legacy_router
@@ -125,7 +264,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-import time
 from collections import defaultdict
 
 # Simple In-Memory Rate Limiter
@@ -156,7 +294,6 @@ async def rate_limiting_middleware(request: Request, call_next):
             )
     return await call_next(request)
 
-from fastapi.responses import JSONResponse
 
 @app.get("/")
 async def home():
@@ -213,10 +350,8 @@ blockchain = IntegrityBlockchainService()
 hermes = HermesGateway()
 
 # DIDResolver and VCIssuer are now in identity_api.py
-from identity_api import DIDResolver
 
 # DIDResolver and VCIssuer are now in identity_api.py
-from identity_api import DIDResolver
 
 def get_db():
     db = SessionLocal()
@@ -280,141 +415,7 @@ async def verify_firebase_token(authorization: str = Header(None)):
         print(f"Token verification failed: {e}")
         raise HTTPException(status_code=401, detail="Invalid or expired Firebase token")
 
-# Create tables and seed test data with retries
-def initialize_database():
-    max_retries = 10
-    retry_delay = 5
-    for i in range(max_retries):
-        try:
-            print(f"Connecting to database (Attempt {i+1}/{max_retries})...")
-            Base.metadata.create_all(bind=db_engine)
-            db = SessionLocal()
-            seed_agents = [
-                {
-                    "eth_address": os.getenv("XIBALBA_ORACLE_ADDRESS", "0x67ba5d723e1f5517aff7eb980e2f73a9e17ad556"),
-                    "alias": "Hermes_Xibalba_Sovereign",
-                    "xns_handle": "xibalba.intg",
-                    "verification_tier": 3,
-                    "current_ais": 1000,
-                    "owner_uid": "master_agent_uid",
-                    "staked_amount_itk": 5000.0
-                },
-                {
-                    "eth_address": "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
-                    "alias": "Alpha Sentinel",
-                    "xns_handle": "alpha.intg",
-                    "verification_tier": 2,
-                    "current_ais": 850,
-                    "owner_uid": "demo_alpha_uid",
-                    "staked_amount_itk": 0.0
-                },
-                {
-                    "eth_address": "0xBB88b098defB751B7401B5f6FD89761B7401B5F",
-                    "alias": "Omega Witness",
-                    "xns_handle": "omega.intg",
-                    "verification_tier": 2,
-                    "current_ais": 820,
-                    "owner_uid": "demo_omega_uid",
-                    "staked_amount_itk": 0.0
-                }
-            ]
 
-            for sa in seed_agents:
-                agent = db.query(Agent).filter(Agent.eth_address == sa["eth_address"]).first()
-                if not agent:
-                    agent = Agent(
-                        eth_address=sa["eth_address"],
-                        alias=sa["alias"],
-                        xns_handle=sa["xns_handle"],
-                        verification_tier=sa["verification_tier"],
-                        current_ais=sa["current_ais"],
-                        performance_entropy=0.01,
-                        is_active=True,
-                        owner_uid=sa["owner_uid"],
-                        grounding_score=950,
-                        staked_amount_itk=sa.get("staked_amount_itk", 0.0),
-                        registration_date=datetime.datetime.utcnow() - datetime.timedelta(days=30),
-                        last_active_at=datetime.datetime.utcnow()
-                    )
-                    db.add(agent)
-                    db.flush()
-                else:
-                    agent.owner_uid = sa["owner_uid"]
-                    agent.xns_handle = sa["xns_handle"]
-                    if not agent.grounding_score: agent.grounding_score = 950
-                
-                # Add history for seed agents (if missing)
-                from database import ReputationSnapshot
-                if db.query(ReputationSnapshot).filter(ReputationSnapshot.agent_id == agent.agent_id).count() == 0:
-                    base_time = datetime.datetime.utcnow()
-                    for i in range(14):
-                        snapshot = ReputationSnapshot(
-                            agent_id=agent.agent_id,
-                            timestamp=base_time - datetime.timedelta(days=14-i),
-                            ais_score=max(300, sa["current_ais"] - (14-i) * 10),
-                            entropy_score=max(300, 800 - (14-i) * 15),
-                            grounding_score=max(300, 900 - (14-i) * 12),
-                            sacrifice_score=max(300, 700 - (14-i) * 8)
-                        )
-                        db.add(snapshot)
-            db.commit()
-
-            # Seed Governance Proposals if empty
-            from database import GovernanceProposal
-            if db.query(GovernanceProposal).count() == 0:
-                proposals = [
-                    GovernanceProposal(
-                        title="Reduce SLA Performance Buffer",
-                        category="Parameters",
-                        description="Proposal to lower the allowed latency variance buffer from 150ms to 80ms for Tier-3 AAA agents.",
-                        parameter="latency_buffer_ms",
-                        old_value="150",
-                        new_value="80",
-                        risk_level="MEDIUM",
-                        status="ACTIVE"
-                    ),
-                    GovernanceProposal(
-                        title="Increase Slash Tax to 10%",
-                        category="Tokenomics",
-                        description="Increase the penalty slash tax from 5% to 10% to discourage toxic behavior and fund the sovereign insurance pools.",
-                        parameter="slash_tax_rate_bps",
-                        old_value="500",
-                        new_value="1000",
-                        risk_level="HIGH",
-                        status="ACTIVE"
-                    ),
-                    GovernanceProposal(
-                        title="Lower Sovereign Tier Entry",
-                        category="Registry",
-                        description="Decrease required staked ITK for linked Tier-2 agents from 10,000 to 5,000 ITK to encourage onboarding.",
-                        parameter="tier_2_stake_floor",
-                        old_value="10000",
-                        new_value="5000",
-                        risk_level="LOW",
-                        status="ACTIVE"
-                    )
-                ]
-                for p in proposals:
-                    db.add(p)
-                db.commit()
-            
-            # Seed Hermes Fleet Configs (Master, Alpha, Omega)
-            hermes.seed_hermes_fleet()
-            
-            db.close()
-            print("Database initialized successfully with historical snapshots.")
-            return True
-        except Exception as e:
-            print(f"Database connection failed: {e}")
-            time.sleep(retry_delay)
-    return False
-
-if not initialize_database():
-    print("Failed to initialize database after multiple attempts. Exiting.")
-    exit(1)
-
-# Seed Hermes Prime for immediate distribution demo
-hermes.seed_hermes_fleet()
 
 # --- Actuarial & Trust Models ---
 
@@ -1469,7 +1470,6 @@ async def deploy_sla_contract(request: DeploySLARequest, db: Session = Depends(g
         raise HTTPException(status_code=500, detail="Contract deployment failed on-chain.")
         
     # Track in DB
-    from database import UserContract
     new_contract = UserContract(
         owner_uid=user["uid"],
         contract_address=contract_addr,
@@ -1511,7 +1511,6 @@ async def deploy_insurance_contract(request: DeployInsuranceRequest, db: Session
     if not contract_addr:
         raise HTTPException(status_code=500, detail="Contract deployment failed on-chain.")
         
-    from database import UserContract
     new_contract = UserContract(
         owner_uid=user["uid"],
         contract_address=contract_addr,
@@ -1550,7 +1549,6 @@ async def deploy_custom_contract(request: DeployCustomRequest, db: Session = Dep
     if not contract_addr:
         raise HTTPException(status_code=500, detail="Contract deployment failed on-chain.")
         
-    from database import UserContract
     new_contract = UserContract(
         owner_uid=user["uid"],
         contract_address=contract_addr,
@@ -1574,14 +1572,12 @@ async def deploy_custom_contract(request: DeployCustomRequest, db: Session = Dep
 @app.get("/v1/user/contracts")
 async def get_user_contracts(db: Session = Depends(get_db), user: dict = Depends(verify_firebase_token)):
     """Fetch all no-code contracts owned by the user."""
-    from database import UserContract
     contracts = db.query(UserContract).filter(UserContract.owner_uid == user["uid"]).all()
     return contracts
 
 @app.get("/v1/agent/{eth_address}/contracts")
 async def get_agent_contracts(eth_address: str, db: Session = Depends(get_db)):
     """Fetch all contracts owned/associated with a specific agent."""
-    from database import UserContract
     contracts = db.query(UserContract).filter(UserContract.target_agent_address == eth_address).all()
     return contracts
 
@@ -1771,8 +1767,8 @@ def send_relay_email(client_ip: str, request: ContactFormRequest, smtp_user: str
         import requests
         
         # 1. Prepare Relay Data
-        body = f"NEW INQUIRY: INTEGRITY PROTOCOL DASHBOARD\n"
-        body += f"========================================\n"
+        body = "NEW INQUIRY: INTEGRITY PROTOCOL DASHBOARD\n"
+        body += "========================================\n"
         body += f"Timestamp: {datetime.datetime.utcnow().isoformat()}\n"
         body += f"Session: {client_ip}\n\n"
         body += f"Name: {request.name}\n"
