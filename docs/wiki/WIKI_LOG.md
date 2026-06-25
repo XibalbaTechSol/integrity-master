@@ -97,8 +97,31 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
+## [2026-06-20] security | devil-sync: Tested 4 adversarial scenarios. 3 blocked, 1 breached, 1 patched.
+- Blocked: PHI Exfiltration, Telemetry Spoofing, Intent Drift.
+- Breached & Patched: Budget Overflow via Small Loops (added validation to `main.py` and `OPA_HIPAA_Guardrails.rego`).
+
+## [2026-06-20] test | test-sync: Added 179 tests across 5 subprojects
+- Expanded integrity-sdk with integration tests for compliance and world data fetcher.
+- Added adversarial and policy tests for bcc_middleware.
+- Implemented Rust unit tests for oracle-core, passport-verifier, and scoring-core.
+- Added Foundry tests for AgentMarketplace and SmartBAA contracts.
+- Added Vitest unit tests for shared dashboard components.
+## [2026-06-20] fix | error-sync: Resolved 3 deprecation/tracking issues
+- `bcc_middleware`: Replaced deprecated Pydantic `.dict()` with `.model_dump()`.
+- `integrity-sdk`: Replaced deprecated psutil `.connections()` with `.net_connections()`.
+- `contracts`: Added and tracked isolated test suite for `SmartBAA.sol`.
 ## [2026-06-22] Optimization | Optimize Tri-Metric Weights
 * Updated the `TriMetricScoringEngine` default implementation in `integrity-oracle/scoring-core/src/lib.rs`.
 * Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
 * The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
+## [2026-06-25] update | contract_monitor.py: Optimize scan_all to avoid N+1 DB queries
+- Pre-fetched agents in `scan_all` to build an `agent_map`.
+- Updated `check_sla_breach` signature to accept `agent: Agent = None`.
+- Used `agent_map` inside `scan_all` loop to pass `Agent` object directly to `check_sla_breach`.
 * New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+## [2026-06-25] update | refactor(sdk): use dataclass for log_model_switch
+- Refactored `log_model_switch` in `integrity-sdk/integrity_sdk/client.py` to use a new `ModelSwitchEvent` dataclass.
+- Updated calls across tests and internal SDK tracking logic to support the new parameter configuration.
+## [2024-06-25] update | Testing Telemetry Analyzer
+- Added 7 unit test functions to `integrity-sdk/tests/unit/test_telemetry.py` to cover calculation methods in `CompositeSignalAnalyzer`.

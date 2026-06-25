@@ -32,13 +32,14 @@ def test_live_ingestion():
 
     # 1. Log a Model Switch event
     print("\n[STEP 2] Logging a Model Switch event...")
-    client.log_model_switch(
+    from integrity_sdk.client import ModelSwitchEvent
+    client.log_model_switch(ModelSwitchEvent(
         from_model="gpt-4o",
         to_model="claude-3-5-sonnet",
         from_provider="openai",
         to_provider="anthropic",
         reason="complex_reasoning_required"
-    )
+    ))
 
     # 2. Log a HITL action
     print("\n[STEP 3] Logging a HITL Override action...")

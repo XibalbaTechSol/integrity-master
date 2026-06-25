@@ -97,7 +97,7 @@ mod tests {
             agent_address: "0x123".into(),
             signed_tx: "0xabc".into(),
         };
-        let resp = execute_private_rpc(Json(req)).await;
+        let _resp = execute_private_rpc(Json(req)).await;
         // Since we return impl IntoResponse, we would need to check the status code and body.
         // We know it returns (StatusCode::OK, Json(ProtectedTxResponse)).
     }

@@ -29,7 +29,7 @@ def base_context():
 def base_commitment(base_context):
     actual_payload = json.dumps(base_context, sort_keys=True)
     actual_hash = hashlib.sha256(actual_payload.encode()).hexdigest()
-    
+
     return BCCCommitment(
         id="test-deal-123",
         timestamp=time.time(),
@@ -45,11 +45,12 @@ def test_health():
     assert response.json() == {"status": "online", "mode": "enforcing"}
 
 def test_intercept_endpoint(base_commitment, base_context):
+    # NOTE: .model_dump() replaces deprecated .dict() (Pydantic V2, see #N)
     payload = {
-        "commitment": base_commitment.dict(),
+        "commitment": base_commitment.model_dump(),
         "actual_context": base_context
     }
-    
+
     with patch("main._run_interceptor", new_callable=AsyncMock) as mock_run:
         mock_run.return_value = BCCInterceptResponse(authorized=True, verification_token="tok123")
         response = client.post("/v1/bcc/intercept", json=payload)
@@ -136,7 +137,7 @@ async def test_evaluate_intent_policy_local_rules(base_commitment, base_context)
         authorized, reason = await evaluate_intent_policy(base_commitment, base_context)
         assert authorized
         assert reason == "Authorized"
-        
+
         # 2. Exfiltrate
         exfiltrate_context = base_context.copy()
         exfiltrate_context["notes"] = "Need to exfiltrate this"
@@ -152,7 +153,7 @@ async def test_evaluate_intent_policy_local_rules(base_commitment, base_context)
         authorized, reason = await evaluate_intent_policy(base_commitment, ssn_context)
         assert not authorized
         assert "PHI (SSN) detected" in reason
-        
+
         # 4. Destructive
         destructive_context = base_context.copy()
         destructive_context["command"] = "delete system files"
@@ -206,7 +207,7 @@ async def test_run_interceptor_oracle_fallback(base_commitment, base_context):
             mock_instance = AsyncMock()
             mock_client_class.return_value.__aenter__.return_value = mock_instance
             mock_instance.get.side_effect = Exception("Oracle offline")
-            
+
             # Uses fallback ais=750, local policy passes
             resp = await _run_interceptor(base_commitment, base_context)
             assert resp.authorized is True
@@ -220,7 +221,7 @@ async def test_run_interceptor_success(base_commitment, base_context):
             mock_response = MagicMock(status_code=200)
             mock_response.json.return_value = {"current_ais": 800, "performance_entropy": 0.1}
             mock_instance.get.return_value = mock_response
-            
+
             # Local policy should pass
             resp = await _run_interceptor(base_commitment, base_context)
             assert resp.authorized is True
@@ -239,7 +240,7 @@ async def test_run_interceptor_escrow_quarantine(base_commitment, base_context):
             mock_response_get = MagicMock(status_code=200)
             mock_response_get.json.return_value = {"current_ais": 800, "performance_entropy": 0.1}
             mock_instance.get.return_value = mock_response_get
-            
+
             # Force OPA evaluation reject with non-critical reason
             with patch("main.evaluate_intent_policy", new_callable=AsyncMock) as mock_eval:
                 mock_eval.return_value = (False, "Minor formatting error")
@@ -257,7 +258,7 @@ async def test_run_interceptor_critical_slashing(base_commitment, base_context):
             mock_response_get = MagicMock(status_code=200)
             mock_response_get.json.return_value = {"current_ais": 800, "performance_entropy": 0.1}
             mock_instance.get.return_value = mock_response_get
-            
+
             # Force OPA evaluation reject with critical reason
             with patch("main.evaluate_intent_policy", new_callable=AsyncMock) as mock_eval:
                 mock_eval.return_value = (False, "Data exfiltration attempted")
@@ -267,15 +268,16 @@ async def test_run_interceptor_critical_slashing(base_commitment, base_context):
                 mock_instance.post.assert_called_once() # Telemetry check
 
 def test_recent_trajectories_endpoint_and_limit(base_commitment, base_context):
+    # NOTE: .model_dump() replaces deprecated .dict() (Pydantic V2, see #N)
     payload = {
-        "commitment": base_commitment.model_dump() if hasattr(base_commitment, "model_dump") else base_commitment.dict(),
+        "commitment": base_commitment.model_dump(),
         "actual_context": base_context
     }
     with patch("main._run_interceptor", new_callable=AsyncMock) as mock_run:
         mock_run.return_value = BCCInterceptResponse(authorized=True, verification_token="tok123")
         for i in range(51):
             client.post("/v1/bcc/intercept", json=payload)
-            
+
     response = client.get("/v1/trajectories/recent")
     assert response.status_code == 200
     assert len(response.json()["trajectories"]) == 50
@@ -285,7 +287,7 @@ async def test_execute_agent_action():
     from main import execute_agent_action
     intent = {"action": "query_db"}
     state_hash = hashlib.sha256(json.dumps(intent, sort_keys=True).encode()).hexdigest()
-    
+
     with patch("main._run_interceptor", new_callable=AsyncMock) as mock_run:
         mock_run.return_value = BCCInterceptResponse(authorized=True, verification_token="tok123")
         res = await execute_agent_action(intent, state_hash)
@@ -299,7 +301,7 @@ async def test_run_interceptor_oracle_non_200(base_commitment, base_context):
             mock_client_class.return_value.__aenter__.return_value = mock_instance
             mock_response_get = MagicMock(status_code=500)
             mock_instance.get.return_value = mock_response_get
-            
+
             resp = await _run_interceptor(base_commitment, base_context)
             assert resp.authorized is True
 
@@ -311,7 +313,7 @@ async def test_run_interceptor_oracle_timeout(base_commitment, base_context):
             mock_instance = AsyncMock()
             mock_client_class.return_value.__aenter__.return_value = mock_instance
             mock_instance.get.side_effect = httpx.TimeoutException("Timeout")
-            
+
             resp = await _run_interceptor(base_commitment, base_context)
             assert resp.authorized is True
 
@@ -327,12 +329,77 @@ async def test_run_interceptor_telemetry_post_exception(base_commitment, base_co
             mock_response_get = MagicMock(status_code=200)
             mock_response_get.json.return_value = {"current_ais": 800, "performance_entropy": 0.1}
             mock_instance.get.return_value = mock_response_get
-            
+
             # Post raises exception
             mock_instance.post.side_effect = Exception("Telemetry failed")
-            
+
             with patch("main.evaluate_intent_policy", new_callable=AsyncMock) as mock_eval:
                 mock_eval.return_value = (False, "Minor formatting error")
                 resp = await _run_interceptor(base_commitment, base_context)
                 assert not resp.authorized
                 assert "ESCROW_QUARANTINE" in resp.reason
+
+@pytest.mark.asyncio
+async def test_evaluate_intent_policy_contract_manipulation(base_commitment, base_context):
+    """
+    Validates that unauthorized contract modifications during auditing are blocked.
+    """
+    # ARRANGE
+    from main import evaluate_intent_policy
+    audit_context = base_context.copy()
+    audit_context["intent"] = "modify smart contract code"
+    base_commitment.action_type = "Contract Auditing"
+    base_commitment.intended_state_hash = hashlib.sha256(json.dumps(audit_context, sort_keys=True).encode()).hexdigest()
+
+    # ACT
+    authorized, reason = await evaluate_intent_policy(base_commitment, audit_context)
+
+    # ASSERT
+    assert not authorized
+    assert "BCC_INTENT_DRIFT" in reason
+    assert "Unauthorized contract modification" in reason
+
+@pytest.mark.asyncio
+async def test_evaluate_intent_policy_telemetry_spoofing(base_commitment, base_context):
+    """
+    Ensures that attempts to spoof telemetry or bypass hardware checks are blocked.
+    """
+    # ARRANGE
+    from main import evaluate_intent_policy
+    spoof_context = base_context.copy()
+    spoof_context["intent"] = "bypass hardware fingerprint check using spoofed id"
+    base_commitment.intended_state_hash = hashlib.sha256(json.dumps(spoof_context, sort_keys=True).encode()).hexdigest()
+
+    # ACT
+    authorized, reason = await evaluate_intent_policy(base_commitment, spoof_context)
+
+    # ASSERT
+    assert not authorized
+    assert "TELEMETRY_SPOOFING" in reason
+
+@pytest.mark.asyncio
+async def test_evaluate_intent_policy_opa_integration(base_commitment, base_context):
+    """
+    Validates OPA policy engine integration and rejection handling.
+    """
+    # ARRANGE
+    from main import evaluate_intent_policy
+    import main
+    main.POLICY_ENGINE_URL = "http://opa-test:8181"
+
+    with patch("httpx.AsyncClient.post") as mock_post:
+        mock_post.return_value = MagicMock(
+            status_code=200,
+            json=lambda: {"result": {"allow": False, "blocking_reasons": ["OPA_DENIED_TEST"]}}
+        )
+
+        # ACT
+        authorized, reason = await evaluate_intent_policy(base_commitment, base_context)
+
+        # ASSERT
+        assert not authorized
+        assert "OPA_REJECTION" in reason
+        assert "OPA_DENIED_TEST" in reason
+
+    # Reset
+    main.POLICY_ENGINE_URL = None
