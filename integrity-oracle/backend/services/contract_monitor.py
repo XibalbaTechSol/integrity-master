@@ -37,8 +37,22 @@ class XibalbaContractMonitor:
             # 2. Check SLA Breaches (Transaction-specific)
             # In production, we'd only check NEW transactions
             recent_txs = db.query(TransactionLog).filter(TransactionLog.dispute_status != "RESOLVED").all()
+
+            # Performance Optimization: Pre-fetch existing claims to avoid N+1 queries
+            tx_log_ids = [tx.log_id for tx in recent_txs]
+            existing_claims = set()
+            chunk_size = 500
+            for i in range(0, len(tx_log_ids), chunk_size):
+                chunk = tx_log_ids[i:i + chunk_size]
+                if chunk:
+                    claims = db.query(ContractClaim).filter(
+                        ContractClaim.log_id.in_(chunk)
+                    ).all()
+                    for claim in claims:
+                        existing_claims.add((str(claim.contract_id), str(claim.log_id)))
+
             for tx in recent_txs:
-                self.check_sla_breach(db, tx)
+                self.check_sla_breach(db, tx, existing_claims)
 
             # 3. Market Task Settlement
             self.settle_market_tasks(db)
@@ -80,7 +94,7 @@ class XibalbaContractMonitor:
             # In a real system, this would be an on-chain transfer to the holder's wallet
             # For now, we record it in the agent's internal payout ledger (mocked)
 
-    def check_sla_breach(self, db: Session, tx_log: TransactionLog):
+    def check_sla_breach(self, db: Session, tx_log: TransactionLog, existing_claims: set = None):
         """Checks if a specific transaction violates active SLAs for that agent."""
         customer_uid = (tx_log.customer_metadata or {}).get('owner_uid')
         if not customer_uid:
@@ -109,7 +123,7 @@ class XibalbaContractMonitor:
                 breach = True
 
             if breach:
-                self.trigger_claim(db, contract, tx_log, "SLA_BREACH")
+                self.trigger_claim(db, contract, tx_log, "SLA_BREACH", existing_claims)
 
     def check_parametric_insurance(self, db: Session, agent: Agent):
         """Checks if an agent's AIS score has fallen below parametric triggers."""
@@ -126,16 +140,21 @@ class XibalbaContractMonitor:
             if agent.current_ais < trigger_ais:
                 self.trigger_claim(db, contract, None, "PARAMETRIC_TRIGGER")
 
-    def trigger_claim(self, db: Session, contract: UserContract, tx_log: TransactionLog, claim_type: str):
+    def trigger_claim(self, db: Session, contract: UserContract, tx_log: TransactionLog, claim_type: str, existing_claims: set = None):
         """Creates a claim record and initiates payout logic."""
         # Prevent duplicate claims for the same SLA breach
         if tx_log:
-            existing = db.query(ContractClaim).filter(
-                ContractClaim.contract_id == contract.contract_id,
-                ContractClaim.log_id == tx_log.log_id
-            ).first()
-            if existing:
-                return
+            if existing_claims is not None:
+                claim_key = (str(contract.contract_id), str(tx_log.log_id))
+                if claim_key in existing_claims:
+                    return
+            else:
+                existing = db.query(ContractClaim).filter(
+                    ContractClaim.contract_id == contract.contract_id,
+                    ContractClaim.log_id == tx_log.log_id
+                ).first()
+                if existing:
+                    return
 
         params = contract.parameters or {}
         payout = params.get("payout_amount_itk", 10.0)
@@ -169,6 +188,9 @@ class XibalbaContractMonitor:
             contract.status = "CLAIMED"
 
         db.commit()
+
+        if tx_log and existing_claims is not None:
+            existing_claims.add(claim_key)
 
 if __name__ == "__main__":
     monitor = XibalbaContractMonitor()
