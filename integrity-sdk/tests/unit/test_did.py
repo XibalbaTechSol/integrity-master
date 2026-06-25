@@ -1,3 +1,6 @@
+import pytest
+import os
+from pathlib import Path
 from integrity_sdk import did
 
 def test_did(mocker, tmp_path):

@@ -1,5 +1,3 @@
-import time
-import uuid
 import os
 import sys
 
@@ -31,14 +29,16 @@ class XibalbaContractMonitor:
         try:
             # 1. Check Parametric Insurance (Agent-wide)
             agents = db.query(Agent).all()
+            agent_map = {}
             for agent in agents:
+                agent_map[agent.agent_id] = agent
                 self.check_parametric_insurance(db, agent)
             
             # 2. Check SLA Breaches (Transaction-specific)
             # In production, we'd only check NEW transactions
             recent_txs = db.query(TransactionLog).filter(TransactionLog.dispute_status != "RESOLVED").all()
             for tx in recent_txs:
-                self.check_sla_breach(db, tx)
+                self.check_sla_breach(db, tx, agent=agent_map.get(tx.agent_id))
 
             # 3. Market Task Settlement
             self.settle_market_tasks(db)
@@ -80,13 +80,15 @@ class XibalbaContractMonitor:
             # In a real system, this would be an on-chain transfer to the holder's wallet
             # For now, we record it in the agent's internal payout ledger (mocked)
 
-    def check_sla_breach(self, db: Session, tx_log: TransactionLog):
+    def check_sla_breach(self, db: Session, tx_log: TransactionLog, agent: Agent = None):
         """Checks if a specific transaction violates active SLAs for that agent."""
         customer_uid = (tx_log.customer_metadata or {}).get('owner_uid')
         if not customer_uid:
             return
 
-        agent = db.query(Agent).filter(Agent.agent_id == tx_log.agent_id).first()
+        if agent is None:
+            agent = db.query(Agent).filter(Agent.agent_id == tx_log.agent_id).first()
+
         if not agent:
             return
 
