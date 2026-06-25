@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Activity, Lock, Code, Zap, ShieldCheck, Cpu, Coins, Globe, ArrowRight } from 'lucide-react';
+import { Shield, Activity, Lock, Code, ExternalLink, Zap, ShieldCheck, Cpu, Fingerprint, Database, Coins, Globe, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '../../utils/useIsMobile';

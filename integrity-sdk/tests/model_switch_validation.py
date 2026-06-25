@@ -58,14 +58,13 @@ def test_model_switch():
 
     # 4. Log a manual model switch event
     print("\n[STEP 3] Logging a manual model switch event (claude-3-opus -> gemini-1.5-pro)...")
-    from integrity_sdk.client import ModelSwitchEvent
-    client.log_model_switch(ModelSwitchEvent(
+    client.log_model_switch(
         from_model="claude-3-opus",
         to_model="gemini-1.5-pro",
         from_provider="anthropic",
         to_provider="google",
         reason="cost_optimization"
-    ))
+    )
 
     # Wait for final flush
     print("   Waiting for background threads to flush queue...")

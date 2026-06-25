@@ -1,11 +1,9 @@
-import pytest
 import httpx
 import asyncio
 import json
 
 OPA_URL = "http://localhost:8181/v1/data/integrity"
 
-@pytest.mark.asyncio
 async def test_policy():
     print("Testing OPA Policy Guardrails...\n")
     
