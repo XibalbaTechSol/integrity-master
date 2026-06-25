@@ -1284,9 +1284,13 @@ async def get_latest_telemetry(db: Session = Depends(get_db)):
     logs = db.query(TelemetryLog).order_by(TelemetryLog.created_at.desc()).limit(50).all()
     
     # Enrich with agent alias
+    agent_ids = list({log.agent_id for log in logs})
+    agents = db.query(Agent).filter(Agent.agent_id.in_(agent_ids)).all()
+    agent_map = {agent.agent_id: agent for agent in agents}
+
     enriched_logs = []
     for log in logs:
-        agent = db.query(Agent).filter(Agent.agent_id == log.agent_id).first()
+        agent = agent_map.get(log.agent_id)
         enriched_logs.append({
             "id": str(log.log_id),
             "type": log.event_type,
