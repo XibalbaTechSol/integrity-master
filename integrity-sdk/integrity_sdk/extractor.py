@@ -53,7 +53,7 @@ class InferenceMetadataExtractor:
                 extracted["token_logprobs"] = token_logprobs
 
         # Auto-compute pricing heuristics if possible (OpenAI defaults)
-        model = extracted.get("model_name", "").lower()
+        model = (extracted.get("model_name") or "").lower()
         if "gpt-4o" in model:
             extracted["estimated_cost_usd"] = (
                 (extracted.get("prompt_tokens", 0) * 0.000005) + 

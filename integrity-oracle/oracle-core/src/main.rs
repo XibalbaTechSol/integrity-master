@@ -545,3 +545,14 @@ async fn verify_proof_async(payload: TelemetryPayload, pg_pool: &Pool<Postgres>)
         .await;
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    /// Ensures that the AIS calculation returns a fixed baseline value.
+    #[test]
+    fn test_calculate_default_ais_consistency() {
+        assert_eq!(calculate_default_ais(None, None, None), 1000);
+    }
+}

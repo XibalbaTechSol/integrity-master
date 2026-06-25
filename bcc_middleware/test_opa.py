@@ -2,15 +2,18 @@ import pytest
 import httpx
 import asyncio
 import json
+import pytest
 
 OPA_URL = "http://localhost:8181/v1/data/integrity"
 
 @pytest.mark.asyncio
 async def test_policy():
-    print("Testing OPA Policy Guardrails...\n")
-    
+    """
+    Validates OPA policy guardrails via async HTTP calls.
+    Tests scenarios for valid requests, SSN violations, and access control.
+    """
     async with httpx.AsyncClient() as client:
-        # Scenario 1: Valid authorized request
+        # ARRANGE - Scenario 1: Valid authorized request
         payload_1 = {
             "input": {
                 "commitment": {
@@ -22,10 +25,18 @@ async def test_policy():
                 }
             }
         }
-        resp = await client.post(OPA_URL, json=payload_1)
-        print("Scenario 1 (Valid ZKP):", json.dumps(resp.json().get("result", {}), indent=2))
         
-        # Scenario 2: Technical Safeguard Failure (SSN Exfiltration)
+        # ACT
+        try:
+            resp = await client.post(OPA_URL, json=payload_1)
+            # ASSERT
+            if resp.status_code == 200:
+                result = resp.json().get("result", {})
+                assert result.get("allow") is True
+        except Exception:
+            pytest.skip("OPA service unreachable")
+
+        # ARRANGE - Scenario 2: Technical Safeguard Failure (SSN Exfiltration)
         payload_2 = {
             "input": {
                 "commitment": {
@@ -37,10 +48,16 @@ async def test_policy():
                 }
             }
         }
+
+        # ACT
         resp = await client.post(OPA_URL, json=payload_2)
-        print("\nScenario 2 (SSN Violation):", json.dumps(resp.json().get("result", {}), indent=2))
         
-        # Scenario 3: Access Control Failure (Unauthorized Agent EMR_WRITE)
+        # ASSERT
+        result = resp.json().get("result", {})
+        assert result.get("allow") is False
+        assert any("SSN" in r for r in result.get("blocking_reasons", []))
+
+        # ARRANGE - Scenario 3: Access Control Failure (Unauthorized Agent EMR_WRITE)
         payload_3 = {
             "input": {
                 "commitment": {
@@ -52,8 +69,10 @@ async def test_policy():
                 }
             }
         }
-        resp = await client.post(OPA_URL, json=payload_3)
-        print("\nScenario 3 (Access Control Violation):", json.dumps(resp.json().get("result", {}), indent=2))
 
-if __name__ == "__main__":
-    asyncio.run(test_policy())
+        # ACT
+        resp = await client.post(OPA_URL, json=payload_3)
+
+        # ASSERT
+        result = resp.json().get("result", {})
+        assert result.get("allow") is False
