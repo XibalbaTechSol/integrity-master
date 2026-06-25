@@ -101,4 +101,7 @@
 * Updated the `TriMetricScoringEngine` default implementation in `integrity-oracle/scoring-core/src/lib.rs`.
 * Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
 * The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
-* New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+## [2026-06-25] update | contract_monitor.py: Optimize scan_all to avoid N+1 DB queries
+- Pre-fetched agents in `scan_all` to build an `agent_map`.
+- Updated `check_sla_breach` signature to accept `agent: Agent = None`.
+- Used `agent_map` inside `scan_all` loop to pass `Agent` object directly to `check_sla_breach`.
