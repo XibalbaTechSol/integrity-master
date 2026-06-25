@@ -12,21 +12,11 @@ pub struct TriMetricScoringEngine {
 
 impl Default for TriMetricScoringEngine {
     fn default() -> Self {
-        // Mathematical Rationale for Weight Optimizations:
-        // The legacy 5-metric system had weights: W_TRUSTFLOW=0.30, W_XIBALBA=0.30, W_SACRIFICE=0.20,
-        // W_STAKING_AGE=0.10, and W_VOLUME=0.10.
-        // In this strict 3-metric system, w_staking_age and w_volume must remain exactly 0.0.
-        // To maintain relative proportionality and ensure the remaining active weights sum exactly to 1.0,
-        // we re-normalize the core weights by dividing each by their sum (0.30 + 0.30 + 0.20 = 0.80).
-        // w_trustflow = 0.30 / 0.80 = 0.375
-        // w_xibalba = 0.30 / 0.80 = 0.375
-        // w_sacrifice = 0.20 / 0.80 = 0.25
-        // These values use exact IEEE-754 f64 literals to avoid precision regressions.
         Self {
             max_score: 1000.0,
-            w_trustflow: 0.375,
-            w_xibalba: 0.375,
-            w_sacrifice: 0.25,
+            w_trustflow: 0.2833333333333333,
+            w_xibalba: 0.38333333333333336,
+            w_sacrifice: 0.3333333333333333,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }
@@ -69,7 +59,7 @@ impl TriMetricScoringEngine {
         let grounding_boost = 1.0 + (hgi_raw * 0.2);
 
         let trustflow_idx = (avg_partner_ais / 1000.0).min(1.0);
-        let audit_idx = xibalba_audit_score.max(0.0).min(1.0);
+        let audit_idx = xibalba_audit_score.clamp(0.0, 1.0);
 
         // Logarithmic scale (1000 hours = 1.0)
         let sacrifice_idx = ((gpu_hours_verified + 1.0).log10() / 3.0).min(1.0);

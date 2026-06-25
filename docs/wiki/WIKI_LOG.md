@@ -101,3 +101,13 @@
 - `bcc_middleware`: Replaced deprecated Pydantic `.dict()` with `.model_dump()`.
 - `integrity-sdk`: Replaced deprecated psutil `.connections()` with `.net_connections()`.
 - `contracts`: Added and tracked isolated test suite for `SmartBAA.sol`.
+## [2026-06-22] Optimization | Optimize Tri-Metric Weights
+* Updated the `TriMetricScoringEngine` default implementation in `integrity-oracle/scoring-core/src/lib.rs`.
+* Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
+* The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
+* New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+## [2026-06-25] update | refactor(sdk): use dataclass for log_model_switch
+- Refactored `log_model_switch` in `integrity-sdk/integrity_sdk/client.py` to use a new `ModelSwitchEvent` dataclass.
+- Updated calls across tests and internal SDK tracking logic to support the new parameter configuration.
+## [2024-06-25] update | Testing Telemetry Analyzer
+- Added 7 unit test functions to `integrity-sdk/tests/unit/test_telemetry.py` to cover calculation methods in `CompositeSignalAnalyzer`.
