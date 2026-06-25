@@ -1150,11 +1150,14 @@ async def get_ledger_history(db: Session = Depends(get_db), offset: int = 0, lim
     total_logs = db.query(TransactionLog).count()
     logs = db.query(TransactionLog).order_by(TransactionLog.created_at.desc()).offset(offset).limit(limit).all()
 
+    # Pre-fetch agent eth_addresses to avoid N+1 queries
+    agent_ids = {log.agent_id for log in logs}
+    agents = db.query(Agent).filter(Agent.agent_id.in_(agent_ids)).all() if agent_ids else []
+    agent_address_map = {agent.agent_id: agent.eth_address for agent in agents}
+
     formatted_logs = []
     for log in logs:
-        # Load agent eth_address
-        agent = db.query(Agent).filter(Agent.agent_id == log.agent_id).first()
-        agent_address = agent.eth_address if agent else "0x0"
+        agent_address = agent_address_map.get(log.agent_id, "0x0")
 
         # Load from/to from metadata if available
         meta = log.provider_metadata or {}
