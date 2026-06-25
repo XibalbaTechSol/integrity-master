@@ -1,4 +1,7 @@
 #![allow(clippy::field_reassign_with_default)]
+#![allow(clippy::unnecessary_cast)]
+#[allow(clippy::field_reassign_with_default)]
+#[allow(clippy::unnecessary_cast)]
 pub mod merkle;
 pub mod rollup_daemon;
 pub mod webhook_worker;
@@ -52,6 +55,7 @@ pub struct CoreMetrics {
 }
 
 /// The Payload Dispatcher: Extracts core protocol metrics from domain-specific payloads.
+#[allow(clippy::field_reassign_with_default)]
 fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics {
     let mut metrics = CoreMetrics::default();
 
@@ -1394,7 +1398,7 @@ async fn ingest_telemetry(
         metrics.entropy = payload
             .avg_entropy
             .or(Some(payload.performance_variance))
-            .unwrap_or(0.05);
+            .unwrap_or(0.05) as f32;
         metrics.grounding = payload
             .avg_grounding
             .unwrap_or(if payload.hitl_intervention {
