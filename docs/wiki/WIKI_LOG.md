@@ -97,8 +97,6 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
-## [2026-06-22] Optimization | Optimize Tri-Metric Weights
-* Updated the `TriMetricScoringEngine` default implementation in `integrity-oracle/scoring-core/src/lib.rs`.
-* Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
-* The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
-* New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+## [2026-06-25] update | Update TriMetricScoringEngine optimal weights
+- Updated default weights in `integrity-oracle/scoring-core/src/lib.rs` using Lagrange multipliers to strictly minimize Euclidean distance to legacy 5-metric targets under a 3-metric constraint.
+- Weights updated: `w_trustflow`=0.36666666666666664, `w_xibalba`=0.36666666666666664, `w_sacrifice`=0.26666666666666666.
