@@ -5,13 +5,21 @@ import time
 import os
 import uuid
 import hashlib
-from typing import Optional, Any, Dict, Callable, List
+from typing import Optional, Any, Dict, Callable
 from dataclasses import dataclass, asdict
 
 from .batcher import TelemetryBatcher
 from .prover import NoirProver
 from .telemetry.analyzer import CompositeSignalAnalyzer
 
+
+@dataclass
+class ModelSwitchEvent:
+    from_model: str
+    to_model: str
+    from_provider: Optional[str] = None
+    to_provider: Optional[str] = None
+    reason: Optional[str] = None
 
 @dataclass
 class BCCCommitment:
@@ -451,24 +459,17 @@ class IntegrityClient:
         # Ensure values stay strictly bounded between 0.0 and 1.0
         return min(max(entropy, 0.0), 1.0), min(max(grounding, 0.0), 1.0)
 
-    def log_model_switch(
-        self,
-        from_model: str,
-        to_model: str,
-        from_provider: Optional[str] = None,
-        to_provider: Optional[str] = None,
-        reason: Optional[str] = None,
-    ) -> None:
+    def log_model_switch(self, event: ModelSwitchEvent) -> None:
         """
         Manually logs a model/provider switch event to the telemetry queue.
         """
         metadata = {
             "event_type": "model_switch",
-            "from_model": from_model,
-            "to_model": to_model,
-            "from_provider": from_provider or "unknown",
-            "to_provider": to_provider or "unknown",
-            "reason": reason or "dynamic_dispatch",
+            "from_model": event.from_model,
+            "to_model": event.to_model,
+            "from_provider": event.from_provider or "unknown",
+            "to_provider": event.to_provider or "unknown",
+            "reason": event.reason or "dynamic_dispatch",
         }
         self.log_telemetry(metadata=metadata, entropy=0.1, grounding=0.95)
 
@@ -510,11 +511,13 @@ class IntegrityClient:
                 with self._lock:
                     if self.last_model and self.last_model != model_name:
                         self.log_model_switch(
-                            from_model=self.last_model,
-                            to_model=model_name,
-                            from_provider=self.last_provider,
-                            to_provider=provider_name,
-                            reason="automatic_telemetry_detect"
+                            ModelSwitchEvent(
+                                from_model=self.last_model,
+                                to_model=model_name,
+                                from_provider=self.last_provider,
+                                to_provider=provider_name,
+                                reason="automatic_telemetry_detect"
+                            )
                         )
                     self.last_model = model_name
                     self.last_provider = provider_name
@@ -719,7 +722,7 @@ class IntegrityClient:
                 entropy=1.0, # Maximum entropy (disorder)
                 grounding=0.0 # Zero grounding
             )
-            raise RuntimeError(f"BCC_INTENT_DRIFT: Actual execution context deviates from signed intent!")
+            raise RuntimeError("BCC_INTENT_DRIFT: Actual execution context deviates from signed intent!")
 
         # 3. Execute Action
         try:
@@ -1009,7 +1012,7 @@ class IntegrityClient:
             )
             conn.commit()
             conn.close()
-            print(f"[IntegrityClient] Telemetry cached locally inside SQLite.")
+            print("[IntegrityClient] Telemetry cached locally inside SQLite.")
         except Exception as ex:
             print(f"[IntegrityClient] Failed to write to SQLite cache: {ex}")
 
@@ -1041,7 +1044,7 @@ class IntegrityClient:
                 cursor.execute("DELETE FROM offline_telemetry WHERE id = ?", (row_id,))
             conn.commit()
             conn.close()
-            print(f"[IntegrityClient] Successfully synchronized offline cache with Oracle.")
+            print("[IntegrityClient] Successfully synchronized offline cache with Oracle.")
         except Exception:
             pass
 
