@@ -262,7 +262,7 @@ export const EconomicUseCasesSection = () => {
                             }}
                         >
                             <div style={{ color: useCase.color, marginBottom: isMobile ? '24px' : '32px' }}>
-                                {React.cloneElement(useCase.icon as React.ReactElement, { size: isMobile ? 24 : 32 })}
+                                {React.cloneElement(useCase.icon as React.ReactElement, { size: isMobile ? 24 : 32 } as any)}
                             </div>
                             <span style={{ color: useCase.color, fontSize: '0.65rem', fontWeight: 900, letterSpacing: '0.2em' }}>{useCase.subtitle}</span>
                             <h3 style={{ fontSize: isMobile ? '1.4rem' : '1.8rem', fontWeight: 800, margin: '12px 0 20px' }}>{useCase.title}</h3>

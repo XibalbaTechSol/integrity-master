@@ -99,7 +99,7 @@ export function GovernancePanel() {
         }
         setIsLoading(false);
       });
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+
   }, []);
 
   const handleVote = async (id: string, type: 'for' | 'against') => {

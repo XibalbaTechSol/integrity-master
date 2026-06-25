@@ -20,7 +20,9 @@ export const LandingPage = () => {
             />
             
             <HeroSection 
-                setIsRegistryOpen={setIsRegistryOpen} 
+                setIsRegistryOpen={setIsRegistryOpen}
+                setContactType={setContactType}
+                setIsContactOpen={setIsContactOpen}
             />
 
             <TrustGapSection />
@@ -45,7 +47,7 @@ export const LandingPage = () => {
             <ContactModal 
                 isOpen={isContactOpen} 
                 onClose={() => setIsContactOpen(false)} 
-                type={contactType} 
+                initialType={contactType}
             />
             
             <RegistryExplorer 

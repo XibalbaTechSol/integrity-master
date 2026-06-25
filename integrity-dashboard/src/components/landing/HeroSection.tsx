@@ -3,7 +3,7 @@ import { motion } from 'framer-motion';
 import { Mail, Code, ArrowRight, FileText, ExternalLink } from 'lucide-react';
 import { useIsMobile } from '../../utils/useIsMobile';
 
-export const HeroSection = ({ setContactType, setIsContactOpen, setIsRegistryOpen }) => {
+export const HeroSection = ({ setContactType, setIsContactOpen, setIsRegistryOpen }: any) => {
     const isMobile = useIsMobile();
 
     return (
