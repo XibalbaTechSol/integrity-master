@@ -837,13 +837,16 @@ class IntegrityClient:
         """
         from .extractor import InferenceMetadataExtractor
         
-        metadata = InferenceMetadataExtractor.normalize(
+        from .extractor import NormalizeConfig
+
+        config = NormalizeConfig(
             provider=provider,
             raw_data=raw_data,
             latency_ms=latency_ms,
             ttft_ms=ttft_ms,
             enable_full_recording=self.enable_full_recording
         )
+        metadata = InferenceMetadataExtractor.normalize(config)
         
         if extra_metadata:
             metadata.update(extra_metadata)
