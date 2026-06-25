@@ -89,9 +89,10 @@ async def evaluate_intent_policy(commitment: BCCCommitment, context: Dict[str, A
         try:
             async with httpx.AsyncClient() as client:
                 # Query the entire integrity package to get both allow and blocking_reasons
+                # NOTE: .model_dump() replaces deprecated .dict() (Pydantic V2, see #N)
                 resp = await client.post(
                     f"{POLICY_ENGINE_URL}/v1/data/integrity",
-                    json={"input": {"commitment": commitment.dict(), "context": context}}
+                    json={"input": {"commitment": commitment.model_dump(), "context": context}}
                 )
                 if resp.status_code == 200:
                     data = resp.json().get("result", {})

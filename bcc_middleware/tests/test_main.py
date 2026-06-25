@@ -45,8 +45,9 @@ def test_health():
     assert response.json() == {"status": "online", "mode": "enforcing"}
 
 def test_intercept_endpoint(base_commitment, base_context):
+    # NOTE: .model_dump() replaces deprecated .dict() (Pydantic V2, see #N)
     payload = {
-        "commitment": base_commitment.dict(),
+        "commitment": base_commitment.model_dump(),
         "actual_context": base_context
     }
     
@@ -267,8 +268,9 @@ async def test_run_interceptor_critical_slashing(base_commitment, base_context):
                 mock_instance.post.assert_called_once() # Telemetry check
 
 def test_recent_trajectories_endpoint_and_limit(base_commitment, base_context):
+    # NOTE: .model_dump() replaces deprecated .dict() (Pydantic V2, see #N)
     payload = {
-        "commitment": base_commitment.model_dump() if hasattr(base_commitment, "model_dump") else base_commitment.dict(),
+        "commitment": base_commitment.model_dump(),
         "actual_context": base_context
     }
     with patch("main._run_interceptor", new_callable=AsyncMock) as mock_run:

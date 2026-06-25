@@ -97,6 +97,10 @@
 ## [2026-06-19] cleanup | Repository Cleanup Loop
 - Repository Cleanup Loop: Pruned 2 branches, removed 8 dead files, and organized the repo.
 
+## [2026-06-20] fix | error-sync: Resolved 3 deprecation/tracking issues
+- `bcc_middleware`: Replaced deprecated Pydantic `.dict()` with `.model_dump()`.
+- `integrity-sdk`: Replaced deprecated psutil `.connections()` with `.net_connections()`.
+- `contracts`: Added and tracked isolated test suite for `SmartBAA.sol`.
 ## [2026-06-22] Optimization | Optimize Tri-Metric Weights
 * Updated the `TriMetricScoringEngine` default implementation in `integrity-oracle/scoring-core/src/lib.rs`.
 * Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
