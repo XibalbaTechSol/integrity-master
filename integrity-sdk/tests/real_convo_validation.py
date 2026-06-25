@@ -53,13 +53,14 @@ def run_real_convo():
 
     # Trader triggers model switch telemetry
     print("Trader Agent switching models to do deep verification...")
-    trader_client.integrity_client.log_model_switch(
+    from integrity_sdk.client import ModelSwitchEvent
+    trader_client.integrity_client.log_model_switch(ModelSwitchEvent(
         from_model="llama3.2:1b",
         to_model="llama3:8b",
         from_provider="ollama",
         to_provider="ollama-deep",
         reason="high_stakes_risk_refinement"
-    )
+    ))
 
     # Trader receives human intervention override
     print("Simulating Human-in-the-Loop review override on the proposed trade...")
