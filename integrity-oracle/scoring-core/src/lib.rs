@@ -14,9 +14,18 @@ impl Default for TriMetricScoringEngine {
     fn default() -> Self {
         Self {
             max_score: 1000.0,
-            w_trustflow: 0.2833333333333333,
-            w_xibalba: 0.38333333333333336,
-            w_sacrifice: 0.3333333333333333,
+            // The optimal weights for the Rust TriMetricScoringEngine are derived using Lagrange multipliers
+            // (orthogonal projection) to strictly minimize Euclidean distance to the legacy 5-metric system targets
+            // (0.30, 0.30, 0.20) under a strict 3-metric constraint (summing to 1.0).
+            // This is achieved by shifting each coordinate by exactly +1/15, resulting in:
+            // w_trustflow = 0.30 + 1/15 = 11/30 = 0.36666666666666664
+            // w_xibalba = 0.30 + 1/15 = 11/30 = 0.36666666666666664
+            // w_sacrifice = 0.20 + 1/15 = 8/30 = 0.26666666666666666
+            // These exact IEEE-754 f64 literal representations ensure they sum perfectly to 1.0
+            // without floating-point precision regressions.
+            w_trustflow: 0.36666666666666664,
+            w_xibalba: 0.36666666666666664,
+            w_sacrifice: 0.26666666666666666,
             w_staking_age: 0.0,
             w_volume: 0.0,
         }
