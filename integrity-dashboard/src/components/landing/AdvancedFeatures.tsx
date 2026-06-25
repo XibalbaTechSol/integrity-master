@@ -1,5 +1,5 @@
 import React from 'react';
-import { Fingerprint, Database, Lock, Cpu, Globe, Shield, GitBranch, Copy, Zap, ArrowRight } from 'lucide-react';
+import { Fingerprint, Database, Lock, Cpu, Globe, GitBranch, Copy, Zap, ArrowRight } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '../../utils/useIsMobile';

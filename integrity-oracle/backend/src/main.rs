@@ -100,7 +100,7 @@ fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics
                         .and_then(|v| v.as_f64())
                         .map(|v| v as f32)
                 })
-                .unwrap_or(0.05) as f32;
+                .unwrap_or(0.05);
             metrics.sacrifice = (payload
                 .get("gpu_hours_used")
                 .and_then(|v| v.as_f64())
@@ -124,7 +124,7 @@ fn dispatch_payload(domain_id: &str, payload: &serde_json::Value) -> CoreMetrics
                         .and_then(|v| v.as_f64())
                         .map(|v| v as f32)
                 })
-                .unwrap_or(0.01) as f32;
+                .unwrap_or(0.01);
             metrics.grounding = 0.50; // Quants are mostly autonomous
             metrics.sacrifice = (payload
                 .get("gpu_hours_used")

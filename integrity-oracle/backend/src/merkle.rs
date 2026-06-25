@@ -39,6 +39,7 @@ impl MerkleTree {
         let mut idx = index;
 
         for level in 0..self.tree.len() - 1 {
+#[allow(clippy::manual_is_multiple_of)]
             let sibling_idx = if idx.is_multiple_of(2) { idx + 1 } else { idx - 1 };
             if sibling_idx < self.tree[level].len() {
                 proof.push(self.tree[level][sibling_idx]);
