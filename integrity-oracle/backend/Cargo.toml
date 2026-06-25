@@ -27,3 +27,10 @@ alloy-rpc-client = { version = "2.0.5", features = ["pubsub", "ws"] }
 reqwest = { version = "0.13", features = ["json"] }
 primitive-types = "0.14.0"
 scoring-core = { path = "../scoring-core" }
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+opentelemetry = "0.22"
+opentelemetry_sdk = { version = "0.22", features = ["rt-tokio"] }
+opentelemetry-otlp = "0.15"
+tracing-opentelemetry = "0.23"
+opentelemetry-semantic-conventions = "0.14"

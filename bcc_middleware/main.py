@@ -212,15 +212,24 @@ async def _run_interceptor(commitment: BCCCommitment, context: Dict[str, Any]) -
                             reason=f"AIS_BELOW_THRESHOLD: Agent AIS {ais} is too low for this action"
                         )
                 else:
-                    print(f"[BCC] Oracle returned {resp.status_code}. Using MOCK_AIS fallback.")
-                    ais = 750 # Mock successful AIS
+                    print(f"[BCC] Oracle returned {resp.status_code}. Failing closed.")
+                    return BCCInterceptResponse(
+                        authorized=False, 
+                        reason=f"ORACLE_ERROR: Oracle returned {resp.status_code}"
+                    )
             except (httpx.ConnectError, httpx.TimeoutException):
-                print("[BCC] Oracle unreachable. Using MOCK_AIS fallback.")
-                ais = 750 # Mock successful AIS
+                print("[BCC] Oracle unreachable. Failing closed.")
+                return BCCInterceptResponse(
+                    authorized=False, 
+                    reason="ORACLE_UNREACHABLE: Cannot verify agent AIS"
+                )
     except Exception as e:
         print(f"[BCC] Unexpected error during Oracle check: {e}")
-        # In MVP, we fallback to allow. In production, we might fail-closed.
-        ais = 750 
+        # In production, we fail-closed.
+        return BCCInterceptResponse(
+            authorized=False, 
+            reason=f"ORACLE_ERROR: Unexpected error: {e}"
+        )
 
     # 4. Intent & Policy Gate
     authorized, reason = await evaluate_intent_policy(commitment, context)

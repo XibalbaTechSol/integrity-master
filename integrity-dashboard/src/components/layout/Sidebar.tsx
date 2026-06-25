@@ -11,7 +11,7 @@ export function Sidebar() {
     <aside className={`sidebar ${isCollapsed ? 'collapsed' : ''}`}>
       <div className="sidebar-header" style={{ padding: isCollapsed ? 'var(--space-4) auto' : 'var(--space-6)', justifyContent: isCollapsed ? 'center' : 'space-between', flexDirection: isCollapsed ? 'column' : 'row', gap: isCollapsed ? '12px' : '0' }}>
         <div style={{ display: 'flex', flexDirection: 'column', alignItems: isCollapsed ? 'center' : 'flex-start', gap: '4px' }}>
-          <img src="/XibalbaSolutionsLogo.png" alt="Xibalba" style={{ height: '32px' }} />
+          <img src="/xibalba_logo.png" alt="Xibalba" style={{ height: '32px' }} />
           {!isCollapsed && (
             <div style={{ fontSize: '0.65rem', color: 'var(--gold)', letterSpacing: '0.1em', textTransform: 'uppercase', fontWeight: 800 }}>
               Integrity Protocol

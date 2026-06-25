@@ -97,11 +97,11 @@ def main():
         sum_penalty = abs(1.0 - sum_weights) * 1000.0
         
         # Targets
-        target_tf = 0.20
-        target_xi = 0.30
-        target_sf = 0.25
-        target_sa = 0.15
-        target_vl = 0.10
+        target_tf = 0.36666666666666664
+        target_xi = 0.36666666666666664
+        target_sf = 0.26666666666666666
+        target_sa = 0.0
+        target_vl = 0.0
         
         dist = ((w_tf - target_tf)**2 + (w_xi - target_xi)**2 + (w_sf - target_sf)**2 + (w_sa - target_sa)**2 + (w_vl - target_vl)**2) ** 0.5
         

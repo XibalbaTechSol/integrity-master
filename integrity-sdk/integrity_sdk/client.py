@@ -1162,7 +1162,10 @@ class IntegrityClient:
             )
             response.raise_for_status()
         except Exception as e:
-            print(f"[IntegrityClient] Transmission failed, caching locally: {e}")
+            if hasattr(e, 'response') and e.response is not None:
+                print(f"[IntegrityClient] Transmission failed, caching locally: {e} - Body: {e.response.text}")
+            else:
+                print(f"[IntegrityClient] Transmission failed, caching locally: {e}")
             self._cache_payload_locally(envelope if 'envelope' in locals() else {})
 
     # ------------------------------------------------------------------

@@ -1,8 +1,8 @@
 :root {
   /* Color palette */
-  --bg-primary: #06080d;
-  --bg-secondary: #0c1017;
-  --bg-tertiary: #111722;
+  --bg-primary: #050d18;
+  --bg-secondary: #0a1f3a;
+  --bg-tertiary: #132d50;
   --surface: rgba(255, 255, 255, 0.03);
   --surface-hover: rgba(255, 255, 255, 0.06);
   --glass: rgba(255, 255, 255, 0.04);

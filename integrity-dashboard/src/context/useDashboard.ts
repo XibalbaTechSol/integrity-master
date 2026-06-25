@@ -17,10 +17,13 @@ export interface DashboardContextType {
   isLoading: boolean;
   isBackendOffline: boolean;
   toasts: ToastMessage[];
+  user: any;
   
   selectAgent: (address: string) => void;
   setActiveTab: (tab: TabId) => void;
   connectWallet: () => Promise<void>;
+  signInWithGoogle: () => Promise<void>;
+  signOut: () => Promise<void>;
   fetchData: () => Promise<void>;
   addToast: (type: 'success' | 'error' | 'info', message: string) => void;
   removeToast: (id: string) => void;

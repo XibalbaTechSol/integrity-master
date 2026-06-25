@@ -1,11 +1,10 @@
 import React from 'react';
 import { useDashboard } from '../../context/useDashboard';
-import { Shield, Wallet, Server, RefreshCw, AlertTriangle, Globe } from 'lucide-react';
+import { Shield, Wallet, Server, RefreshCw, AlertTriangle, Globe, Mail, LogIn, LogOut } from 'lucide-react';
 
 export function Topbar() {
-  const { walletAddress, connectWallet, fetchData, isBackendOffline } = useDashboard();
+  const { walletAddress, connectWallet, fetchData, isBackendOffline, user, signInWithGoogle, signOut } = useDashboard();
   const [isRefreshing, setIsRefreshing] = React.useState(false);
-  const [domain, setDomain] = React.useState('global');
 
   const handleRefresh = async () => {
     setIsRefreshing(true);
@@ -16,7 +15,7 @@ export function Topbar() {
   return (
     <div className="topbar" style={{ flexWrap: 'wrap', height: 'auto', padding: '12px 24px', gap: '12px' }}>
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-3)' }}>
-        <Shield size={20} color="var(--gold)" />
+        <img src="/xibalba_logo.png" alt="Xibalba Solutions Logo" style={{ height: '32px', width: 'auto' }} />
         <div>
           <h1 style={{ fontSize: '1rem', fontWeight: 700, margin: 0, textTransform: 'uppercase', letterSpacing: '0.05em' }}>
             Integrity Command Center
@@ -28,20 +27,6 @@ export function Topbar() {
       </div>
 
       <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-4)', flexWrap: 'wrap', justifyContent: 'flex-end', flex: 1 }}>
-        <div style={{ display: 'flex', alignItems: 'center', gap: 'var(--space-2)', background: 'var(--bg-secondary)', padding: '4px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--glass-border)' }}>
-          <Globe size={14} color="var(--gold)" />
-          <span style={{ fontSize: '0.7rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase' }}>Domain:</span>
-          <select 
-            value={domain} 
-            onChange={(e) => setDomain(e.target.value)}
-            style={{ background: 'transparent', border: 'none', color: 'var(--text-primary)', fontSize: '0.75rem', fontWeight: 600, cursor: 'pointer', outline: 'none' }}
-          >
-            <option value="global">Global (Mesh)</option>
-            <option value="shield">Shield (Healthcare)</option>
-            <option value="quant">Quant (Finance)</option>
-            <option value="supply">Logistics (Supply)</option>
-          </select>
-        </div>
 
         {isBackendOffline && (
           <div style={{ display: 'flex', alignItems: 'center', gap: '6px', background: 'var(--danger-dim)', color: 'var(--danger)', padding: '4px 8px', borderRadius: 'var(--radius-sm)', fontSize: '0.75rem', fontWeight: 600 }}>
@@ -56,6 +41,29 @@ export function Topbar() {
         <button className="btn btn-ghost" onClick={handleRefresh} disabled={isRefreshing} style={{ padding: '4px 8px' }}>
           <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} /> Sync
         </button>
+
+        {user ? (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--glass-border)' }}>
+            <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--gold)', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>
+              {user.displayName || user.email}
+            </span>
+            <button 
+              onClick={signOut}
+              title="Sign Out"
+              style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '2px' }}
+            >
+              <LogOut size={14} />
+            </button>
+          </div>
+        ) : (
+          <button 
+            className="btn btn-ghost" 
+            onClick={signInWithGoogle}
+            style={{ padding: '6px 12px', fontSize: '0.75rem', display: 'flex', alignItems: 'center', gap: '6px', border: '1px solid rgba(255,255,255,0.1)' }}
+          >
+            <Mail size={14} /> Google Sign In
+          </button>
+        )}
 
         <button 
           className={`btn ${walletAddress ? 'btn-success' : 'btn-primary'}`} 

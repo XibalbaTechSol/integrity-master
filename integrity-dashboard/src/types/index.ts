@@ -247,6 +247,14 @@ export interface ProvenanceEntry {
   parent_id?: string;
 }
 
+export interface StabilityBenchmark {
+  model_name: string;
+  provider_name: string;
+  simulated_ais: number;
+  stability_metric: number;
+  grounding_metric: number;
+}
+
 // ─── Tab types ──────────────────────────────────────────────────────
 export type TabId =
   | 'telemetry'

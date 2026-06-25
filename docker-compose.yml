@@ -1,9 +1,41 @@
 version: "3.8"
 services:
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: integrity
+    ports:
+      - "15432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  redis:
+    image: redis:alpine
+    ports:
+      - "6379:6379"
+
+  jaeger:
+    image: jaegertracing/all-in-one:latest
+    ports:
+      - "16686:16686" # Web UI
+      - "4317:4317"   # OTLP gRPC
+      - "4318:4318"   # OTLP HTTP
+
   oracle-backend:
-    build: ./integrity-oracle/backend
+    build: 
+      context: ./integrity-oracle
+      dockerfile: Dockerfile
     ports: ["8080:8080"]
     env_file: ./integrity-oracle/backend/.env
+    environment:
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4317
+      - OTEL_SERVICE_NAME=oracle-backend
+      - DATABASE_URL=postgres://postgres:postgres@postgres:5432/integrity
+    depends_on:
+      - jaeger
+      - postgres
 
   opa:
     image: openpolicyagent/opa:latest
@@ -18,10 +50,18 @@ services:
     environment:
       - OPA_URL=http://opa:8181
       - INTEGRITY_ORACLE_URL=http://oracle-backend:8080
+      - OTEL_EXPORTER_OTLP_ENDPOINT=http://jaeger:4318
+      - OTEL_SERVICE_NAME=bcc-middleware
+      - OTEL_EXPORTER_OTLP_PROTOCOL=http/protobuf
+      - SMART_BAA_ADDRESS=0xb78B63D1Ffb0c9e025DcA4dB4cb7feC584149f56
     depends_on:
       - opa
+      - jaeger
 
   dashboard:
     build: ./integrity-dashboard
     ports: ["5173:5173"]
     depends_on: [oracle-backend]
+
+volumes:
+  pgdata:

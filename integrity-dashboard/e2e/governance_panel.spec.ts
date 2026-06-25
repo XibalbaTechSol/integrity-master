@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('GovernancePanel', () => {
   test('should display proposals and allow creation', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('http://localhost:4173');
     
     // Navigate to the Governance tab
     const accordionBtn = page.locator('.tab-nav-accordion > button');

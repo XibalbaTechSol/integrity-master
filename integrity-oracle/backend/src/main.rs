@@ -14,6 +14,11 @@ use std::env;
 use std::sync::Arc;
 use tokio::net::TcpListener;
 use tower_http::cors::{Any, CorsLayer};
+use opentelemetry_otlp::WithExportConfig;
+use opentelemetry::{global, KeyValue};
+use opentelemetry_sdk::{trace as sdktrace, Resource};
+use tracing_subscriber::{layer::SubscriberExt, util::SubscriberInitExt};
+use tracing_opentelemetry::OpenTelemetryLayer;
 
 // --- DTOs ---
 
@@ -654,7 +659,33 @@ async fn flush_telemetry_batch(pool: &PgPool, buffer: &mut Vec<TelemetryWriteTas
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
     dotenvy::dotenv().ok();
-    println!("Starting Xibalba Oracle Backend (Rust/Axum)...");
+    
+    // OpenTelemetry Initialization
+    let otlp_endpoint = env::var("OTEL_EXPORTER_OTLP_ENDPOINT").unwrap_or_else(|_| "http://localhost:4317".to_string());
+    let service_name = env::var("OTEL_SERVICE_NAME").unwrap_or_else(|_| "oracle-backend".to_string());
+    
+    let tracer = opentelemetry_otlp::new_pipeline()
+        .tracing()
+        .with_exporter(
+            opentelemetry_otlp::new_exporter()
+                .tonic()
+                .with_endpoint(otlp_endpoint),
+        )
+        .with_trace_config(
+            sdktrace::config().with_resource(Resource::new(vec![KeyValue::new(
+                opentelemetry_semantic_conventions::resource::SERVICE_NAME,
+                service_name,
+            )])),
+        )
+        .install_batch(opentelemetry_sdk::runtime::Tokio)?;
+
+    tracing_subscriber::registry()
+        .with(tracing_subscriber::EnvFilter::new("info,backend=debug"))
+        .with(tracing_subscriber::fmt::layer())
+        .with(OpenTelemetryLayer::new(tracer))
+        .init();
+
+    tracing::info!("Starting Xibalba Oracle Backend (Rust/Axum)...");
 
     // Load DB from .env (in real environment)
     // For MVP compilation, we allow fallback or mock pool if DSN is missing

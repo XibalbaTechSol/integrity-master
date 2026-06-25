@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('ShieldPanel', () => {
   test('should display shield registries and modal interactions', async ({ page }) => {
-    await page.goto('http://localhost:5173');
+    await page.goto('http://localhost:4173');
     
     // Navigate to the Shield tab
     const accordionBtn = page.locator('.tab-nav-accordion > button');

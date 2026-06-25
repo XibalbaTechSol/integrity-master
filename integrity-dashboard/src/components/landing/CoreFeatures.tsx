@@ -1,5 +1,5 @@
 import React from 'react';
-import { Shield, Activity, Lock, Code, Zap, ShieldCheck, Cpu, Coins, Globe, ArrowRight } from 'lucide-react';
+import { Shield, Activity, Lock, Code, Zap, ShieldCheck, Cpu, Coins, Globe, ArrowRight, Eye } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '../../utils/useIsMobile';
@@ -50,54 +50,62 @@ export const DevQuickstartSection = () => {
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     return (
-        <section style={{ padding: isMobile ? '60px 20px' : '100px 60px', background: 'rgba(212, 175, 55, 0.03)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+        <section style={{ padding: isMobile ? '60px 20px' : '120px 60px', background: 'radial-gradient(circle at top, rgba(212, 175, 55, 0.05) 0%, rgba(5,13,24,1) 80%)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
             <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: isMobile ? '40px' : '80px', alignItems: 'center' }}>
-                    <div>
-                        <span style={{ color: 'var(--gold)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', marginBottom: '16px', display: 'block' }}>Developer Experience</span>
-                        <h2 style={{ fontSize: isMobile ? '2.2rem' : '3rem', fontWeight: 800, marginBottom: '24px', lineHeight: 1.1 }}>Start building instantly.<br />No hardware DID required.</h2>
-                        <p style={{ fontSize: '1.1rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, marginBottom: '24px', fontWeight: 500 }}>
-                            Enter the agent economy today with our new <strong>Developer API Key</strong> testing mode. 
+                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1.2fr', gap: isMobile ? '60px' : '100px', alignItems: 'center' }}>
+                    <motion.div initial={{ opacity: 0, x: -30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }}>
+                        <span style={{ color: 'var(--gold)', fontSize: '0.7rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', marginBottom: '16px', display: 'block' }}>Developer Experience</span>
+                        <h2 style={{ fontSize: isMobile ? '2.5rem' : '3.5rem', fontWeight: 800, marginBottom: '24px', lineHeight: 1.1 }}>Start building instantly.<br />No hardware DID required.</h2>
+                        <p style={{ fontSize: '1.15rem', color: 'rgba(255,255,255,0.85)', lineHeight: 1.8, marginBottom: '24px', fontWeight: 500 }}>
+                            Enter the agent economy today with our new <strong style={{ color: 'white' }}>Developer API Key</strong> testing mode. 
                         </p>
-                        <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.5)', lineHeight: 1.8, marginBottom: '40px' }}>
+                        <p style={{ fontSize: '1rem', color: 'rgba(255,255,255,0.4)', lineHeight: 1.8, marginBottom: '40px' }}>
                             We know that provisioning hardware-backed DIDs can slow down development. That's why we've introduced Developer API Keys. Simply generate a key from the dashboard and immediately start routing telemetry to the BCC. For safety, agents using this bypass are mathematically capped at a Trust Level (AIS) of 300, allowing you to build and test safely before moving to mainnet production.
                         </p>
-                        <div style={{ display: 'flex', gap: '16px' }}>
-                            <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ padding: '16px 32px' }}>
+                        <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
+                            <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '1rem', boxShadow: '0 10px 30px rgba(212,175,55,0.2)' }}>
                                 Generate API Key
                             </button>
-                            <a href="https://github.com/XibalbaTechSol/integrity-protocol/tree/main/docs" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '16px 32px', border: '1px solid rgba(255,255,255,0.1)', color: 'white', textDecoration: 'none' }}>
+                            <a href="https://github.com/XibalbaTechSol/integrity-protocol/tree/main/docs" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '16px 32px', border: '1px solid rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', fontSize: '1rem' }}>
                                 Read the Docs
                             </a>
                         </div>
-                    </div>
-                    <div style={{ background: '#050d18', border: '1px solid rgba(255,255,255,0.1)', borderRadius: '16px', padding: '24px', position: 'relative' }}>
-                        <div style={{ display: 'flex', gap: '8px', marginBottom: '16px' }}>
-                            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#f87171' }} />
-                            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#fbbf24' }} />
-                            <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#34d399' }} />
+                    </motion.div>
+                    
+                    <motion.div initial={{ opacity: 0, x: 30 }} whileInView={{ opacity: 1, x: 0 }} viewport={{ once: true }} style={{ background: 'linear-gradient(145deg, rgba(15,23,42,0.9) 0%, rgba(5,13,24,0.9) 100%)', border: '1px solid rgba(212, 175, 55, 0.2)', borderRadius: '24px', position: 'relative', boxShadow: '0 30px 60px rgba(0,0,0,0.5), inset 0 1px 0 rgba(255,255,255,0.1)', overflow: 'hidden' }}>
+                        {/* IDE Header */}
+                        <div style={{ padding: '16px 24px', background: 'rgba(0,0,0,0.4)', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                            <div style={{ display: 'flex', gap: '8px', alignItems: 'center' }}>
+                                <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#f87171', boxShadow: '0 0 10px #f87171' }} />
+                                <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#fbbf24', boxShadow: '0 0 10px #fbbf24' }} />
+                                <div style={{ width: 12, height: 12, borderRadius: '50%', background: '#34d399', boxShadow: '0 0 10px #34d399' }} />
+                            </div>
+                            <span style={{ fontSize: '0.75rem', color: 'rgba(255,255,255,0.3)', fontWeight: 600, letterSpacing: '0.1em' }}>agent_runner.ts</span>
                         </div>
-                        <pre style={{ margin: 0, color: '#94a3b8', fontSize: '0.85rem', fontFamily: 'monospace', overflowX: 'auto' }}>
-<code style={{ color: '#c9a84c' }}>import</code> {'{'} IntegrityClient {'}'} <code style={{ color: '#c9a84c' }}>from</code> '@xibalba/integrity-sdk';
+                        {/* IDE Body */}
+                        <div style={{ padding: '32px', overflowX: 'auto' }}>
+                            <pre style={{ margin: 0, color: '#e2e8f0', fontSize: '0.9rem', fontFamily: '"JetBrains Mono", monospace', lineHeight: 1.7 }}>
+<code style={{ color: '#c678dd' }}>import</code> {'{'} IntegrityClient {'}'} <code style={{ color: '#c678dd' }}>from</code> <code style={{ color: '#98c379' }}>'@xibalba/integrity-sdk'</code>;
 
-<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Initialize with your Developer API Key</code>
-<code style={{ color: '#c9a84c' }}>const</code> client = <code style={{ color: '#c9a84c' }}>new</code> IntegrityClient({'{'}
-apiKey: process.env.INTEGRITY_API_KEY,
-network: <code style={{ color: '#10b981' }}>'base-sepolia'</code>
+<code style={{ color: '#5c6370', fontStyle: 'italic' }}>// Initialize with your Developer API Key</code>
+<code style={{ color: '#c678dd' }}>const</code> client = <code style={{ color: '#c678dd' }}>new</code> <code style={{ color: '#e5c07b' }}>IntegrityClient</code>({'{'}
+  apiKey: process.env.INTEGRITY_API_KEY,
+  network: <code style={{ color: '#98c379' }}>'base-sepolia'</code>
 {'}'});
 
-<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Your agent's AIS is capped at 300 during dev</code>
-<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Ask protocol if transaction is safe</code>
-<code style={{ color: '#c9a84c' }}>const</code> txRequest = <code style={{ color: '#c9a84c' }}>await</code> client.proposeTransaction(uniswapSwap);
+<code style={{ color: '#5c6370', fontStyle: 'italic' }}>// Your agent's AIS is capped at 300 during dev</code>
+<code style={{ color: '#5c6370', fontStyle: 'italic' }}>// Ask protocol if transaction is safe</code>
+<code style={{ color: '#c678dd' }}>const</code> txRequest = <code style={{ color: '#56b6c2' }}>await</code> client.<code style={{ color: '#61afef' }}>proposeTransaction</code>(uniswapSwap);
 
-<code style={{ color: '#c9a84c' }}>if</code> (txRequest.isApproved) {'{'}
-<code style={{ color: 'rgba(255,255,255,0.3)' }}>// Pre-Execution Gated by BCC!</code>
-<code style={{ color: '#c9a84c' }}>await</code> txRequest.execute();
-{'}'} <code style={{ color: '#c9a84c' }}>else</code> {'{'}
-console.log(<code style={{ color: '#10b981' }}>'Transaction blocked: Trust Ceiling exceeded'</code>);
+<code style={{ color: '#c678dd' }}>if</code> (txRequest.isApproved) {'{'}
+  <code style={{ color: '#5c6370', fontStyle: 'italic' }}>// Pre-Execution Gated by BCC!</code>
+  <code style={{ color: '#56b6c2' }}>await</code> txRequest.<code style={{ color: '#61afef' }}>execute</code>();
+{'}'} <code style={{ color: '#c678dd' }}>else</code> {'{'}
+  console.<code style={{ color: '#61afef' }}>log</code>(<code style={{ color: '#98c379' }}>'Transaction blocked: Trust Ceiling exceeded'</code>);
 {'}'}
-                        </pre>
-                    </div>
+                            </pre>
+                        </div>
+                    </motion.div>
                 </div>
             </div>
         </section>
@@ -262,7 +270,7 @@ export const EconomicUseCasesSection = () => {
                             }}
                         >
                             <div style={{ color: useCase.color, marginBottom: isMobile ? '24px' : '32px' }}>
-                                {React.cloneElement(useCase.icon as React.ReactElement, { size: isMobile ? 24 : 32 })}
+                                {React.cloneElement(useCase.icon as React.ReactElement, { size: isMobile ? 24 : 32 } as any)}
                             </div>
                             <span style={{ color: useCase.color, fontSize: '0.65rem', fontWeight: 900, letterSpacing: '0.2em' }}>{useCase.subtitle}</span>
                             <h3 style={{ fontSize: isMobile ? '1.4rem' : '1.8rem', fontWeight: 800, margin: '12px 0 20px' }}>{useCase.title}</h3>
@@ -288,5 +296,87 @@ export const EconomicUseCasesSection = () => {
                 </div>
             </div>
         </section>
+    );
+};
+
+export const PrivacyArchitectureSection = () => {
+    const isMobile = useIsMobile();
+    return (
+        <section style={{ padding: isMobile ? '60px 20px' : '100px 60px', background: 'var(--navy-deep)', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
+            <div style={{ maxWidth: '1400px', margin: '0 auto' }}>
+                <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    style={{ 
+                        background: 'rgba(255,255,255,0.03)', 
+                        border: '1px solid rgba(255,255,255,0.1)', 
+                        borderRadius: '16px', 
+                        padding: isMobile ? '32px' : '48px',
+                        textAlign: 'left',
+                        boxShadow: '0 20px 40px rgba(0,0,0,0.2)'
+                    }}
+                >
+                    <div style={{ display: 'flex', alignItems: 'center', gap: '16px', marginBottom: '24px' }}>
+                        <div style={{ background: 'rgba(212,175,55,0.1)', padding: '12px', borderRadius: '12px' }}>
+                            <Shield size={32} color="var(--gold)" />
+                        </div>
+                        <div>
+                            <span style={{ color: 'var(--gold)', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.4em', marginBottom: '8px', display: 'block' }}>Data Sovereignty</span>
+                            <h3 style={{ margin: 0, fontSize: isMobile ? '1.5rem' : '2rem', fontFamily: 'Playfair Display, serif', fontWeight: 600 }}>Dual-Mode Privacy Architecture</h3>
+                        </div>
+                    </div>
+                    <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1.1rem', marginBottom: '40px', lineHeight: 1.7, maxWidth: '800px' }}>
+                        The Integrity Protocol empowers developers with absolute control over their AI telemetry. Choose the exact level of cryptographic data sovereignty required for your specific vertical without sacrificing accountability.
+                    </p>
+                    
+                    <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : '1fr 1fr', gap: '24px' }}>
+                        {/* Mode 1 */}
+                        <div style={{ background: 'rgba(0,0,0,0.3)', border: '1px solid rgba(255,255,255,0.02)', borderRadius: '16px', padding: '32px', transition: 'all 0.3s', cursor: 'default' }}
+                             onMouseEnter={(e) => e.currentTarget.style.border = '1px solid rgba(255,255,255,0.1)'}
+                             onMouseLeave={(e) => e.currentTarget.style.border = '1px solid rgba(255,255,255,0.02)'}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                                <Eye size={24} color="white" />
+                                <strong style={{ fontSize: '1.2rem' }}>Transparent Mode <span style={{ opacity: 0.5, fontWeight: 400, fontSize: '1rem' }}>(Default)</span></strong>
+                            </div>
+                            <p style={{ color: 'rgba(255,255,255,0.5)', fontSize: '1rem', lineHeight: 1.7, margin: 0 }}>
+                                Full plaintext reasoning traces are transmitted to the Oracle for standard SaaS debugging and rapid AI alignment. Perfect for public or non-sensitive operations where maximum visibility is required.
+                            </p>
+                        </div>
+                        
+                        {/* Mode 2 */}
+                        <div style={{ background: 'rgba(212, 175, 55, 0.08)', border: '1px solid rgba(212, 175, 55, 0.3)', borderRadius: '16px', padding: '32px', transition: 'all 0.3s', cursor: 'default', boxShadow: 'inset 0 0 30px rgba(212,175,55,0.05), 0 0 20px rgba(212,175,55,0.15)' }}
+                             onMouseEnter={(e) => {
+                                 e.currentTarget.style.border = '1px solid rgba(212, 175, 55, 0.6)';
+                                 e.currentTarget.style.boxShadow = 'inset 0 0 40px rgba(212,175,55,0.1), 0 0 30px rgba(212,175,55,0.25)';
+                             }}
+                             onMouseLeave={(e) => {
+                                 e.currentTarget.style.border = '1px solid rgba(212, 175, 55, 0.3)';
+                                 e.currentTarget.style.boxShadow = 'inset 0 0 30px rgba(212,175,55,0.05), 0 0 20px rgba(212,175,55,0.15)';
+                             }}>
+                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '20px' }}>
+                                <Lock size={24} color="var(--gold)" />
+                                <strong style={{ fontSize: '1.2rem', color: 'var(--gold)' }}>Sovereign ZK-Mode <span style={{ opacity: 0.8, fontWeight: 400, fontSize: '1rem' }}>(Enterprise)</span></strong>
+                            </div>
+                            <p style={{ color: 'rgba(255,255,255,0.7)', fontSize: '1rem', lineHeight: 1.7, margin: 0 }}>
+                                Traces never leave local hardware. The SDK generates a mathematical Zero-Knowledge Proof (ZK-Proof) to guarantee compliance without exposing sensitive data to the network. Essential for healthcare, finance, and confidential IP.
+                            </p>
+                        </div>
+                    </div>
+                </motion.div>
+            </div>
+        </section>
+    );
+};
+
+export const CoreFeatures = () => {
+    return (
+        <>
+            <TrustGapSection />
+            <PrivacyArchitectureSection />
+            <DevQuickstartSection />
+            <ProgrammableEscrowsSection />
+            <EconomicUseCasesSection />
+        </>
     );
 };

@@ -25,6 +25,17 @@ The Integrity Protocol operates through a rigorous 5-Node E2E Validation Lifecyc
 4. **Node 4: Mathematical Verification (ZK-ML):** Aztec Noir Zero-Knowledge proofs verify local execution at the edge, ensuring compliance (e.g., HIPAA) without exposing raw sensitive data to the network.
 5. **Node 5: Economic Observability (Layer 0 Oracle):** An isolated Rust-based oracle engine processes telemetry, enforces domain-specific scoring formulas, and anchors Merkle roots back to Base L2.
 
+## Dual-Mode Privacy Architecture
+
+The Integrity Protocol gives developers complete control over how their AI telemetry is stored, accommodating both standard transparent debugging and enterprise-grade absolute privacy.
+
+*   **Mode 1: Transparent Mode (Default)**
+    *   **How it works:** Full plaintext reasoning traces and prompts are sent to the Rust Oracle and stored in a traditional database. 
+    *   **Use case:** Standard Web2 apps, Discord bots, and general SaaS where developers want to easily log into the Dashboard and read their AI's thought process to debug hallucinations.
+*   **Mode 2: Sovereign ZK-Mode (Enterprise/HIPAA)**
+    *   **How it works:** Traces are intercepted but **never leave the user's local hardware**. The SDK hashes the trace locally, generates a Zero-Knowledge Proof (ZK-Proof), and sends *only the mathematical proof* to the Oracle.
+    *   **Use case:** Healthcare (Xibalba Shield), financial trading, and proprietary legal AI. The Oracle database receives zero plaintext data, ensuring absolute compliance even if the database is compromised.
+
 ## Protocol Architecture
 
 ```mermaid

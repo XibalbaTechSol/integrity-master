@@ -3,10 +3,6 @@ import { Fingerprint, Database, Lock, Cpu, Globe, GitBranch, Copy, Zap, ArrowRig
 import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { useIsMobile } from '../../utils/useIsMobile';
-import { ProtocolStats } from '../legacy-ui/ProtocolStats';
-import { BlockchainVisualizer } from '../legacy-ui/BlockchainVisualizer';
-import { RequestStream } from '../legacy-ui/RequestStream';
-import { LiveVerificationBridge } from '../legacy-ui/LiveVerificationBridge';
 
 export const IdentityCeilingsSection = () => {
     const isMobile = useIsMobile();
@@ -350,67 +346,12 @@ export const SmartContractSection = () => {
     );
 };
 
-export const NetworkVitalsSection = () => {
-    const isMobile = useIsMobile();
+export const AdvancedFeatures = () => {
     return (
-        <section id="network" style={{ 
-            padding: isMobile ? '60px 20px' : '120px 60px', 
-            background: 'radial-gradient(circle at center, rgba(16, 185, 129, 0.05) 0%, var(--navy-deep) 60%)', 
-            borderTop: '1px solid rgba(16, 185, 129, 0.1)',
-            position: 'relative',
-            overflow: 'hidden'
-        }}>
-            {/* Radar Grid Background */}
-            <div style={{
-                position: 'absolute', inset: 0, opacity: 0.1, pointerEvents: 'none',
-                backgroundImage: 'linear-gradient(rgba(16, 185, 129, 0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(16, 185, 129, 0.5) 1px, transparent 1px)',
-                backgroundSize: '40px 40px'
-            }} />
-            
-            <div style={{ maxWidth: '1400px', margin: '0 auto', position: 'relative', zIndex: 1 }}>
-                <div style={{ textAlign: 'center', marginBottom: '80px' }}>
-                    <span style={{ color: '#10b981', fontSize: '0.65rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: '0.5em', display: 'block', marginBottom: '16px' }}>
-                        Live Telemetry Stream
-                    </span>
-                    <h2 style={{ fontSize: isMobile ? '2.5rem' : '3.5rem', fontWeight: 800, marginBottom: '24px', lineHeight: 1.1 }}>
-                        Global Protocol <span style={{ color: '#10b981' }}>Vitals.</span>
-                    </h2>
-                    <p style={{ color: 'rgba(255,255,255,0.5)', maxWidth: '650px', margin: '0 auto', fontSize: '1.1rem', lineHeight: 1.6 }}>
-                        Real-time intelligence from the Integrity Network. Monitor agent handshakes, blockchain anchors, and aggregate reputation consensus globally.
-                    </p>
-                </div>
-
-                <ProtocolStats />
-
-                <div style={{ display: 'grid', gridTemplateColumns: isMobile ? '1fr' : 'repeat(3, 1fr)', gap: '24px', marginTop: '40px' }}>
-                    <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', height: isMobile ? '400px' : '600px', overflow: 'hidden', padding: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
-                        <div style={{ padding: '24px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', justifyContent: 'space-between', alignItems: 'center', background: 'rgba(255,255,255,0.02)' }}>
-                            <div style={{ display: 'flex', alignItems: 'center', gap: '12px' }}>
-                                <Globe size={18} className="pulse" style={{ color: 'var(--gold)' }} />
-                                <span style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.1em' }}>TOPOLOGY</span>
-                            </div>
-                            <div style={{ fontSize: '0.65rem', color: 'rgba(255,255,255,0.3)', fontWeight: 700 }}>{isMobile ? 'ACTIVE' : '8,453 NODES ACTIVE'}</div>
-                        </div>
-                        <div style={{ height: 'calc(100% - 70px)' }}>
-                            <BlockchainVisualizer />
-                        </div>
-                    </div>
-
-                    <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', height: isMobile ? '400px' : '600px', overflow: 'hidden', padding: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
-                        <RequestStream />
-                    </div>
-
-                    <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', height: isMobile ? '400px' : '600px', overflow: 'hidden', padding: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>
-                        <div style={{ padding: '24px', borderBottom: '1px solid rgba(255,255,255,0.05)', display: 'flex', alignItems: 'center', gap: '12px', background: 'rgba(255,255,255,0.02)' }}>
-                            <Zap size={18} style={{ color: 'var(--gold)' }} />
-                            <span style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.1em' }}>BRIDGE</span>
-                        </div>
-                        <div style={{ padding: '24px', height: 'calc(100% - 70px)', overflowY: 'auto' }}>
-                            <LiveVerificationBridge />
-                        </div>
-                    </div>
-                </div>
-            </div>
-        </section>
+        <>
+            <IdentityCeilingsSection />
+            <ZeroKnowledgeSection />
+            <SmartContractSection />
+        </>
     );
 };

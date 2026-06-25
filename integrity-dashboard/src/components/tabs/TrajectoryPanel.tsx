@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Panel } from '../shared/Panel';
-import { BrainCircuit, Wrench, FileEdit, AlertTriangle, ShieldCheck } from 'lucide-react';
+import { BrainCircuit, Wrench, FileEdit, AlertTriangle, ShieldCheck, Activity } from 'lucide-react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { API_BASE } from '../../constants';
-// Ensure Activity icon is imported locally since we used it.
-import { Activity } from 'lucide-react';
+import { useDashboard } from '../../context/useDashboard';
 
 const MOCK_TRAJECTORIES = [
   {
@@ -22,8 +21,40 @@ const MOCK_TRAJECTORIES = [
 ];
 
 export function TrajectoryPanel() {
+  const { selectedAgent } = useDashboard();
   const [trajectories, setTrajectories] = useState<any[]>(MOCK_TRAJECTORIES);
   const [activeTraj, setActiveTraj] = useState<any>(MOCK_TRAJECTORIES[0]);
+
+  // Filter trajectories for the selected agent
+  const filteredTrajectories = selectedAgent
+    ? trajectories.filter(t => 
+        t.agent_address?.toLowerCase() === selectedAgent.eth_address?.toLowerCase() || 
+        t.agent_id === selectedAgent.agent_id ||
+        t.agent_id === selectedAgent.alias
+      )
+    : trajectories;
+
+  const displayTrajectories = filteredTrajectories.length > 0 ? filteredTrajectories : [
+    {
+      id: 'traj_idle',
+      intent: 'Awaiting dynamic SDK telemetry and pre-execution intents.',
+      status: 'Idle',
+      score: selectedAgent?.current_ais || 900,
+      steps: [
+        { id: 'si1', type: 'thought', message: 'Node status nominal. Standing by for incoming actions...', time: '12:00:00' }
+      ]
+    }
+  ];
+
+  // Auto-select the first matching trajectory when activeTraj is not in the filtered list
+  useEffect(() => {
+    if (displayTrajectories.length > 0) {
+      const activeStillValid = displayTrajectories.some(t => t.id === activeTraj?.id);
+      if (!activeStillValid) {
+        setActiveTraj(displayTrajectories[0]);
+      }
+    }
+  }, [selectedAgent, trajectories]);
 
   useEffect(() => {
     const fetchTrajectories = async () => {
@@ -33,9 +64,6 @@ export function TrajectoryPanel() {
           const data = await res.json();
           if (data.trajectories && data.trajectories.length > 0) {
             setTrajectories(data.trajectories);
-            if (!activeTraj || activeTraj.id === 'traj_01') {
-              setActiveTraj(data.trajectories[0]);
-            }
           }
         }
       } catch (err) {
@@ -45,7 +73,7 @@ export function TrajectoryPanel() {
     fetchTrajectories();
     const interval = setInterval(fetchTrajectories, 3000);
     return () => clearInterval(interval);
-  }, [activeTraj]);
+  }, []);
 
   return (
     <div className="flex-col gap-6">
@@ -55,7 +83,7 @@ export function TrajectoryPanel() {
         <div className="flex-col gap-6">
           <Panel title="Active Intent Trajectories" icon={<BrainCircuit size={18} />}>
             <div className="flex-col gap-3">
-              {trajectories.map((traj) => (
+              {displayTrajectories.map((traj) => (
                 <div 
                   key={traj.id}
                   onClick={() => setActiveTraj(traj)}

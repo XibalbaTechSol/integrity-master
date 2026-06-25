@@ -20,7 +20,7 @@ test.describe('Seeded Data Validation', () => {
     page.on('pageerror', err => console.log('BROWSER ERROR:', err.message));
     page.on('requestfailed', request => console.log('REQUEST FAILED:', request.url(), request.failure()?.errorText));
 
-    await page.goto('http://localhost:5173/dashboard');
+    await page.goto('http://localhost:4173/dashboard');
     // Wait for the app shell to load
     await page.waitForSelector('.app-shell', { timeout: 30000 });
   });

@@ -1,7 +1,7 @@
 import { test, expect } from '@playwright/test';
 
 test('dashboard loads all advanced capabilities tabs', async ({ page }) => {
-  await page.goto('http://localhost:5173');
+  await page.goto('http://localhost:4173');
   
   // Test Compliance Tab
   await page.click('text=Compliance');

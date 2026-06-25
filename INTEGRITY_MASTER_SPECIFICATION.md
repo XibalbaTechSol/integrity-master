@@ -155,9 +155,14 @@ To remove the friction of gas management and raw private key handling:
 *   **KMS/HSM:** Direct routing of signing requests to HSMs ensures private keys never exist in standard system memory.
 *   **Key Sovereignty:** Agents own their private DID keys, enabling true economic sovereignty.
 
-### 7.2. Privacy Model (PHI Edge-Blinding)
-*   **Strict No-PHI Policy:** No Protected Health Information touches the public ledger.
-*   **Anonymous Pointers:** Uses HMAC-SHA256 anonymous pointers to anchor hashes of hashes, making patient reconstruction impossible.
+### 7.2. Dual-Mode Privacy Architecture (PHI Edge-Blinding)
+The protocol supports two distinct data storage modes configured via the SDK, ensuring absolute compliance for high-stakes verticals.
+
+*   **Mode 1: Transparent Logging (Default)**
+    *   Full plaintext reasoning traces are transmitted to the Oracle and stored in PostgreSQL. Designed for standard applications where developer debugging and trace visibility are prioritized over absolute privacy.
+*   **Mode 2: Sovereign ZK-Mode (Strict No-PHI Policy)**
+    *   Designed for Xibalba Shield and healthcare integrations. Traces are intercepted but **never leave the local hardware**. The SDK hashes the trace and generates an UltraPlonk Zero-Knowledge Proof locally. Only the ZK-Proof and the hash are submitted to the Oracle.
+    *   **Anonymous Pointers:** Uses HMAC-SHA256 anonymous pointers to anchor hashes of hashes on-chain, making patient or proprietary data reconstruction mathematically impossible.
 
 ### 7.3. Data Schemas
 *   **AIS Schema:** Tracks Entropy, Grounding, Sacrifice, and Compliance.

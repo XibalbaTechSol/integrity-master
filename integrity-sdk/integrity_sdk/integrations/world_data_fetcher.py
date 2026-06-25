@@ -3,6 +3,7 @@ from typing import Dict, Any, Optional
 import time
 import hmac
 import hashlib
+import json
 
 class WorldDataFetcher:
     """

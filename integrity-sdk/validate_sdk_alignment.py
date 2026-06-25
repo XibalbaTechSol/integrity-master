@@ -12,7 +12,7 @@ def validate_sdk_alignment():
     print("\n--- [SDK VALIDATION] Initializing IntegrityClient ---")
     
     # Use Oracle on port 8081
-    ORACLE_URL = "http://localhost:8081"
+    ORACLE_URL = "http://localhost:8080"
     AGENT_ID = "0xSDK_Validation_001"
     DOMAIN = "shield"
     

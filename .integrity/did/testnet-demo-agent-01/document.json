@@ -1,0 +1,36 @@
+{
+  "@context": [
+    "https://www.w3.org/ns/did/v1",
+    "https://w3id.org/security/suites/ed25519-2020/v1"
+  ],
+  "id": "did:xibalba:52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5:testnet-demo-agent-01",
+  "created": "2026-06-25T01:34:29Z",
+  "updated": "2026-06-25T01:34:29Z",
+  "verificationMethod": [
+    {
+      "id": "did:xibalba:52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5:testnet-demo-agent-01#key-1",
+      "type": "Ed25519VerificationKey2020",
+      "controller": "did:xibalba:52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5:testnet-demo-agent-01",
+      "publicKeyMultibase": "zmkW8G0C4o3IOiuWay/i0vc5TApBRZLyRsT6aysvesRM="
+    }
+  ],
+  "authentication": [
+    "did:xibalba:52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5:testnet-demo-agent-01#key-1"
+  ],
+  "assertionMethod": [
+    "did:xibalba:52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5:testnet-demo-agent-01#key-1"
+  ],
+  "service": [
+    {
+      "id": "did:xibalba:52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5:testnet-demo-agent-01#integrity-oracle",
+      "type": "IntegrityOracle",
+      "serviceEndpoint": "http://localhost:3000/ingest"
+    }
+  ],
+  "hardwareAttestation": {
+    "fingerprint": "52f9ea2197fd0e039a9b64813142a03f60d30ac4d7d13bcaba2c65ed69e0f5c5",
+    "hostname": "xibalba-HP-Desktop-M01-F0xxx",
+    "cpuModel": "AMD Ryzen 3 3200G with Radeon Vega Graphics",
+    "macAddress": "e8:b1:fc:fd:3d:3d"
+  }
+}

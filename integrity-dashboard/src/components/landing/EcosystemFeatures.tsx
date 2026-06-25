@@ -340,7 +340,6 @@ export const FooterSection = ({ setIsContactOpen, setContactType }) => {
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? '16px 24px' : '32px 48px', marginBottom: '48px', padding: isMobile ? '0 20px' : '0' }}>
                 {[
                     { label: 'Core Protocol', link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md" },
-                    { label: 'Governance', link: "/blog" },
                     { label: 'Insurance Vault', link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/erc_8004.md" },
                     { label: 'Developer SDK', link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/integration-guide.md" },
                     { label: 'Technical Blog', link: "/blog" },
@@ -390,5 +389,18 @@ export const FooterSection = ({ setIsContactOpen, setContactType }) => {
                 © 2026 Xibalba Technology Solutions. Integrity Protocol v8.3 is a sovereign reputation infrastructure.
             </p>
         </footer>
+    );
+};
+
+export const EcosystemFeatures = ({ setIsContactOpen, setContactType }) => {
+    return (
+        <>
+            <SdkIntegrationSection />
+            <TokenEconomySection />
+            <DaoGovernanceSection />
+            <CrossChainSection />
+            <RoadmapSection />
+            <FooterSection setIsContactOpen={setIsContactOpen} setContactType={setContactType} />
+        </>
     );
 };

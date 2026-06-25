@@ -4,6 +4,8 @@ import { api } from '../services/api';
 import type { Agent, ProtocolStats, TabId } from '../types';
 import { DashboardContext } from './useDashboard';
 import type { ToastMessage } from './useDashboard';
+import { auth, googleProvider } from '../firebase';
+import { signInWithPopup, signOut as firebaseSignOut } from 'firebase/auth';
 
 export function DashboardProvider({ children }: { children: ReactNode }) {
   const [agents, setAgents] = useState<Agent[]>([]);
@@ -14,6 +16,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   const [isLoading, setIsLoading] = useState(true);
   const [isBackendOffline, setIsBackendOffline] = useState(false);
   const [toasts, setToasts] = useState<ToastMessage[]>([]);
+  const [user, setUser] = useState<any>(null);
   
   const toastCounter = useRef(0);
   
@@ -83,11 +86,36 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     }
   }, [addToast]);
 
+  const signInWithGoogle = useCallback(async () => {
+    try {
+      await signInWithPopup(auth, googleProvider);
+      addToast('success', 'Authenticated with Google successfully');
+    } catch (err: any) {
+      addToast('error', `Authentication failed: ${err.message}`);
+    }
+  }, [addToast]);
+
+  const signOut = useCallback(async () => {
+    try {
+      await firebaseSignOut(auth);
+      addToast('info', 'Signed out from Google');
+    } catch (err: any) {
+      addToast('error', `Sign out failed: ${err.message}`);
+    }
+  }, [addToast]);
+
   useEffect(() => {
     const savedWallet = localStorage.getItem('integrity_wallet_connected');
     if (savedWallet) {
       setWalletAddress(savedWallet);
     }
+  }, []);
+
+  useEffect(() => {
+    const unsubscribe = auth.onAuthStateChanged((u) => {
+      setUser(u);
+    });
+    return () => unsubscribe();
   }, []);
 
   const fetchData = useCallback(async () => {
@@ -177,9 +205,12 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       isLoading,
       isBackendOffline,
       toasts,
+      user,
       selectAgent: setSelectedAgentAddr,
       setActiveTab,
       connectWallet,
+      signInWithGoogle,
+      signOut,
       fetchData,
       addToast,
       removeToast

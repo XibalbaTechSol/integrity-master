@@ -8,8 +8,8 @@ frictionless, automatic zero-knowledge telemetry logging to the Integrity Oracle
 import time
 from typing import Any, Dict, List, Optional
 try:
-    from langchain.callbacks.base import BaseCallbackHandler
-    from langchain.schema import LLMResult
+    from langchain_core.callbacks.base import BaseCallbackHandler
+    from langchain_core.outputs import LLMResult
 except ImportError:
     # Graceful degradation if LangChain isn't installed
     class BaseCallbackHandler:
@@ -56,26 +56,27 @@ class IntegrityLangChainCallback(BaseCallbackHandler):
             for i, generation in enumerate(response.generations):
                 for gen in generation:
                     text_output = gen.text
+                    reasoning_content = None
+                    if hasattr(gen, 'message') and hasattr(gen.message, 'additional_kwargs'):
+                        reasoning_content = gen.message.additional_kwargs.get("reasoning_content")
                     
                     # Extract token metadata if available
                     token_usage = response.llm_output.get("token_usage", {}) if response.llm_output else {}
                     
-                    # Build mock "raw" payload standard to be parsed by extractor
+                    # Build mock "raw" payload standard
                     mock_payload = {
-                        "text": text_output,
-                        "usage": token_usage,
-                        "model": response.llm_output.get("model_name", "langchain-generic") if response.llm_output else "langchain-generic"
+                        "text_output": text_output,
+                        "token_usage": token_usage,
+                        "model_name": response.llm_output.get("model_name", "langchain-generic") if response.llm_output else "langchain-generic",
+                        "framework": "langchain",
+                        "run_id": run_id,
+                        "latency_ms": latency_ms,
+                        "reasoning_content": reasoning_content,
                     }
 
                     # Log via IntegrityClient (which handles ZK proving and DID binding)
-                    self.client.log_inference(
-                        provider="langchain",
-                        raw_data=mock_payload,
-                        latency_ms=latency_ms,
-                        extra_metadata={
-                            "framework": "langchain",
-                            "run_id": run_id
-                        }
+                    self.client.log_telemetry(
+                        metadata=mock_payload,
                     )
         except Exception as e:
             # Fallback to avoid crashing agent

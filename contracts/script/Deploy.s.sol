@@ -22,6 +22,13 @@ import {AgentFactory}          from "../src/framework/AgentFactory.sol";
 // ── Shield (HIPAA layer — deploy contract only, no PHI logic here) ───────────
 import {AuditShield}           from "../src/shield/AuditShield.sol";
 
+// ── Financial / Marketplace Contracts ─────────────────────────────────────────
+import {AgentMarketplace}      from "../src/AgentMarketplace.sol";
+import {MedicalCreditLine}     from "../src/MedicalCreditLine.sol";
+import {ClinicalTrialBond}     from "../src/ClinicalTrialBond.sol";
+import {ClaimsAdjudicator}     from "../src/ClaimsAdjudicator.sol";
+import {SmartBAA}              from "../src/SmartBAA.sol";
+
 /**
  * @title Deploy
  * @notice Full deployment of the Integrity Protocol to a target network.
@@ -63,6 +70,11 @@ contract Deploy is Script {
     StateAnchor           public stateAnchor;
     Slasher               public slasher;
     AuditShield           public auditShield;
+    AgentMarketplace      public agentMarketplace;
+    MedicalCreditLine     public medicalCreditLine;
+    ClinicalTrialBond     public clinicalTrialBond;
+    ClaimsAdjudicator     public claimsAdjudicator;
+    SmartBAA              public smartBAA;
 
     function run() external {
         uint256 deployerKey = vm.envUint("DEPLOYER_PRIVATE_KEY");
@@ -135,13 +147,33 @@ contract Deploy is Script {
         agentFactory = new AgentFactory(deployer);
         console.log("[12/13] AgentFactory      :", address(agentFactory));
 
-        // ── Step 13: Audit Shield (domain-agnostic audit anchoring layer) ─────
+        // ── Step 13: Audit Shield ────────────────────────────────────────────
         auditShield = new AuditShield();
-        console.log("[13/13] AuditShield       :", address(auditShield));
+        console.log("[13/18] AuditShield        :", address(auditShield));
 
-        // ── Post-Deployment: Slasher (requires IntegrityProtocol + Registry) ──
+        // ── Step 14: Agent Marketplace ───────────────────────────────────────
+        agentMarketplace = new AgentMarketplace(address(itkToken), address(reputationRegistry));
+        console.log("[14/18] AgentMarketplace   :", address(agentMarketplace));
+
+        // ── Step 15: Smart BAA ───────────────────────────────────────────────
+        smartBAA = new SmartBAA(address(itkToken), address(reputationRegistry));
+        console.log("[15/18] SmartBAA           :", address(smartBAA));
+
+        // ── Step 16: Medical Credit Line ─────────────────────────────────────
+        medicalCreditLine = new MedicalCreditLine(address(itkToken), address(smartBAA), address(reputationRegistry));
+        console.log("[16/18] MedicalCreditLine  :", address(medicalCreditLine));
+
+        // ── Step 17: Clinical Trial Bond ─────────────────────────────────────
+        clinicalTrialBond = new ClinicalTrialBond(address(itkToken), address(smartBAA), address(reputationRegistry));
+        console.log("[17/18] ClinicalTrialBond  :", address(clinicalTrialBond));
+
+        // ── Step 18: Claims Adjudicator ──────────────────────────────────────
+        claimsAdjudicator = new ClaimsAdjudicator(address(itkToken), address(smartBAA), address(reputationRegistry));
+        console.log("[18/18] ClaimsAdjudicator  :", address(claimsAdjudicator));
+
+        // ── Step 19: Slasher (Deferred) ──────────────────────────────────────
         slasher = new Slasher(address(integrityProtocol), address(reputationRegistry));
-        console.log("[+] Slasher               :", address(slasher));
+        console.log("[19/19] Slasher            :", address(slasher));
 
         // ── Post-Deployment Configuration ────────────────────────────────────
 

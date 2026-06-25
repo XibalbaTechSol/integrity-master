@@ -1,7 +1,7 @@
-.PHONY: help install build test lint clean
+.PHONY: help install build test lint clean demo
 
 help:
-	@echo "Available targets: install build test lint clean"
+	@echo "Available targets: install build test lint clean demo"
 
 # === Per-package targets ===
 install-sdk:
@@ -44,4 +44,13 @@ test-contracts:
 test-dashboard:
 	cd integrity-dashboard && npm run lint
 
-test: test-sdk test-oracle test-contracts test-dashboard
+test-bcc:
+	cd bcc_middleware && pip install -e . && pytest
+
+test-cli:
+	cd integrity-cli && pytest
+
+test: test-sdk test-oracle test-contracts test-dashboard test-bcc test-cli
+
+demo:
+	docker compose up --build
