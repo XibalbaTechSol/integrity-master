@@ -120,6 +120,9 @@
 - Updated `check_sla_breach` signature to accept `agent: Agent = None`.
 - Used `agent_map` inside `scan_all` loop to pass `Agent` object directly to `check_sla_breach`.
 * New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+- [2026-06-25] update | perf(backend): fix N+1 query in get_ledger_history
+  - Resolved an N+1 query issue in `integrity-oracle/backend/services/trust_api.py` `get_ledger_history` endpoint.
+  - Replaced individual `Agent` lookups inside a loop with a bulk `.in_()` pre-fetch query mapping to eliminate latency.
 ## [2026-06-25] update | refactor(sdk): use dataclass for log_model_switch
 - Refactored `log_model_switch` in `integrity-sdk/integrity_sdk/client.py` to use a new `ModelSwitchEvent` dataclass.
 - Updated calls across tests and internal SDK tracking logic to support the new parameter configuration.
