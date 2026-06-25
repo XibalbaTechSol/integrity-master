@@ -102,3 +102,5 @@
 * Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
 * The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
 * New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+## [2024-06-25] update | Testing Telemetry Analyzer
+- Added 7 unit test functions to `integrity-sdk/tests/unit/test_telemetry.py` to cover calculation methods in `CompositeSignalAnalyzer`.
