@@ -105,3 +105,5 @@
 ## [2026-06-25] update | refactor(sdk): use dataclass for log_model_switch
 - Refactored `log_model_switch` in `integrity-sdk/integrity_sdk/client.py` to use a new `ModelSwitchEvent` dataclass.
 - Updated calls across tests and internal SDK tracking logic to support the new parameter configuration.
+## [2024-06-25] update | Testing Telemetry Analyzer
+- Added 7 unit test functions to `integrity-sdk/tests/unit/test_telemetry.py` to cover calculation methods in `CompositeSignalAnalyzer`.
