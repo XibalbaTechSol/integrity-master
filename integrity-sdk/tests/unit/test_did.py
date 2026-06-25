@@ -42,3 +42,63 @@ def test_did(mocker, tmp_path):
     did.load_did_document("test_agent")
     
     did.derive_evm_address(b"seed"*8)
+
+def test_make_did():
+    # Test typical case
+    fingerprint = "0a1b2c3d4e5f6g7h8i9j"
+    expected = f"did:xibalba:{fingerprint}"
+    assert did._make_did(fingerprint) == expected
+
+    # Test edge case: empty fingerprint
+    assert did._make_did("") == "did:xibalba:"
+
+    # Test edge case: special characters
+    assert did._make_did("!@#$%^&*()") == "did:xibalba:!@#$%^&*()"
+
+def test_build_did_document_detailed(mocker):
+    # Mock hardware attestation
+    mocker.patch("integrity_sdk.did.get_hardware_attestation", return_value={
+        "hostname": "test-host",
+        "cpu_model": "test-cpu",
+        "mac_address": "00:11:22:33:44:55"
+    })
+
+    # Mock time to make test deterministic
+    mocker.patch("integrity_sdk.did._iso_now", return_value="2023-01-01T00:00:00Z")
+
+    did_str = "did:xibalba:fingerprint123"
+    pub_key = b"public_key_bytes"
+    fingerprint = "fingerprint123"
+
+    doc = did._build_did_document(did_str, pub_key, fingerprint)
+
+    # Check required properties
+    assert "@context" in doc
+    assert doc["id"] == did_str
+    assert doc["created"] == "2023-01-01T00:00:00Z"
+    assert doc["updated"] == "2023-01-01T00:00:00Z"
+
+    # Check verification methods
+    assert len(doc["verificationMethod"]) == 1
+    vm = doc["verificationMethod"][0]
+    assert vm["id"] == f"{did_str}#key-1"
+    assert vm["type"] == "Ed25519VerificationKey2020"
+    assert vm["controller"] == did_str
+    assert vm["publicKeyMultibase"].startswith("z")
+
+    # Check assertions and authentications
+    assert doc["authentication"] == [f"{did_str}#key-1"]
+    assert doc["assertionMethod"] == [f"{did_str}#key-1"]
+
+    # Check services
+    assert len(doc["service"]) == 1
+    svc = doc["service"][0]
+    assert svc["id"] == f"{did_str}#integrity-oracle"
+    assert svc["type"] == "IntegrityOracle"
+
+    # Check hardware attestation
+    hw = doc["hardwareAttestation"]
+    assert hw["fingerprint"] == fingerprint
+    assert hw["hostname"] == "test-host"
+    assert hw["cpuModel"] == "test-cpu"
+    assert hw["macAddress"] == "00:11:22:33:44:55"
