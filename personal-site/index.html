@@ -1002,13 +1002,19 @@ result = <span class="code-kw">await</span> client.execute_with_integrity(
     <section id="contact" style="border-top: 1px solid var(--border-main);">
         <div class="container animate-in">
             <div class="text-center" style="max-width: 600px; margin: 0 auto;">
-                <span class="meta-label">Developer Access</span>
-                <h2>Join the Developer Beta</h2>
-                <p style="color: var(--text-secondary); margin: 1rem 0 2.5rem;">We are opening early access to the Python SDK for teams building autonomous agents that need verifiable execution and on-chain trust. Sign up below to get your API key.</p>
+                <span class="meta-label">Get in Touch</span>
+                <h2>Contact Xibalba Solutions</h2>
+                <p style="color: var(--text-secondary); margin: 1rem 0 2.5rem;">Interested in implementing verifiable execution and on-chain trust for your autonomous agents? Reach out to our team below to discuss partnerships, enterprise pricing, or developer access.</p>
                 
-                <form class="waitlist-form" action="https://xibalba-api.onrender.com/contact" method="POST">
-                    <input type="email" name="email" placeholder="Enter your work email" required class="waitlist-input">
-                    <button type="submit" class="btn waitlist-btn">Get API Key &rarr;</button>
+                <form class="waitlist-form" action="https://formsubmit.co/xibalbasolutions@gmail.com" method="POST">
+                    <input type="hidden" name="_subject" value="New contact from Xibalba Solutions Landing Page!">
+                    <input type="hidden" name="_captcha" value="false">
+                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
+                        <input type="text" name="name" placeholder="Your Name" required class="waitlist-input" style="flex: 1;">
+                        <input type="email" name="email" placeholder="Your Work Email" required class="waitlist-input" style="flex: 1;">
+                    </div>
+                    <textarea name="message" placeholder="How can we help? (Provide any necessary context)" required class="waitlist-input" style="width: 100%; min-height: 100px; margin-bottom: 15px; resize: vertical; padding: 12px; border-radius: 4px; border: 1px solid var(--border-main); background: var(--bg-secondary); color: var(--text-main); font-family: inherit;"></textarea>
+                    <button type="submit" class="btn waitlist-btn" style="width: 100%;">Send Message &rarr;</button>
                 </form>
                 <div id="waitlist-feedback" class="waitlist-feedback"></div>
             </div>

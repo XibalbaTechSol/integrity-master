@@ -124,9 +124,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 });
 
                 if (response.ok) {
-                    waitlistFeedback.innerHTML = "✓ Success! You've been added to the beta waitlist.";
+                    waitlistFeedback.innerHTML = "✓ Success! Your message has been sent. We'll be in touch soon.";
                     waitlistFeedback.classList.add("success", "visible");
-                    emailInput.value = "";
+                    waitlistForm.reset();
                 } else {
                     throw new Error("Form submission failed");
                 }
