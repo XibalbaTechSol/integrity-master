@@ -46,7 +46,7 @@ export const TrustGapSection = () => {
     );
 };
 
-export const DevQuickstartSection = () => {
+export const DevQuickstartSection = ({ setContactType, setIsContactOpen }: { setContactType: any, setIsContactOpen: any }) => {
     const isMobile = useIsMobile();
     const navigate = useNavigate();
     return (
@@ -63,8 +63,8 @@ export const DevQuickstartSection = () => {
                             We know that provisioning hardware-backed DIDs can slow down development. That's why we've introduced Developer API Keys. Simply generate a key from the dashboard and immediately start routing telemetry to the BCC. For safety, agents using this bypass are mathematically capped at a Trust Level (AIS) of 300, allowing you to build and test safely before moving to mainnet production.
                         </p>
                         <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap' }}>
-                            <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '1rem', boxShadow: '0 10px 30px rgba(212,175,55,0.2)' }}>
-                                Generate API Key
+                            <button onClick={() => { setContactType('developer'); setIsContactOpen(true); }} className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '1rem', boxShadow: '0 10px 30px rgba(212,175,55,0.2)' }}>
+                                Request API Key
                             </button>
                             <a href="https://github.com/XibalbaTechSol/integrity-protocol/tree/main/docs" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '16px 32px', border: '1px solid rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', fontSize: '1rem' }}>
                                 Read the Docs

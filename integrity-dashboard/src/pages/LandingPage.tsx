@@ -25,7 +25,7 @@ export const LandingPage = () => {
                     <h2 style={{ fontSize: '2.5rem', fontWeight: 800 }}>Start Building</h2>
                     <p style={{ color: 'rgba(255,255,255,0.6)' }}>Integrate the Integrity Protocol into your stack.</p>
                 </div>
-                <DevQuickstartSection />
+                <DevQuickstartSection setContactType={setContactType} setIsContactOpen={setIsContactOpen} />
                 <SdkIntegrationSection />
             </div>
 

@@ -30,13 +30,33 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, ini
         setStatus('loading');
         
         try {
-            await axios.post(`${API_BASE}/v1/contact`, formData);
-            setStatus('success');
-            setTimeout(() => {
-                onClose();
-                setStatus('idle');
-                setFormData({ ...formData, message: '' }); // reset message
-            }, 3000);
+            const response = await fetch('https://formsubmit.co/ajax/xibalbasolutions@gmail.com', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Accept': 'application/json'
+                },
+                body: JSON.stringify({
+                    name: formData.name,
+                    email: formData.email,
+                    organization: formData.organization,
+                    inquiry_type: formData.inquiry_type,
+                    message: formData.message,
+                    _subject: `New Inquiry: ${formData.inquiry_type} from ${formData.name}`,
+                    _template: 'box'
+                })
+            });
+            
+            if (response.ok) {
+                setStatus('success');
+                setTimeout(() => {
+                    onClose();
+                    setStatus('idle');
+                    setFormData({ ...formData, message: '' }); // reset message
+                }, 3000);
+            } else {
+                throw new Error('Form submission failed');
+            }
         } catch (error) {
             console.error("Error submitting contact form", error);
             setStatus('error');
