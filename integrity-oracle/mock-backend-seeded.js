@@ -318,7 +318,18 @@ const server = http.createServer((req, res) => {
   } else if (req.url.startsWith('/v1/agent/') && req.url.endsWith('/identity')) {
     sendJSON({ did_document: { id: `did:intg:${req.url.split('/')[3]}` } });
   } else if (req.url.startsWith('/v1/agent/') && req.url.endsWith('/provenance')) {
-    sendJSON([]);
+    const address = req.url.split('/')[3];
+    const agentTx = transactions.filter(t => t.agent_id.toLowerCase() === address.toLowerCase()).slice(0, 10);
+    const logs = agentTx.map(t => ({
+      log_id: `log_${Math.random().toString(36).substr(2, 9)}`,
+      action: "Execution Result",
+      input_hash: `0x${Math.random().toString(16).substring(2, 20)}`,
+      output_hash: t.on_chain_tx_hash,
+      model_used: "Llama 3 (8B) [TEE]",
+      timestamp: t.completion_time_ms || Date.now(),
+      created_at: new Date(t.completion_time_ms || Date.now()).toISOString()
+    }));
+    sendJSON(logs);
   } else if (req.url === '/v1/shield/baas') {
     sendJSON([
       { id: 'baa_001', coveredEntity: '0xHospital_A', status: 'active', signedAt: '2026-05-12', stake: '5000 ITK' },
@@ -328,6 +339,24 @@ const server = http.createServer((req, res) => {
     sendJSON({ contract_address: `0x${Math.random().toString(16).substring(2, 42)}`, status: 'deployed' });
   } else if (req.url === '/v1/contracts/list-market' && req.method === 'POST') {
     sendJSON({ status: 'listed' });
+  } else if (req.url === '/v1/disputes/raise' && req.method === 'POST') {
+    let body = '';
+    req.on('data', chunk => { body += chunk.toString(); });
+    req.on('end', () => {
+      const data = body ? JSON.parse(body) : {};
+      const dealId = data.deal_id;
+      const tx = transactions.find(t => t.on_chain_tx_hash === dealId);
+      if (tx) {
+        tx.dispute_status = 'PENDING';
+      }
+      sendJSON({
+        dispute_id: 'dsp_' + Math.random().toString(16).substring(2, 18),
+        deal_id: dealId || '',
+        status: 'Open',
+        created_at: new Date().toISOString()
+      });
+    });
+    return;
   } else if (req.url === '/v1/transactions/report' && req.method === 'POST') {
     let body = '';
     req.on('data', chunk => { body += chunk.toString(); });

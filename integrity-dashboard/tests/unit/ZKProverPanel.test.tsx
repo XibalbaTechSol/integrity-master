@@ -26,7 +26,7 @@ describe('ZKProverPanel', () => {
   });
 
   it('renders initial state', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });
@@ -37,13 +37,13 @@ describe('ZKProverPanel', () => {
   });
 
   it('generates a ZK proof successfully', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: vi.fn(),
     });
 
-    (api.generateZKProof as any).mockResolvedValue({
+    (api.generateZKProof as unknown).mockResolvedValue({
       proof: {
         proof_hash: '0xproof123',
         proof_data: '{"data": "mock"}'
@@ -62,13 +62,13 @@ describe('ZKProverPanel', () => {
   });
 
   it('handles fallback when api fails', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: vi.fn(),
     });
 
-    (api.generateZKProof as any).mockRejectedValue(new Error('Offline'));
+    (api.generateZKProof as unknown).mockRejectedValue(new Error('Offline'));
 
     render(<ZKProverPanel />);
     

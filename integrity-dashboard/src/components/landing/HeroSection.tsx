@@ -22,7 +22,7 @@ export const HeroSection = ({ setContactType, setIsContactOpen, setIsRegistryOpe
                     <img 
                         src="/XibalbaSolutionsLogo.png" 
                         alt="Xibalba Logo" 
-                        style={{ height: '140px', marginBottom: '32px', opacity: 1 }} 
+                        style={{ height: '220px', marginBottom: '40px', opacity: 1 }} 
                     />
                     <span style={{ color: 'var(--gold)', fontSize: isMobile ? '0.65rem' : '0.85rem', fontWeight: 900, textTransform: 'uppercase', letterSpacing: isMobile ? '0.3em' : '0.6em', marginBottom: '12px', display: 'block' }}>The Engine of Trust for the Agentic Economy</span>
 

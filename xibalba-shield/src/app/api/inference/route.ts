@@ -37,7 +37,7 @@ export async function POST(request: Request) {
       
       // Middleware uses Python's json.dumps(sort_keys=True)
       // We replicate this with a sorted object
-      const sortedContext = Object.keys(context).sort().reduce((acc: any, key) => {
+      const sortedContext = Object.keys(context).sort().reduce((acc: Record<string, unknown>, key) => {
         acc[key] = context[key as keyof typeof context];
         return acc;
       }, {});

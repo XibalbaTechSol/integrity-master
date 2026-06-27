@@ -21,7 +21,7 @@ describe('CompliancePanel', () => {
   });
 
   it('renders "Select an agent" when no agent is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });
@@ -31,7 +31,7 @@ describe('CompliancePanel', () => {
   });
 
   it('renders compliance scorecard when agent is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -42,7 +42,7 @@ describe('CompliancePanel', () => {
   });
 
   it('renders audit trail events', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });

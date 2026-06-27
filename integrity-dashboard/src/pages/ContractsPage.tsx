@@ -5,7 +5,6 @@ import { Panel } from '../components/shared/Panel';
 import { FactoryPanel } from '../components/tabs/FactoryPanel';
 import { ZKProverPanel } from '../components/tabs/ZKProverPanel';
 import { OracleRegistryPanel } from '../components/tabs/OracleRegistryPanel';
-import { BlockchainVisualizer } from '../components/legacy-ui/BlockchainVisualizer';
 import { ImmutableLedger } from '../components/legacy-ui/ImmutableLedger';
 import {
   Code2,
@@ -18,7 +17,7 @@ import {
 
 // ─── Types ───────────────────────────────────────────────────────────────────
 
-type ProtocolTab = 'Factory' | 'Oracles' | 'Ledger';
+type ProtocolTab = 'factory' | 'zk' | 'oracle' | 'ledger';
 
 interface TabConfig {
   id: ProtocolTab;
@@ -91,43 +90,18 @@ const StatCard = ({
   </div>
 );
 
-// ─── Tab definitions ─────────────────────────────────────────────────────────
-
-const TABS: TabConfig[] = [
-  { id: 'Factory', icon: <FileCode size={15} />, label: 'Factory' },
-  { id: 'Oracles', icon: <Database size={15} />, label: 'Oracles' },
-  { id: 'Ledger', icon: <Layers size={15} />, label: 'Ledger' },
+// ─── Sub-nav tabs ─────────────────────────────────────────────────────────────
+const TABS: { id: ProtocolTab; label: string; icon: React.ReactNode }[] = [
+  { id: 'factory', label: 'Factory', icon: <FileCode size={14} /> },
+  { id: 'zk',      label: 'ZK Prover', icon: <Shield size={14} /> },
+  { id: 'oracle',  label: 'Oracle', icon: <Database size={14} /> },
+  { id: 'ledger',  label: 'Ledger', icon: <Layers size={14} /> },
 ];
-
-// ─── Animation variants ───────────────────────────────────────────────────────
-
-const sectionVariants = {
-  hidden: { opacity: 0, y: 18 },
-  visible: { opacity: 1, y: 0, transition: { duration: 0.28, ease: 'easeOut' } },
-  exit: { opacity: 0, y: -12, transition: { duration: 0.18, ease: 'easeIn' } },
-};
 
 // ─── Main Page ────────────────────────────────────────────────────────────────
 
-export function ProtocolPage() {
-  const { stats, activeTab: globalActiveTab, setActiveTab: setGlobalActiveTab } = useDashboard() as any;
-
-  let activeTab: ProtocolTab = 'Factory';
-  if (globalActiveTab === 'oracle') {
-    activeTab = 'Oracles';
-  } else if (globalActiveTab === 'ledger' || globalActiveTab === 'zk') {
-    activeTab = 'Ledger';
-  }
-
-  const setActiveTab = (tab: ProtocolTab) => {
-    if (tab === 'Factory') {
-      setGlobalActiveTab('factory');
-    } else if (tab === 'Oracles') {
-      setGlobalActiveTab('oracle');
-    } else if (tab === 'Ledger') {
-      setGlobalActiveTab('ledger');
-    }
-  };
+export function ContractsPage() {
+  const { stats, activeTab, setActiveTab } = useDashboard() as any;
 
   const totalContracts = stats?.total_contracts ?? '—';
   const activeNodes = stats?.active_nodes ?? '—';
@@ -181,7 +155,7 @@ export function ProtocolPage() {
               letterSpacing: '-0.01em',
             }}
           >
-            Protocol
+            Contracts
           </h1>
         </div>
         <p
@@ -192,7 +166,7 @@ export function ProtocolPage() {
             paddingLeft: '48px',
           }}
         >
-          Smart contracts, ZK proofs, oracle feeds &amp; settlement ledger
+          Deploy custom contracts, create markets, and execute trades on the testnet
         </p>
       </motion.div>
 
@@ -220,22 +194,9 @@ export function ProtocolPage() {
         />
       </motion.div>
 
-      {/* ── Sub-nav pill tabs ── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.25, delay: 0.12 }}
-        style={{
-          display: 'flex',
-          gap: 'var(--space-2)',
-          padding: '4px',
-          background: 'var(--bg-secondary)',
-          borderRadius: 'var(--radius-md)',
-          border: '1px solid var(--glass-border)',
-          width: 'fit-content',
-        }}
-      >
-        {TABS.map((tab) => {
+      {/* ── Sub-navigation Tab Bar ───────────────────────────────────────── */}
+      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--glass-border)', paddingBottom: '8px', marginTop: 'var(--space-2)' }}>
+        {TABS.map(tab => {
           const isActive = activeTab === tab.id;
           return (
             <button
@@ -246,96 +207,63 @@ export function ProtocolPage() {
                 alignItems: 'center',
                 gap: '6px',
                 padding: '6px 16px',
-                borderRadius: 'calc(var(--radius-md) - 4px)',
-                border: 'none',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
                 cursor: 'pointer',
-                fontSize: '0.8125rem',
-                fontWeight: isActive ? 600 : 400,
-                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
                 background: isActive ? 'var(--primary-dim)' : 'transparent',
-                transition: 'all 0.18s ease',
-                outline: 'none',
+                border: '1px solid ' + (isActive ? 'var(--primary)' : 'var(--glass-border)'),
+                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                transition: 'all 0.15s'
               }}
-              aria-selected={isActive}
-              role="tab"
             >
-              <span
-                style={{
-                  color: isActive ? 'var(--primary)' : 'var(--text-muted)',
-                  display: 'flex',
-                  alignItems: 'center',
-                }}
-              >
-                {tab.icon}
-              </span>
+              {tab.icon}
               {tab.label}
             </button>
           );
         })}
-      </motion.div>
+      </div>
 
-      {/* ── Panel content (animated) ── */}
-      <AnimatePresence mode="wait">
-        {activeTab === 'Factory' && (
+      {/* ── Section Content (Tabbed) ── */}
+      <div style={{ marginTop: 'var(--space-2)' }}>
+        <AnimatePresence mode="wait">
           <motion.div
-            key="factory"
-            variants={sectionVariants as any}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            key={activeTab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
           >
-            <Panel
-              title="Contract Factory"
-              icon={<FileCode size={18} />}
-              style={{ background: 'transparent', border: 'none', padding: 0 } as any}
-            >
-              <FactoryPanel />
-            </Panel>
+            {activeTab === 'factory' && (
+              <Panel
+                title="Contract Factory"
+                icon={<FileCode size={18} />}
+                style={{ background: 'transparent', border: 'none', padding: 0 } as React.CSSProperties}
+              >
+                <FactoryPanel />
+              </Panel>
+            )}
+
+            {activeTab === 'oracle' && (
+              <Panel
+                title="Oracle Registry"
+                icon={<Database size={18} />}
+                style={{ background: 'transparent', border: 'none', padding: 0 } as React.CSSProperties}
+              >
+                <OracleRegistryPanel />
+              </Panel>
+            )}
+
+            {activeTab === 'zk' && <ZKProverPanel />}
+
+            {activeTab === 'ledger' && (
+              <Panel title="Immutable Settlement Ledger" icon={<Layers size={18} />}>
+                <ImmutableLedger />
+              </Panel>
+            )}
           </motion.div>
-        )}
-
-        {activeTab === 'Oracles' && (
-          <motion.div
-            key="oracles"
-            variants={sectionVariants as any}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <Panel
-              title="Oracle Registry"
-              icon={<Database size={18} />}
-              style={{ background: 'transparent', border: 'none', padding: 0 } as any}
-            >
-              <OracleRegistryPanel />
-            </Panel>
-          </motion.div>
-        )}
-
-        {activeTab === 'Ledger' && (
-          <motion.div
-            key="ledger"
-            variants={sectionVariants as any}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-            style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-6)' }}
-          >
-            {/* Consolidated ZK Prover Utility */}
-            <ZKProverPanel />
-
-            {/* Global Network State Visualizer */}
-            <Panel title="Global Network State" icon={<Activity size={18} />}>
-              <BlockchainVisualizer />
-            </Panel>
-
-            {/* Immutable Settlement Ledger */}
-            <Panel title="Immutable Settlement Ledger" icon={<Layers size={18} />}>
-              <ImmutableLedger />
-            </Panel>
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

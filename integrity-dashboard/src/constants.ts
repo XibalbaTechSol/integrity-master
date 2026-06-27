@@ -9,11 +9,11 @@ export const RPC_URL = "https://sepolia.base.org";
 
 export const IS_PRODUCTION = false; // Set to false for Local / Playwright testing
 
-export const API_BASE = import.meta.env.VITE_API_BASE || 
-  (IS_PRODUCTION 
-    ? "https://integrity-protocol-backend.onrender.com"
-    : ((typeof window !== 'undefined' && (window.location.hostname === "localhost" || window.location.hostname === "127.0.0.1")) 
-      ? "http://127.0.0.1:8080" 
-      : "https://integrity-protocol-backend.onrender.com"));
+const envApiBase = import.meta.env.VITE_API_BASE;
+export const API_BASE = (envApiBase && envApiBase.startsWith('http'))
+  ? envApiBase
+  : (IS_PRODUCTION 
+      ? "https://integrity-protocol-backend.onrender.com"
+      : "http://127.0.0.1:8080");
 
 

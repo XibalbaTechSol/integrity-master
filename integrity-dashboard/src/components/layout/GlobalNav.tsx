@@ -10,10 +10,10 @@ interface NavItem {
 }
 
 const NAV_ITEMS: NavItem[] = [
-  { label: 'Intelligence', icon: <Activity size={16} />,   activeTabs: ['telemetry', 'trajectory', 'advanced'], defaultTab: 'telemetry' },
+  { label: 'Contracts',    icon: <Code2 size={16} />,      activeTabs: ['factory', 'zk', 'oracle', 'ledger'], defaultTab: 'factory' },
+  { label: 'Intelligence', icon: <Activity size={16} />,   activeTabs: ['telemetry', 'reasoning', 'diagnostics'], defaultTab: 'telemetry' },
   { label: 'Finance',      icon: <DollarSign size={16} />, activeTabs: ['wallet', 'staking', 'credit', 'markets', 'stability'], defaultTab: 'wallet' },
-  { label: 'Protocol',     icon: <Code2 size={16} />,      activeTabs: ['factory', 'zk', 'oracle', 'ledger'], defaultTab: 'factory' },
-  { label: 'Governance',   icon: <Vote size={16} />,       activeTabs: ['governance', 'compliance', 'shield'], defaultTab: 'governance' },
+  { label: 'Xibalba Shield', icon: <Shield size={16} />,   activeTabs: ['governance', 'shield', 'compliance'], defaultTab: 'shield' },
   { label: 'Identity',     icon: <Key size={16} />,        activeTabs: ['identity', 'apikeys'], defaultTab: 'identity' },
 ];
 

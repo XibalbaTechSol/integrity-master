@@ -40,3 +40,5 @@ __all__ = [
     "IntegrityOpenAI",
     "TrajectoryEvaluator",
 ]
+from .autodiscovery import AutodiscoveryDaemon
+__all__.append('AutodiscoveryDaemon')

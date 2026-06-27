@@ -3,10 +3,10 @@ import os
 import argparse
 from dotenv import load_dotenv
 
-# Ensure we can find the blockchain service
-sys.path.append(os.path.join(os.path.dirname(__file__), "services"))
+# Ensure we can find the services package
+sys.path.append(os.path.dirname(__file__))
 
-from blockchain_service import IntegrityBlockchainService
+from services.blockchain_service import IntegrityBlockchainService
 
 def main():
     parser = argparse.ArgumentParser(description="Integrity Protocol Faucet Worker")

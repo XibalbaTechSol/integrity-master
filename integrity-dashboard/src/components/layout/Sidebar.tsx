@@ -4,7 +4,7 @@ import { PlusCircle, Database, ShieldCheck, ChevronLeft, ChevronRight } from 'lu
 import { StatusBadge } from '../shared/StatusBadge';
 
 export function Sidebar() {
-  const { agents, selectedAgent, selectAgent, isLoading, setActiveTab } = useDashboard();
+  const { agents, selectedAgent, selectAgent, isLoading, setActiveTab, walletAddress } = useDashboard();
   const [isCollapsed, setIsCollapsed] = useState(false);
 
   return (
@@ -28,8 +28,12 @@ export function Sidebar() {
       
       {!isCollapsed && (
         <div style={{ padding: '0 var(--space-6) var(--space-4)' }}>
-          <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>Fleet Command</h2>
-          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', opacity: 0.7 }}>Sovereign Agent Roster</div>
+          <h2 style={{ fontSize: '0.875rem', fontWeight: 600, color: 'var(--text-muted)', textTransform: 'uppercase', letterSpacing: '0.05em' }}>
+            {walletAddress ? 'Sovereign Fleet' : 'Public Nodes'}
+          </h2>
+          <div style={{ fontSize: '0.75rem', color: 'var(--text-muted)', opacity: 0.7 }}>
+            {walletAddress ? 'My Delegated Agents' : 'Network Roster (Read-Only)'}
+          </div>
         </div>
       )}
       

@@ -5,6 +5,7 @@ import { useDashboard } from '../context/useDashboard';
 import { Panel } from '../components/shared/Panel';
 import { IdentityPanel } from '../components/tabs/IdentityPanel';
 import { APIKeyPanel } from '../components/tabs/APIKeyPanel';
+import { PrivacyPanel } from '../components/tabs/PrivacyPanel';
 import { getTier } from '../types';
 
 // ─── Sub-nav tab IDs ──────────────────────────────────────────────────────────
@@ -28,23 +29,10 @@ const sectionVariants = {
 
 // ─── Component ────────────────────────────────────────────────────────────────
 export function IdentityPage() {
-  const { selectedAgent, activeTab: globalActiveTab, setActiveTab: setGlobalActiveTab } = useDashboard();
-
-  let activeTab: IdentityTab = 'did';
-  if (globalActiveTab === 'apikeys') {
-    activeTab = 'apikeys';
-  }
-
-  const setActiveTab = (tab: IdentityTab) => {
-    if (tab === 'did') {
-      setGlobalActiveTab('identity');
-    } else if (tab === 'apikeys') {
-      setGlobalActiveTab('apikeys');
-    }
-  };
+  const { selectedAgent, activeTab, setActiveTab } = useDashboard();
 
   // ── Derived values ──────────────────────────────────────────────────────────
-  const did       = (selectedAgent as any)?.did_document?.id ?? null;
+  const did       = (selectedAgent as any)?.did_document?.id ?? (selectedAgent?.eth_address ? `did:xibalba:${selectedAgent.eth_address}` : null);
   const ais       = selectedAgent?.current_ais ?? null;
   const tier      = ais !== null ? getTier(ais) : null;
   const tierColor = tier ? TIER_COLORS[tier] : 'var(--text-muted)';
@@ -57,10 +45,9 @@ export function IdentityPage() {
       : did
     : null;
 
-  // ── Tab definitions ─────────────────────────────────────────────────────────
-  const TABS: { id: IdentityTab; label: string; icon: React.ReactNode }[] = [
-    { id: 'did',     label: 'DID & Registry', icon: <Globe   size={14} /> },
-    { id: 'apikeys', label: 'API Keys',        icon: <Code    size={14} /> },
+  const TABS: { id: 'identity' | 'apikeys'; label: string; icon: React.ReactNode }[] = [
+    { id: 'identity', label: 'Identity & DID', icon: <User size={14} /> },
+    { id: 'apikeys',  label: 'API Keys',       icon: <Key size={14} /> },
   ];
 
   return (
@@ -213,32 +200,27 @@ export function IdentityPage() {
         </motion.div>
       )}
 
-      {/* ── Sub-nav pill tabs ──────────────────────────────────────────────── */}
-      <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        transition={{ duration: 0.3, delay: 0.1 }}
-        style={{ display: 'flex', gap: 'var(--space-2)' }}
-      >
-        {TABS.map((tab) => {
+      {/* ── Sub-navigation Tab Bar ───────────────────────────────────────── */}
+      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--glass-border)', paddingBottom: '8px', marginTop: 'var(--space-2)' }}>
+        {TABS.map(tab => {
           const isActive = activeTab === tab.id;
           return (
             <button
               key={tab.id}
               onClick={() => setActiveTab(tab.id)}
               style={{
-                display: 'inline-flex',
+                display: 'flex',
                 alignItems: 'center',
-                gap: 6,
+                gap: '6px',
                 padding: '6px 16px',
-                borderRadius: '999px',
-                fontSize: '0.82rem',
-                fontWeight: isActive ? 600 : 400,
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
                 cursor: 'pointer',
-                border: isActive ? '1px solid var(--primary)' : '1px solid var(--border-color)',
-                background: isActive ? 'var(--primary)' : 'var(--bg-secondary)',
-                color: isActive ? 'var(--navy-deep, #0a0e1a)' : 'var(--text-muted)',
-                transition: 'all 0.18s ease',
+                background: isActive ? 'var(--primary-dim)' : 'transparent',
+                border: '1px solid ' + (isActive ? 'var(--primary)' : 'var(--glass-border)'),
+                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                transition: 'all 0.15s'
               }}
             >
               {tab.icon}
@@ -246,34 +228,28 @@ export function IdentityPage() {
             </button>
           );
         })}
-      </motion.div>
+      </div>
 
-      {/* ── Animated section content ───────────────────────────────────────── */}
-      <AnimatePresence mode="wait">
-        {activeTab === 'did' && (
+      {/* ── Section content (Tabbed Component Mount) ────────────────────── */}
+      <div style={{ marginTop: 'var(--space-2)' }}>
+        <AnimatePresence mode="wait">
           <motion.div
-            key="did"
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
+            key={activeTab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
           >
-            <IdentityPanel />
+            {activeTab === 'identity' && (
+              <div className="flex-col gap-6">
+                <IdentityPanel />
+                <PrivacyPanel />
+              </div>
+            )}
+            {activeTab === 'apikeys' && <APIKeyPanel />}
           </motion.div>
-        )}
-
-        {activeTab === 'apikeys' && (
-          <motion.div
-            key="apikeys"
-            variants={sectionVariants}
-            initial="hidden"
-            animate="visible"
-            exit="exit"
-          >
-            <APIKeyPanel />
-          </motion.div>
-        )}
-      </AnimatePresence>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

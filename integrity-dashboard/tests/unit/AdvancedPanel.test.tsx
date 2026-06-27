@@ -32,12 +32,12 @@ describe('AdvancedPanel', () => {
   });
 
   it('renders provenance logs when backend is online', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: { eth_address: '0x123' },
       isBackendOffline: false,
     });
-    (api.getProvenance as any).mockResolvedValue(mockLogs);
+    (api.getProvenance as unknown).mockResolvedValue(mockLogs);
 
     render(<AdvancedPanel />);
     
@@ -48,7 +48,7 @@ describe('AdvancedPanel', () => {
   });
 
   it('shows offline message when backend is offline', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: { eth_address: '0x123' },
       isBackendOffline: true,
@@ -59,7 +59,7 @@ describe('AdvancedPanel', () => {
   });
 
   it('disables MEV protection for ineligible agents', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: { eth_address: '0x123', current_ais: 800 },
     });
@@ -71,7 +71,7 @@ describe('AdvancedPanel', () => {
   });
 
   it('enables MEV protection for eligible agents', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: { eth_address: '0x123', current_ais: 1200 },
     });

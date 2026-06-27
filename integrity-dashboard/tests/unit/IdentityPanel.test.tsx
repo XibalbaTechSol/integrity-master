@@ -10,7 +10,7 @@ vi.mock('../../src/context/DashboardContext', () => ({
 
 describe('IdentityPanel', () => {
   it('renders "Select an agent" message when no agent is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });
@@ -20,7 +20,7 @@ describe('IdentityPanel', () => {
   });
 
   it('renders DIDExplorer when an agent is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: { eth_address: '0x123', alias: 'Test Agent' },
     });
@@ -32,7 +32,7 @@ describe('IdentityPanel', () => {
   });
 
   it('opens registration modal when button is clicked', () => {
-    (useDashboard as any).mockReturnValue(mockDashboardContext);
+    (useDashboard as unknown).mockReturnValue(mockDashboardContext);
 
     render(<IdentityPanel />);
     const button = screen.getByText(/Open Registration Flow/i);

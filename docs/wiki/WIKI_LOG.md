@@ -102,3 +102,10 @@
 * Replaced the relative proportionality weights with optimized weights using Lagrange multipliers (orthogonal projection).
 * The new weights strictly minimize Euclidean distance to the legacy 5-metric system targets under a strict 3-metric constraint (summing to 1.0).
 * New values: `w_trustflow = 0.36666666666666664`, `w_xibalba = 0.36666666666666664`, `w_sacrifice = 0.26666666666666666`.
+
+## [2026-06-25] update | Interactive Disputes and Contract Details
+- `integrity-dashboard`: Expanded "Core Integrity Protocol Contracts" view with live searchable list and inline expandable detail panel detailing technical descriptions, ABI signatures (reads/writes), event specifications, and recent tx logs.
+- `integrity-dashboard`: Fixed Base Sepolia RPC event query block limit overflow by capping the lookback window to 1000 blocks.
+- `integrity-dashboard`: Integrated "Dispute Transaction" workflow inside the Ledger detail overlay, enabling users to post ITK collateral bonds and file dispute reasons directly.
+- `integrity-oracle`: Added `/v1/disputes/raise` endpoint handler to the mock backend to match the live Rust Oracle API.
+

@@ -27,7 +27,7 @@ describe('StakingPanel', () => {
   });
 
   it('renders initial state', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });
@@ -38,7 +38,7 @@ describe('StakingPanel', () => {
   });
 
   it('renders agent stake when selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -50,14 +50,14 @@ describe('StakingPanel', () => {
 
   it('stakes successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: addToastMock,
       fetchData: vi.fn(),
     });
 
-    (api.stake as any).mockResolvedValue({ status: 'success' });
+    (api.stake as unknown).mockResolvedValue({ status: 'success' });
 
     render(<StakingPanel />);
     

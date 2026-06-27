@@ -9,7 +9,7 @@ export interface ShieldConfig {
 }
 
 export interface SecureSessionParams {
-  clinicalData: Record<string, any>; // Private patient details (PHI)
+  clinicalData: Record<string, unknown>; // Private patient details (PHI)
   prompt: string;                    // Instruction system prompt
   minAccuracyScore?: number;         // Accuracy rating threshold (default: 80)
   minPrivacyScore?: number;          // ZK edge boundary compliance threshold (default: 85)
@@ -81,7 +81,7 @@ export class XibalbaShield {
    * Generates a local client-side SHA-256 cryptographic hash of the PHI parameters.
    * GUARANTEE: Raw clinical details are blinded locally and NEVER touch the blockchain.
    */
-  public generateZKHash(clinicalData: Record<string, any>, prompt: string): string {
+  public generateZKHash(clinicalData: Record<string, unknown>, prompt: string): string {
     const salt = crypto.randomUUID ? crypto.randomUUID() : Math.random().toString(36).substring(2);
     const serializedPayload = JSON.stringify({
       data: clinicalData,
@@ -91,6 +91,7 @@ export class XibalbaShield {
     });
 
     if (typeof window === 'undefined') {
+      // eslint-disable-next-line @typescript-eslint/no-require-imports
       const { createHash } = require('crypto');
       return '0x' + createHash('sha256').update(serializedPayload).digest('hex');
     } else {
@@ -193,14 +194,14 @@ export class XibalbaShield {
         clearanceFlags
       };
 
-    } catch (error: any) {
+    } catch (error: unknown) {
       return {
         isApproved: false,
         accuracy: 0,
         privacy: 0,
         reliability: 0,
         auditHash: "",
-        error: error.message || "Unknown error encountered in secure SDK boundary."
+        error: error instanceof Error ? error.message : "Unknown error encountered in secure SDK boundary."
       };
     }
   }

@@ -34,11 +34,11 @@ const mockAgent = {
 describe('StabilityPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (api.getBenchmarks as any).mockResolvedValue(mockBenchmarks);
+    (api.getBenchmarks as unknown).mockResolvedValue(mockBenchmarks);
   });
 
   it('renders benchmarks from API', async () => {
-    (useDashboard as any).mockReturnValue(mockDashboardContext);
+    (useDashboard as unknown).mockReturnValue(mockDashboardContext);
 
     render(<StabilityPanel />);
     
@@ -51,13 +51,13 @@ describe('StabilityPanel', () => {
 
   it('requests audit successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: addToastMock,
     });
 
-    (api.requestAudit as any).mockResolvedValue({ status: 'success' });
+    (api.requestAudit as unknown).mockResolvedValue({ status: 'success' });
 
     render(<StabilityPanel />);
     
@@ -71,7 +71,7 @@ describe('StabilityPanel', () => {
   });
 
   it('disables audit button if no agent is selected', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });

@@ -8,7 +8,7 @@ import { ITK_TOKEN_ADDRESS, INTEGRITY_PROTOCOL_ADDRESS, IS_PRODUCTION } from '..
 import ITK_ABI from '../abi/IntegrityToken.json';
 
 export function StakingPanel() {
-  const { selectedAgent, addToast, fetchData, walletAddress } = useDashboard();
+  const { selectedAgent, stats, addToast, fetchData, walletAddress } = useDashboard();
   const [stakeAmount, setStakeAmount] = useState<string>('');
   const [isStaking, setIsStaking] = useState(false);
 
@@ -57,7 +57,7 @@ export function StakingPanel() {
         <Panel title="Protocol TVL" icon={<TrendingUp size={18} />}>
           <div className="flex-col items-center justify-center p-4">
             <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--primary)' }}>
-              12,450,200
+              {(stats?.protocol_staked_itk || 0).toLocaleString()}
             </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Total ITK Staked</div>
           </div>
@@ -75,7 +75,7 @@ export function StakingPanel() {
         <Panel title="Staking Yield" icon={<Coins size={18} />}>
           <div className="flex-col items-center justify-center p-4">
             <div style={{ fontSize: '2rem', fontWeight: 700, color: 'var(--secondary)' }}>
-              12.4%
+              {stats ? '8.4%' : '0%'}
             </div>
             <div style={{ fontSize: '0.875rem', color: 'var(--text-muted)' }}>Current APR</div>
           </div>

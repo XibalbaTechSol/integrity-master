@@ -235,9 +235,9 @@ export function ShieldPanel() {
         api.getShieldInteractions(),
         api.getComplianceReviewQueue()
       ]);
-      setBaas(baaData || []);
-      setInteractions(intData || []);
-      setViolations(violationData || []);
+      setBaas((baaData as BAA[]) || []);
+      setInteractions((intData as Interaction[]) || []);
+      setViolations((violationData as Violation[]) || []);
     } catch (err: any) {
       addToast('error', `Shield sync failed: ${err.message}`);
     } finally {

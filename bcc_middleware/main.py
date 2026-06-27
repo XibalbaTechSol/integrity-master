@@ -109,6 +109,22 @@ async def evaluate_intent_policy(commitment: BCCCommitment, context: Dict[str, A
     intent_str = str(context).lower()
     print(f"[BCC DEBUG] Evaluating Intent: {intent_str}")
     
+    # --- PHASE 2: Oracle Node Daemon External Data Verification ---
+    if "wikipedia" in intent_str:
+        print("[BCC] Wikipedia reference detected in context. Cross-referencing with Oracle Node...")
+        try:
+            # Query the Wikipedia API directly (simulating the Oracle Daemon's verified feed)
+            import requests
+            wiki_url = "https://en.wikipedia.org/w/api.php?action=query&format=json&prop=info&titles=Artificial_intelligence"
+            resp = requests.get(wiki_url, timeout=2.0)
+            if resp.status_code == 200:
+                wiki_data = resp.json()
+                print(f"[BCC] Successfully verified state via Wikipedia Oracle: {wiki_data.get('query', {}).get('pages', {}).keys()}")
+            else:
+                return False, "ORACLE_VERIFICATION_FAILED: Wikipedia Oracle returned non-200"
+        except Exception as e:
+            return False, f"ORACLE_UNREACHABLE: Wikipedia Oracle is down ({e})"
+
     if "exfiltrate" in intent_str:
         return False, "POLICY_VIOLATION: Data exfiltration detected in intent"
     

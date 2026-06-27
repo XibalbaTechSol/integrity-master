@@ -1,6 +1,7 @@
+/* eslint-disable @typescript-eslint/ban-ts-comment */
 // @ts-nocheck
 import pkg from "hardhat";
-const { ethers } = pkg;
+// Removed unused ethers assignment
 import * as dotenv from "dotenv";
 
 dotenv.config();

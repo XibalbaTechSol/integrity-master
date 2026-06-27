@@ -14,11 +14,11 @@ const IntelligencePage = lazy(() =>
 const FinancePage = lazy(() =>
   import('./pages/FinancePage').then(m => ({ default: m.FinancePage }))
 );
-const ProtocolPage = lazy(() =>
-  import('./pages/ProtocolPage').then(m => ({ default: m.ProtocolPage }))
+const ContractsPage = lazy(() =>
+  import('./pages/ContractsPage').then(m => ({ default: m.ContractsPage }))
 );
-const GovernancePage = lazy(() =>
-  import('./pages/GovernancePage').then(m => ({ default: m.GovernancePage }))
+const ShieldPage = lazy(() =>
+  import('./pages/ShieldPage').then(m => ({ default: m.ShieldPage }))
 );
 const IdentityPage = lazy(() =>
   import('./pages/IdentityPage').then(m => ({ default: m.IdentityPage }))
@@ -50,13 +50,15 @@ const LoadingFallback = () => (
 
 import { useDashboard } from './context/useDashboard';
 
+import { CommandPalette } from './components/shared/CommandPalette';
+
 function DashboardShell() {
   const { activeTab } = useDashboard();
 
-  const isIntelligence = ['telemetry', 'trajectory', 'advanced'].includes(activeTab);
+  const isIntelligence = ['telemetry', 'reasoning', 'diagnostics'].includes(activeTab);
   const isFinance = ['wallet', 'staking', 'credit', 'markets', 'stability'].includes(activeTab);
-  const isProtocol = ['factory', 'zk', 'oracle', 'ledger'].includes(activeTab);
-  const isGovernance = ['governance', 'compliance', 'shield'].includes(activeTab);
+  const isContracts = ['factory', 'zk', 'oracle', 'ledger'].includes(activeTab);
+  const isShield = ['governance', 'compliance', 'shield'].includes(activeTab);
   const isIdentity = ['identity', 'apikeys'].includes(activeTab);
 
   return (
@@ -69,13 +71,14 @@ function DashboardShell() {
           <Suspense fallback={<LoadingFallback />}>
             {isIntelligence && <IntelligencePage />}
             {isFinance && <FinancePage />}
-            {isProtocol && <ProtocolPage />}
-            {isGovernance && <GovernancePage />}
+            {isContracts && <ContractsPage />}
+            {isShield && <ShieldPage />}
             {isIdentity && <IdentityPage />}
           </Suspense>
         </main>
       </div>
       <ToastManager />
+      <CommandPalette />
     </div>
   );
 }

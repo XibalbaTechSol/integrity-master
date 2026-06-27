@@ -9,10 +9,19 @@ class Integrity:
     
     _default_client: Optional[IntegrityClient] = None
 
+    _autodiscovery_daemon = None
+
     @classmethod
-    def init(cls, **kwargs) -> IntegrityClient:
-        """Initializes the global Integrity client."""
+    def init(cls, enable_autodiscovery: bool = False, **kwargs) -> IntegrityClient:
+        """Initializes the global Integrity client and optionally starts the discovery daemon."""
         cls._default_client = IntegrityClient(**kwargs)
+        
+        if enable_autodiscovery and cls._autodiscovery_daemon is None:
+            from .autodiscovery import AutodiscoveryDaemon
+            oracle_url = kwargs.get("oracle_url", "http://localhost:8080")
+            cls._autodiscovery_daemon = AutodiscoveryDaemon(oracle_url=oracle_url)
+            cls._autodiscovery_daemon.start()
+            
         return cls._default_client
 
     @classmethod

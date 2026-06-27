@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { FactoryPanel } from '../../src/components/tabs/FactoryPanel';
-import { useDashboard } from '../../src/context/DashboardContext';
+import { useDashboard } from '../../src/context/useDashboard';
 import { mockDashboardContext } from './test-utils';
 import { api } from '../../src/services/api';
 
-vi.mock('../../src/context/DashboardContext', () => ({
+vi.mock('../../src/context/useDashboard', () => ({
   useDashboard: vi.fn(),
 }));
 
@@ -26,7 +26,7 @@ describe('FactoryPanel', () => {
   });
 
   it('renders initial state', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });
@@ -36,7 +36,7 @@ describe('FactoryPanel', () => {
   });
 
   it('changes contract template when type is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -50,13 +50,13 @@ describe('FactoryPanel', () => {
 
   it('deploys a contract successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: addToastMock,
     });
 
-    (api.deployContract as any).mockResolvedValue({
+    (api.deployContract as unknown).mockResolvedValue({
       contract_address: '0xnewcontract',
       status: 'deployed'
     });
@@ -74,13 +74,13 @@ describe('FactoryPanel', () => {
 
   it('handles deployment failure', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: addToastMock,
     });
 
-    (api.deployContract as any).mockRejectedValue(new Error('Out of gas'));
+    (api.deployContract as unknown).mockRejectedValue(new Error('Out of gas'));
 
     render(<FactoryPanel />);
     

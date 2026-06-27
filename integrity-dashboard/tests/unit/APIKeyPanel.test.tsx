@@ -24,7 +24,7 @@ describe('APIKeyPanel', () => {
 
   beforeEach(() => {
     vi.clearAllMocks();
-    (api.getApiKeys as any).mockResolvedValue(mockKeys);
+    (api.getApiKeys as unknown).mockResolvedValue(mockKeys);
     // Mock clipboard
     Object.assign(navigator, {
       clipboard: {
@@ -34,7 +34,7 @@ describe('APIKeyPanel', () => {
   });
 
   it('renders initial state with existing keys', async () => {
-    (useDashboard as any).mockReturnValue(mockDashboardContext);
+    (useDashboard as unknown).mockReturnValue(mockDashboardContext);
 
     render(<APIKeyPanel />);
     
@@ -46,12 +46,12 @@ describe('APIKeyPanel', () => {
 
   it('generates a key successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       addToast: addToastMock,
     });
 
-    (api.generateApiKey as any).mockResolvedValue({ 
+    (api.generateApiKey as unknown).mockResolvedValue({ 
       api_key: 'sk-123456789', 
       created_at: new Date().toISOString(),
       expires_at: new Date().toISOString() 
@@ -71,8 +71,8 @@ describe('APIKeyPanel', () => {
   });
 
   it('copies key to clipboard', async () => {
-    (useDashboard as any).mockReturnValue(mockDashboardContext);
-    (api.generateApiKey as any).mockResolvedValue({ 
+    (useDashboard as unknown).mockReturnValue(mockDashboardContext);
+    (api.generateApiKey as unknown).mockResolvedValue({ 
       api_key: 'sk-123456789',
       created_at: new Date().toISOString(),
       expires_at: new Date().toISOString()
@@ -93,13 +93,13 @@ describe('APIKeyPanel', () => {
 
   it('deletes a key successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       addToast: addToastMock,
     });
     
     window.confirm = vi.fn().mockReturnValue(true);
-    (api.deleteApiKey as any).mockResolvedValue({ status: 'deleted' });
+    (api.deleteApiKey as unknown).mockResolvedValue({ status: 'deleted' });
 
     render(<APIKeyPanel />);
     

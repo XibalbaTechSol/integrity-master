@@ -2,7 +2,7 @@ import { test, expect } from '@playwright/test';
 
 test.describe('CompliancePanel', () => {
   test('should display compliance scorecard and audit trail', async ({ page }) => {
-    await page.goto('http://localhost:4173');
+    await page.goto('/');
     
     // Navigate to the Compliance tab (handle mobile accordion if present)
     const accordionBtn = page.locator('.tab-nav-accordion > button');

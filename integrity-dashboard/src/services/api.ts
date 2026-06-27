@@ -121,8 +121,15 @@ class ApiService {
     return this.post('/agent/register', data);
   }
 
+  async updateAgentMetadata(address: string, data: Record<string, unknown>): Promise<unknown> {
+    const res = await axios.patch(`${BASE_URL}/agent/${address}/metadata`, data, {
+      headers: { Authorization: 'Bearer master_agent_token' }
+    });
+    return res.data;
+  }
+
   // --- Auth / Keys ---
-  async getApiKeys(): Promise<any[]> {
+  async getApiKeys(): Promise<unknown[]> {
     return this.fetch('/api-keys');
   }
 
@@ -246,33 +253,42 @@ class ApiService {
   }
 
   // --- Shield / Smart BAA ---
-  async getBAAs(): Promise<any[]> {
+  async getBAAs(): Promise<unknown[]> {
     return this.fetch('/shield/baas');
   }
 
-  async proposeBAA(data: any): Promise<any> {
+  async proposeBAA(data: unknown): Promise<unknown> {
     return this.post('/shield/baa/propose', data);
   }
 
-  async signBAA(baaId: string, signature: string): Promise<any> {
+  async signBAA(baaId: string, signature: string): Promise<unknown> {
     return this.post(`/shield/baa/${baaId}/sign`, { signature });
   }
 
-  async getShieldInteractions(): Promise<any[]> {
+  async getShieldInteractions(): Promise<unknown[]> {
     return this.fetch('/shield/interactions');
   }
 
-  async getComplianceReviewQueue(): Promise<any[]> {
+  async getComplianceReviewQueue(): Promise<unknown[]> {
     return this.fetch('/shield/compliance/review-queue');
   }
 
-  async resolveComplianceViolation(id: string, action: 'finalize_slash' | 'dismiss'): Promise<any> {
+  async resolveComplianceViolation(id: string, action: 'finalize_slash' | 'dismiss'): Promise<unknown> {
     return this.post(`/shield/compliance/resolve`, { violation_id: id, action });
   }
 
   // --- Telemetry ---
   async reportTelemetry(data: TelemetryReport): Promise<{ status: string }> {
     return this.post('/transactions/report', data);
+  }
+
+  // --- Disputes ---
+  async disputeTransaction(dealId: string, initiator: string, reason: string): Promise<{ dispute_id: string, deal_id: string, status: string, created_at: string }> {
+    return this.post('/disputes/raise', {
+      deal_id: dealId,
+      initiator: initiator,
+      reason: reason
+    });
   }
 }
 

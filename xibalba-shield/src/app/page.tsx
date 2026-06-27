@@ -452,7 +452,7 @@ export default function Home() {
               <div className="w-full md:w-[45%] pl-12 md:pl-0 md:text-right">
                 <h4 className="text-lg font-bold text-slate-800 mb-2">SBT Reputation Check</h4>
                 <p className="text-sm text-slate-500">
-                  The Xibalba Shield gateway queries the local smart contract directory. If your agent's `ReputationSBT` contains an active status and score above 80, the request pipeline passes through the firewall instantly.
+                  The Xibalba Shield gateway queries the local smart contract directory. If your agent&apos;s `ReputationSBT` contains an active status and score above 80, the request pipeline passes through the firewall instantly.
                 </p>
               </div>
               <div className="hidden md:block w-[45%]" />

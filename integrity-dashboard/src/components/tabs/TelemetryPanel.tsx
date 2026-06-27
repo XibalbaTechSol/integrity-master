@@ -1,7 +1,7 @@
 import { ProtocolStats } from '../legacy-ui/ProtocolStats';
 import { TelemetryStream } from '../legacy-ui/TelemetryStream';
+import { TelemetryGraphs } from '../legacy-ui/TelemetryGraphs';
 import { useIsMobile } from '../../utils/useIsMobile';
-
 export function TelemetryPanel() {
   const isMobile = useIsMobile();
   return (
@@ -16,6 +16,9 @@ export function TelemetryPanel() {
       
       <div style={{ margin: '0 auto', position: 'relative', zIndex: 1 }}>
           <ProtocolStats />
+          <div style={{ marginTop: '40px' }}>
+              <TelemetryGraphs />
+          </div>
 
           <div style={{ marginTop: '40px' }}>
               <div style={{ background: 'rgba(0,0,0,0.4)', borderRadius: '24px', border: '1px solid rgba(255,255,255,0.05)', height: isMobile ? '600px' : '700px', overflow: 'hidden', padding: 0, boxShadow: '0 20px 40px rgba(0,0,0,0.4)' }}>

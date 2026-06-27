@@ -27,7 +27,7 @@ export function APIKeyPanel() {
   const fetchKeys = async () => {
     try {
       const keys = await api.getApiKeys();
-      setApiKeys(keys);
+      setApiKeys((keys as APIKey[]) || []);
     } catch (err: any) {
       addToast('error', `Failed to fetch API Keys: ${err.message}`);
     } finally {

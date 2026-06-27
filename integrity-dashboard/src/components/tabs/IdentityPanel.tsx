@@ -14,55 +14,50 @@ export function IdentityPanel() {
 
   return (
     <div className="flex-col gap-6">
-      <div className="grid-cols-2">
-        <div className="flex-col gap-6">
-          <Panel title="Decentralized Identifier (DID)" icon={<Key size={18} />}>
-            {selectedAgent ? (
-              <DIDExplorer agent={selectedAgent} />
-            ) : (
-              <div className="text-muted" style={{ padding: 'var(--space-4)', textAlign: 'center' }}>
-                Select an agent from the sidebar to view its Decentralized Identity Document.
-              </div>
-            )}
-          </Panel>
-        </div>
+      <Panel title="Decentralized Identifier (DID)" icon={<Key size={18} />}>
+        {selectedAgent ? (
+          <DIDExplorer agent={selectedAgent} />
+        ) : (
+          <div className="text-muted" style={{ padding: 'var(--space-4)', textAlign: 'center' }}>
+            Select an agent from the sidebar to view its Decentralized Identity Document.
+          </div>
+        )}
+      </Panel>
 
-        <div className="flex-col gap-6">
-          <Panel title="XNS Search Service" icon={<Search size={18} />}>
-            <XNSSearchService />
-          </Panel>
+      <Panel title="XNS Search Service" icon={<Search size={18} />}>
+        <XNSSearchService />
+      </Panel>
 
-          <Panel title="Identity Management" icon={<Users size={18} />}>
-            <div className="flex-col gap-4">
-               <p className="text-muted" style={{ fontSize: '0.875rem' }}>
-                  Manage your autonomous agent identities. You can either deploy a new identity or claim ownership of an existing one.
-               </p>
-               <div className="flex gap-3">
-                 <button className="btn btn-primary" onClick={() => setIsRegisterModalOpen(true)} style={{ flex: 1 }}>
-                   <ShieldCheck size={16} style={{ marginRight: '8px' }} /> Register New
-                 </button>
-                 <button className="btn btn-outline" onClick={() => setIsClaimModalOpen(true)} style={{ flex: 1 }}>
-                   <LinkIcon size={16} style={{ marginRight: '8px' }} /> Claim Existing
-                 </button>
-               </div>
-            </div>
-            {isRegisterModalOpen && (
-               <AgentOnboarding 
-                 isOpen={isRegisterModalOpen} 
-                 onClose={() => setIsRegisterModalOpen(false)} 
-                 onSuccess={() => { setIsRegisterModalOpen(false); fetchData(); }} 
-               />
-            )}
-            {isClaimModalOpen && (
-               <ClaimAgentModal 
-                 isOpen={isClaimModalOpen} 
-                 onClose={() => setIsClaimModalOpen(false)} 
-                 onSuccess={() => { setIsClaimModalOpen(false); fetchData(); }} 
-               />
-            )}
-          </Panel>
+      <Panel title="Identity Management" icon={<Users size={18} />}>
+        <div className="flex-col gap-4">
+           <p className="text-muted" style={{ fontSize: '0.875rem' }}>
+              Manage your autonomous agent identities. You can either deploy a new identity or claim ownership of an existing one.
+           </p>
+           <div className="flex gap-3">
+             <button className="btn btn-primary" onClick={() => setIsRegisterModalOpen(true)} style={{ flex: 1 }}>
+               <ShieldCheck size={16} style={{ marginRight: '8px' }} /> Register New
+             </button>
+             <button className="btn btn-outline" onClick={() => setIsClaimModalOpen(true)} style={{ flex: 1 }}>
+               <LinkIcon size={16} style={{ marginRight: '8px' }} /> Claim Existing
+             </button>
+           </div>
         </div>
-      </div>
+      </Panel>
+      
+      {isRegisterModalOpen && (
+         <AgentOnboarding 
+           isOpen={isRegisterModalOpen} 
+           onClose={() => setIsRegisterModalOpen(false)} 
+           onSuccess={() => { setIsRegisterModalOpen(false); fetchData(); }} 
+         />
+      )}
+      {isClaimModalOpen && (
+         <ClaimAgentModal 
+           isOpen={isClaimModalOpen} 
+           onClose={() => setIsClaimModalOpen(false)} 
+           onSuccess={() => { setIsClaimModalOpen(false); fetchData(); }} 
+         />
+      )}
     </div>
   );
 }

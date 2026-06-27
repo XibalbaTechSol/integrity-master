@@ -94,163 +94,7 @@ function StatCard({ icon, label, value }: StatCardProps) {
   );
 }
 
-// ─── Wallet Section ───────────────────────────────────────────────────────────
-function WalletSection() {
-  const { walletAddress, walletBalance, connectWallet } = useDashboard();
 
-  return (
-    <div className="flex-col gap-6">
-      <Panel title="Connected Wallet" icon={<Wallet size={18} />}>
-        {!walletAddress ? (
-          /* ── Not connected empty state ── */
-          <div
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              alignItems: 'center',
-              justifyContent: 'center',
-              gap: 'var(--space-4)',
-              padding: 'var(--space-4)',
-              textAlign: 'center',
-            }}
-          >
-            <div
-              style={{
-                width: '64px',
-                height: '64px',
-                borderRadius: '50%',
-                background: 'var(--bg-secondary)',
-                border: '1px solid var(--glass-border)',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                color: 'var(--text-muted)',
-              }}
-            >
-              <Wallet size={28} />
-            </div>
-            <div>
-              <div style={{ fontWeight: 600, marginBottom: '4px' }}>No wallet connected</div>
-              <div
-                style={{
-                  fontSize: '0.875rem',
-                  color: 'var(--text-muted)',
-                  maxWidth: '320px',
-                }}
-              >
-                Connect your Web3 wallet to view your ITK balance, sign transactions, and interact
-                with the Integrity Protocol.
-              </div>
-            </div>
-            <button
-              className="btn btn-primary"
-              onClick={() => (connectWallet as any)()}
-            >
-              Connect Wallet
-            </button>
-          </div>
-        ) : (
-          /* ── Connected state ── */
-          <div style={{ display: 'flex', flexDirection: 'column', gap: 'var(--space-4)' }}>
-            {/* Address row */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 'var(--space-4)',
-                background: 'var(--bg-secondary)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--glass-border)',
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--text-muted)',
-                    marginBottom: '4px',
-                  }}
-                >
-                  Wallet Address
-                </div>
-                <div className="mono" style={{ fontSize: '0.875rem', wordBreak: 'break-all' }}>
-                  {walletAddress}
-                </div>
-              </div>
-              <div
-                style={{
-                  width: '10px',
-                  height: '10px',
-                  borderRadius: '50%',
-                  background: 'var(--success)',
-                  flexShrink: 0,
-                  marginLeft: 'var(--space-4)',
-                  boxShadow: '0 0 6px var(--success)',
-                }}
-              />
-            </div>
-
-            {/* Balance row */}
-            <div
-              style={{
-                display: 'flex',
-                justifyContent: 'space-between',
-                alignItems: 'center',
-                padding: 'var(--space-4)',
-                background: 'var(--bg-secondary)',
-                borderRadius: 'var(--radius-md)',
-                border: '1px solid var(--glass-border)',
-              }}
-            >
-              <div>
-                <div
-                  style={{
-                    fontSize: '0.75rem',
-                    color: 'var(--text-muted)',
-                    marginBottom: '4px',
-                  }}
-                >
-                  ITK Balance
-                </div>
-                <div
-                  style={{
-                    fontSize: '1.75rem',
-                    fontWeight: 700,
-                    color: 'var(--gold)',
-                    fontVariantNumeric: 'tabular-nums',
-                  }}
-                >
-                  {(walletBalance as any).toLocaleString()}
-                  <span
-                    style={{
-                      fontSize: '0.875rem',
-                      fontWeight: 400,
-                      color: 'var(--text-muted)',
-                      marginLeft: '6px',
-                    }}
-                  >
-                    ITK
-                  </span>
-                </div>
-              </div>
-              <DollarSign size={32} style={{ color: 'var(--gold)', opacity: 0.4 }} />
-            </div>
-
-            {/* Reconnect */}
-            <button
-              className="btn btn-ghost"
-              style={{ alignSelf: 'flex-start', fontSize: '0.8rem' }}
-              onClick={() => (connectWallet as any)()}
-            >
-              Reconnect Wallet
-            </button>
-          </div>
-        )}
-      </Panel>
-    </div>
-  );
-}
 
 // ─── Animation config ─────────────────────────────────────────────────────────
 const sectionVariants = {
@@ -261,14 +105,7 @@ const sectionVariants = {
 
 // ─── FinancePage ──────────────────────────────────────────────────────────────
 export function FinancePage() {
-  const { stats, activeTab: globalActiveTab, setActiveTab: setGlobalActiveTab } = useDashboard();
-
-  const validTabs: string[] = ['wallet', 'staking', 'credit', 'markets', 'stability'];
-  const activeTab = validTabs.includes(globalActiveTab) ? (globalActiveTab as FinanceTab) : 'wallet';
-
-  const setActiveTab = (tab: FinanceTab) => {
-    setGlobalActiveTab(tab);
-  };
+  const { stats, activeTab, setActiveTab } = useDashboard();
 
   // ── Stat strip values ──
   const tvl        = stats?.tvl                     ?? 0;
@@ -325,18 +162,8 @@ export function FinancePage() {
         <StatCard icon={<ShoppingCart size={18} />} label="Market Volume"     value={marketVol.toLocaleString()} />
       </div>
 
-      {/* ── Sub-nav pill tabs ─────────────────────────────────────────────── */}
-      <div
-        style={{
-          display: 'flex',
-          gap: '6px',
-          flexWrap: 'wrap',
-          background: 'var(--bg-secondary)',
-          border: '1px solid var(--glass-border)',
-          borderRadius: 'var(--radius-md)',
-          padding: '6px',
-        }}
-      >
+      {/* ── Sub-navigation Tab Bar ───────────────────────────────────────── */}
+      <div style={{ display: 'flex', gap: '8px', borderBottom: '1px solid var(--glass-border)', paddingBottom: '8px', marginTop: 'var(--space-2)' }}>
         {TABS.map(tab => {
           const isActive = activeTab === tab.id;
           return (
@@ -347,16 +174,15 @@ export function FinancePage() {
                 display: 'flex',
                 alignItems: 'center',
                 gap: '6px',
-                padding: '6px 14px',
-                borderRadius: 'var(--radius-md)',
-                border: 'none',
+                padding: '6px 16px',
+                borderRadius: 'var(--radius-sm)',
+                fontSize: '0.75rem',
+                fontWeight: 600,
                 cursor: 'pointer',
-                fontSize: '0.8125rem',
-                fontWeight: isActive ? 600 : 400,
-                background: isActive ? 'var(--primary)' : 'transparent',
-                color: isActive ? '#fff' : 'var(--text-muted)',
-                transition: 'background 0.18s, color 0.18s',
-                outline: 'none',
+                background: isActive ? 'var(--primary-dim)' : 'transparent',
+                border: '1px solid ' + (isActive ? 'var(--primary)' : 'var(--glass-border)'),
+                color: isActive ? 'var(--primary)' : 'var(--text-muted)',
+                transition: 'all 0.15s'
               }}
             >
               {tab.icon}
@@ -366,22 +192,24 @@ export function FinancePage() {
         })}
       </div>
 
-      {/* ── Section content ───────────────────────────────────────────────── */}
-      <AnimatePresence mode="wait">
-        <motion.div
-          key={activeTab}
-          variants={sectionVariants}
-          initial="initial"
-          animate="animate"
-          exit="exit"
-        >
-          {activeTab === 'wallet'    && <TokenWallet />}
-          {activeTab === 'staking'   && <StakingPanel />}
-          {activeTab === 'credit'    && <CreditPanel />}
-          {activeTab === 'markets'   && <ActuarialHub mode="markets" />}
-          {activeTab === 'stability' && <ActuarialHub mode="stability" />}
-        </motion.div>
-      </AnimatePresence>
+      {/* ── Section content (Tabbed Component Mount) ────────────────────── */}
+      <div style={{ marginTop: 'var(--space-2)' }}>
+        <AnimatePresence mode="wait">
+          <motion.div
+            key={activeTab}
+            initial={{ opacity: 0, y: 8 }}
+            animate={{ opacity: 1, y: 0 }}
+            exit={{ opacity: 0, y: -8 }}
+            transition={{ duration: 0.18 }}
+          >
+            {activeTab === 'wallet' && <TokenWallet />}
+            {activeTab === 'staking' && <StakingPanel />}
+            {activeTab === 'credit' && <CreditPanel />}
+            {activeTab === 'markets' && <ActuarialHub mode="markets" />}
+            {activeTab === 'stability' && <ActuarialHub mode="stability" />}
+          </motion.div>
+        </AnimatePresence>
+      </div>
     </div>
   );
 }

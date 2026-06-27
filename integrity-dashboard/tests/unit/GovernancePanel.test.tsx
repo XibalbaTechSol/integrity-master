@@ -1,11 +1,11 @@
 import { describe, it, expect, vi, beforeEach } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { GovernancePanel } from '../../src/components/tabs/GovernancePanel';
-import { useDashboard } from '../../src/context/DashboardContext';
+import { useDashboard } from '../../src/context/useDashboard';
 import { mockDashboardContext } from './test-utils';
 import { api } from '../../src/services/api';
 
-vi.mock('../../src/context/DashboardContext', () => ({
+vi.mock('../../src/context/useDashboard', () => ({
   useDashboard: vi.fn(),
 }));
 
@@ -44,11 +44,11 @@ describe('GovernancePanel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
     localStorage.clear();
-    (api.getProposals as any).mockResolvedValue(mockProposals);
+    (api.getProposals as unknown).mockResolvedValue(mockProposals);
   });
 
   it('renders proposals from API', async () => {
-    (useDashboard as any).mockReturnValue(mockDashboardContext);
+    (useDashboard as unknown).mockReturnValue(mockDashboardContext);
 
     render(<GovernancePanel />);
     
@@ -60,7 +60,7 @@ describe('GovernancePanel', () => {
 
   it('casts a vote successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       addToast: addToastMock,
     });
@@ -80,7 +80,7 @@ describe('GovernancePanel', () => {
 
   it('creates a new proposal', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       addToast: addToastMock,
     });

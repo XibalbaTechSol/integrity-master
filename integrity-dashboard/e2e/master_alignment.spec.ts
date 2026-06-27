@@ -46,7 +46,7 @@ test.describe('Master Specification Alignment Workflows', () => {
       ]});
     });
 
-    await page.goto('http://localhost:4173/dashboard');
+    await page.goto('/dashboard');
     await page.waitForTimeout(1000);
   });
 
@@ -70,7 +70,7 @@ test.describe('Master Specification Alignment Workflows', () => {
     // For mobile/tablet, we might need to open a menu first or just use hashes
     const isMobile = viewport && viewport.width < 1024;
     if (isMobile) {
-      await page.goto('http://localhost:4173/dashboard#shield');
+      await page.goto('/dashboard#shield');
     } else {
       await page.click('text=Xibalba Shield');
     }
@@ -90,7 +90,7 @@ test.describe('Master Specification Alignment Workflows', () => {
   test('Oracle Registry - World Awareness Protocol', async ({ page, viewport }) => {
     const isMobile = viewport && viewport.width < 1024;
     if (isMobile) {
-      await page.goto('http://localhost:4173/dashboard#oracle');
+      await page.goto('/dashboard#oracle');
     } else {
       await page.click('text=Oracle Registry');
     }
@@ -110,7 +110,7 @@ test.describe('Master Specification Alignment Workflows', () => {
   test('Forensic Provenance - BCC Intent-Locking audit', async ({ page, viewport }) => {
     const isMobile = viewport && viewport.width < 1024;
     if (isMobile) {
-      await page.goto('http://localhost:4173/dashboard#advanced');
+      await page.goto('/dashboard#advanced');
     } else {
       await page.click('text=Advanced');
     }
@@ -125,7 +125,7 @@ test.describe('Master Specification Alignment Workflows', () => {
   test('A2A Marketplace - Autonomous Task Creation', async ({ page, viewport }) => {
     const isMobile = viewport && viewport.width < 1024;
     if (isMobile) {
-      await page.goto('http://localhost:4173/dashboard#markets');
+      await page.goto('/dashboard#markets');
     } else {
       await page.click('text=A2A Markets');
     }

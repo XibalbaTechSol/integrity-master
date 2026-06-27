@@ -27,11 +27,25 @@ const tabs = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 
         if (method === 'personal_sign') {
           return '0x' + 'a'.repeat(130); // dummy sig
         }
+        if (method === 'eth_chainId') {
+          return '0x14a34'; // 84532
+        }
+        if (method === 'net_version') {
+          return '84532';
+        }
+        if (method === 'eth_blockNumber') {
+          return '0x1';
+        }
+        if (method === 'eth_call') {
+          // Mock 1000 ITK balance
+          return '0x00000000000000000000000000000000000000000000003635c9adc5dea00000';
+        }
         return null;
       },
       on: () => {},
       removeListener: () => {},
     };
+    window.localStorage.setItem('integrity_mock_token', 'mock_jwt_token_here');
   });
 
   const page = await context.newPage();
@@ -40,7 +54,7 @@ const tabs = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 
 
   // 1. Visit Dashboard
   console.log('--- Step 1: Initial Load ---');
-  await page.goto('http://localhost:5173', { waitUntil: 'networkidle' });
+  await page.goto('http://localhost:5173/dashboard', { waitUntil: 'networkidle' });
   await page.waitForTimeout(3000);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, '01_initial_load.png') });
 
@@ -63,26 +77,33 @@ const tabs = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 
   console.log('--- Step 3: Tab Traversal ---');
   for (const tab of tabs) {
     console.log(`Checking tab: ${tab}...`);
-    await page.goto(`http://localhost:5173/#${tab}`);
+    await page.evaluate((t) => { window.location.hash = t; }, tab);
     await page.waitForTimeout(1000); // let data load
     await page.screenshot({ path: path.join(SCREENSHOT_DIR, `tab_${tab}.png`) });
   }
 
   // 4. Workflow: Register Agent
   console.log('--- Step 4: Workflow - Register Agent ---');
-  await page.goto('http://localhost:5173/#identity');
-  await page.waitForSelector('text=Register New Agent', { timeout: 10000 });
-  
-  await page.fill('input[required]', 'Validator-Prime'); 
-  await page.fill('input[placeholder="e.g. gpt-4o, claude-3-opus"]', 'playwright-validator-bot');
-  
-  await page.click('text=Deploy Agent Identity');
+  await page.evaluate(() => { window.location.hash = 'identity'; });
+  await page.waitForTimeout(2000); // Wait for React hydration
+  await page.click('.content-area button:has-text("Register New")');
+  await page.waitForSelector('button:has-text("Demo Auto-fill")', { timeout: 10000 });
+  await page.click('button:has-text("Demo Auto-fill")');
+  await page.waitForTimeout(500);
+  await page.click('button:has-text("Continue")');
+  await page.waitForTimeout(500);
+  await page.click('button:has-text("Initialize Sovereign Contract")');
+  await page.waitForTimeout(3000);
+  await page.click('button:has-text("Continue")');
+  await page.waitForTimeout(500);
+  await page.click('button:has-text("Enter Command Center")');
   await page.waitForTimeout(2000);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'workflow_agent_registered.png') });
 
   // 5. Workflow: Create Leveraged Market Task
   console.log('--- Step 5: Workflow - Create Market Task (Leveraged) ---');
-  await page.goto('http://localhost:5173/#markets');
+  await page.evaluate(() => { window.location.hash = 'markets'; });
+  await page.waitForTimeout(1000);
   await page.fill('input[placeholder="e.g. Data Inference SLA"]', 'E2E Validation Task');
   await page.check('#useCredit');
   await page.click('text=Create A2A Task');
@@ -91,7 +112,8 @@ const tabs = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 
 
   // 6. Workflow: Request Institutional Loan
   console.log('--- Step 6: Workflow - Request Loan ---');
-  await page.goto('http://localhost:5173/#credit');
+  await page.evaluate(() => { window.location.hash = 'credit'; });
+  await page.waitForTimeout(1000);
   // Fill the principal input
   await page.locator('input[type="number"]').first().fill('5000');
   await page.click('text=Submit Loan Application');
@@ -100,11 +122,13 @@ const tabs = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 
 
   // 7. Workflow: Wallet Transfer
   console.log('--- Step 7: Workflow - Wallet Transfer ---');
-  await page.goto('http://localhost:5173/#wallet');
-  await page.fill('input[placeholder="0x... or select agent"]', '0xd62982a313FfA10966e76CD9dA11708eDbb01B3f');
-  // Fill amount
-  await page.locator('input[type="number"]').fill('500');
-  await page.click('text=Execute Secure Transfer');
+  await page.evaluate(() => { window.location.hash = 'wallet'; });
+  await page.waitForTimeout(1000);
+  await page.click('text=Send');
+  await page.waitForSelector('input[placeholder="0x..."]', { timeout: 5000 });
+  await page.fill('input[placeholder="0x..."]', '0xd62982a313FfA10966e76CD9dA11708eDbb01B3f');
+  await page.fill('input[placeholder="0.00"]', '500');
+  await page.click('text=CONFIRM TRANSACTION');
   await page.waitForTimeout(2000);
   await page.screenshot({ path: path.join(SCREENSHOT_DIR, 'workflow_wallet_transfer.png') });
 

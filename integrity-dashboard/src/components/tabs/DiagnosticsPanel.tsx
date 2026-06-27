@@ -136,32 +136,34 @@ export function DiagnosticsPanel() {
       </Panel>
 
       <div className="grid-cols-2">
-        <Panel title="Integrity Hash Reconstruction" icon={<Hash size={18} />}>
+        <Panel title="Integrity Hash Reconstruction Tracker" icon={<Hash size={18} />}>
            <div className="flex-col gap-4">
-              <p className="text-muted" style={{ fontSize: '0.75rem' }}>
-                Verifying the deterministic <code>integrity_hash</code> used for Layer 0 anchoring.
-              </p>
+              <div style={{ fontSize: '0.8rem', color: 'var(--text-muted)', lineHeight: 1.4 }}>
+                This console displays how the protocol mathematically constructs the unique, deterministic <strong>Integrity Hash</strong> for transaction validation. 
+                By hashing the immutable inputs below using <code>sha256/Keccak256</code>, the protocol generates a single footprint committed to the Base Sepolia L2 blockchain. This guarantees execution metrics cannot be tampered with after the fact.
+              </div>
               
               <div className="flex-col gap-2">
-                 <HashInput label="Deal ID" value="deal_1781161708" />
-                 <HashInput label="Latency" value="142ms" />
-                 <HashInput label="Accuracy" value="0.982" />
-                 <HashInput label="Agent ID" value={selectedAgent?.eth_address.substring(0, 12) || '0x...'} />
+                 <div style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--primary)', textTransform: 'uppercase', letterSpacing: '0.05em', marginBottom: '2px' }}>Deterministic Telemetry Inputs:</div>
+                 <HashInput label="Deal/Task ID" value="deal_1781161708" />
+                 <HashInput label="Measured Latency" value="142ms" />
+                 <HashInput label="Fidelity Accuracy" value="0.982" />
+                 <HashInput label="Subject Agent ID" value={selectedAgent?.eth_address || '0xcc3f...a99c'} />
               </div>
 
-              <div className="flex justify-center" style={{ margin: '8px 0' }}>
-                 <Code size={18} color="var(--primary)" />
+              <div className="flex justify-center" style={{ margin: '4px 0' }}>
+                 <Code size={16} color="var(--primary)" />
               </div>
 
               <div style={{ padding: '12px', background: 'var(--primary-dim)', borderRadius: 'var(--radius-md)', border: '2px solid var(--primary)', textAlign: 'center' }}>
-                 <div style={{ fontSize: '0.65rem', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px' }}>Canonical Integrity Hash</div>
-                 <div className="mono" style={{ fontSize: '0.875rem', fontWeight: 700, color: 'var(--text-primary)', wordBreak: 'break-all' }}>
-                   0x88f2a23142cd88f2a23142cd88f2a231
+                 <div style={{ fontSize: '0.65rem', color: 'var(--primary)', fontWeight: 600, textTransform: 'uppercase', marginBottom: '4px', letterSpacing: '0.05em' }}>Canonical Output (State Hash)</div>
+                 <div className="mono" style={{ fontSize: '0.85rem', fontWeight: 700, color: 'var(--text-primary)', wordBreak: 'break-all' }}>
+                   0x88f2a23142cd88f2a23142cd88f2a23142cd88f2a23142cd88f2a23142cd88f2
                  </div>
               </div>
 
-              <div className="flex items-center gap-2" style={{ color: 'var(--success)', fontSize: '0.75rem' }}>
-                 <Link size={14} /> Provenance Anchored to Base L2 Block #12,884,901
+              <div className="flex items-center gap-2" style={{ color: 'var(--success)', fontSize: '0.75rem', fontWeight: 600, borderTop: '1px solid var(--glass-border)', paddingTop: '10px', marginTop: '2px' }}>
+                 <Link size={14} /> Attestation State Anchored to Base L2 @ Block #12,884,901
               </div>
            </div>
         </Panel>

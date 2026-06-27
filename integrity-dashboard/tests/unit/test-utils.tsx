@@ -1,5 +1,6 @@
-import React, { ReactElement } from 'react';
-import { render, RenderOptions } from '@testing-library/react';
+import { ReactElement } from 'react';
+import { render } from '@testing-library/react';
+import type { RenderOptions } from '@testing-library/react';
 import { vi } from 'vitest';
 
 // Mock context values

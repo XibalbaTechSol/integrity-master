@@ -1,11 +1,11 @@
 import { describe, it, expect, vi } from 'vitest';
 import { render, screen, fireEvent, waitFor } from '@testing-library/react';
 import { CreditPanel } from '../../src/components/tabs/CreditPanel';
-import { useDashboard } from '../../src/context/DashboardContext';
+import { useDashboard } from '../../src/context/useDashboard';
 import { mockDashboardContext } from './test-utils';
 import { api } from '../../src/services/api';
 
-vi.mock('../../src/context/DashboardContext', () => ({
+vi.mock('../../src/context/useDashboard', () => ({
   useDashboard: vi.fn(),
 }));
 
@@ -40,7 +40,7 @@ const mockAgent = {
 
 describe('CreditPanel', () => {
   it('renders "Select an agent" message when no agent is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: null,
     });
@@ -51,7 +51,7 @@ describe('CreditPanel', () => {
   });
 
   it('renders credit profile metrics when an agent is selected', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -64,7 +64,7 @@ describe('CreditPanel', () => {
   });
 
   it('shows error message when borrow amount exceeds limit', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -80,14 +80,14 @@ describe('CreditPanel', () => {
   it('submits loan application successfully', async () => {
     const fetchDataMock = vi.fn();
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       fetchData: fetchDataMock,
       addToast: addToastMock,
     });
 
-    (api.borrow as any).mockResolvedValue({ status: 'success' });
+    (api.borrow as unknown).mockResolvedValue({ status: 'success' });
 
     render(<CreditPanel />);
     const input = screen.getByLabelText(/Principal Amount/i);
@@ -107,7 +107,7 @@ describe('CreditPanel', () => {
   });
 
   it('renders active loans table', () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });

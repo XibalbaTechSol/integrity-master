@@ -22,7 +22,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   
   const [activeTab, setActiveTabState] = useState<TabId>(() => {
     const hash = window.location.hash.replace('#', '') as TabId;
-    const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'advanced', 'staking', 'stability', 'wallet'];
+    const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'reasoning', 'diagnostics', 'staking', 'stability', 'wallet'];
     return validTabs.includes(hash) ? hash : 'telemetry';
   });
 
@@ -180,7 +180,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as TabId;
-      const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'advanced', 'staking', 'stability', 'wallet'];
+      const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'reasoning', 'diagnostics', 'staking', 'stability', 'wallet'];
       if (validTabs.includes(hash)) setActiveTabState(hash);
     };
     

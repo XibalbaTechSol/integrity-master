@@ -251,6 +251,21 @@ def run_loop_step(args):
         if feedback:
             task_desc += feedback
             
+    # To prevent repeating weights indefinitely, check current target file weights and append them as things to vary/avoid
+    try:
+        with open(args.target, "r") as f:
+            content = f.read()
+            curr_w = {
+                "w_trustflow": re.search(r"w_trustflow:\s*([0-9.]+)", content).group(1),
+                "w_xibalba": re.search(r"w_xibalba:\s*([0-9.]+)", content).group(1),
+                "w_sacrifice": re.search(r"w_sacrifice:\s*([0-9.]+)", content).group(1),
+                "w_staking_age": re.search(r"w_staking_age:\s*([0-9.]+)", content).group(1),
+                "w_volume": re.search(r"w_volume:\s*([0-9.]+)", content).group(1),
+            }
+            task_desc += f"\n\n[CURRENT PARAMETERS IN CODE]: {json.dumps(curr_w)}. You must vary these parameters and explore different values. Do NOT output/propose these exact weights or values, as they have already been evaluated and did not yield optimal results."
+    except Exception as e:
+        print(f"Warning: Failed to extract current weights for task prompt guidance: {e}")
+            
     session_ids = run_jules_new(task_desc, args.target, args.parallel)
     print(f"✅ Registered Session IDs: {session_ids}")
     

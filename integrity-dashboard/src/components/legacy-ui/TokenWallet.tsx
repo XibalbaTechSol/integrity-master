@@ -52,8 +52,8 @@ export const TokenWallet = ({ user: propUser }: { user?: User | null }) => {
             });
             setProfileBalance(res.data.balance);
             setAppWalletAddress(res.data.app_wallet_address);
-        } catch (e) {
-            console.error("Profile fetch error:", e);
+        } catch (e: any) {
+            console.error("Profile fetch error:", e.message);
         } finally {
             setIsProfileLoading(false);
         }
@@ -177,7 +177,10 @@ export const TokenWallet = ({ user: propUser }: { user?: User | null }) => {
                 setActiveModal(null);
                 fetchWalletData();
             }
-        } catch (e: any) { alert(`Error: ${e.message}`); }
+        } catch (e: any) { 
+            console.warn("Transfer failed:", e.message);
+            alert(`Error: ${e.response?.data?.message || e.message}`);
+        }
         finally { setIsLoading(false); }
     };
 

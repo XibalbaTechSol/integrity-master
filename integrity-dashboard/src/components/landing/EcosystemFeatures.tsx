@@ -339,10 +339,8 @@ export const FooterSection = ({ setIsContactOpen, setContactType }) => {
             />
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? '16px 24px' : '32px 48px', marginBottom: '48px', padding: isMobile ? '0 20px' : '0' }}>
                 {[
-                    { label: 'Core Protocol', link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md" },
-                    { label: 'Insurance Vault', link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/erc_8004.md" },
-                    { label: 'Developer SDK', link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/integration-guide.md" },
-                    { label: 'Technical Blog', link: "/blog" },
+                    { label: 'Launch Dashboard', link: "/dashboard" },
+                    { label: 'Github', link: "https://github.com/XibalbaTechSol/integrity-protocol" },
                     { label: 'Contact Us', link: "contact" }
                 ].map(link => (
                     <a 

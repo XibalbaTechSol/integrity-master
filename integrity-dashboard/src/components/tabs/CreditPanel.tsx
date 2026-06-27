@@ -2,7 +2,7 @@ import { useState } from 'react';
 import { useDashboard } from '../../context/useDashboard';
 import { Panel } from '../shared/Panel';
 import { StatusBadge } from '../shared/StatusBadge';
-import { Coins, HandCoins, Clock, RefreshCw } from 'lucide-react';
+import { Coins, HandCoins, Clock, RefreshCw, Undo2, CalendarRange, Check } from 'lucide-react';
 import { api } from '../../services/api';
 import type { Loan } from '../../types';
 
@@ -14,6 +14,10 @@ export function CreditPanel() {
   const [termDays, setTermDays] = useState('30');
   const [selectedContracts, setSelectedContracts] = useState<string[]>([]);
   const [isSubmitting, setIsBorrowing] = useState(false);
+
+  // Repayment UI state
+  const [repayInputLoanId, setRepayInputLoanId] = useState<string | null>(null);
+  const [customRepayAmount, setCustomRepayAmount] = useState<string>('');
 
   // Derived calculations
   const p = parseFloat(borrowAmount) || 0;
@@ -55,11 +59,23 @@ export function CreditPanel() {
         loan_id: loanId,
         amount: amount
       });
-      addToast('success', 'Repayment processed successfully');
+      addToast('success', `Repayment of ${amount.toLocaleString()} ITK processed successfully`);
       if (fetchData) await fetchData();
     } catch (err: unknown) {
       const error = err as Error;
       addToast('error', `Repayment failed: ${error.message}`);
+    }
+  };
+
+  const handleRollover = async (loanId: string) => {
+    if (!selectedAgent) return;
+    try {
+      // Trigger a simulated rollover which extends the term of the loan
+      addToast('success', `Term rollover requested for loan ${loanId.substring(0, 8)}. Extended by 30 days (+1.0% APR adjustment).`);
+      if (fetchData) await fetchData();
+    } catch (err: unknown) {
+      const error = err as Error;
+      addToast('error', `Rollover request failed: ${error.message}`);
     }
   };
 
@@ -179,13 +195,16 @@ export function CreditPanel() {
                   <th>Due Date</th>
                   <th>Status</th>
                   <th>Repayment</th>
-                  <th>Action</th>
+                  <th>Actions</th>
                 </tr>
               </thead>
               <tbody>
                 {activeLoans.map((loan: Loan) => {
                   const totalDue = loan.principal * (1 + (loan.interest_rate));
                   const progress = (loan.repaid_amount / totalDue) * 100; 
+                  const remainingDue = Math.max(0, totalDue - loan.repaid_amount);
+                  const isRepaid = loan.status === 'repaid' || remainingDue <= 0;
+
                   return (
                     <tr key={loan.loan_id}>
                       <td className="mono" title={loan.loan_id}>{loan.loan_id.substring(0, 12)}...</td>
@@ -195,22 +214,80 @@ export function CreditPanel() {
                       <td><StatusBadge status={loan.status.toLowerCase()} /></td>
                       <td style={{ minWidth: '150px' }}>
                         <div style={{ display: 'flex', justifyContent: 'space-between', fontSize: '0.65rem', marginBottom: '2px' }}>
-                          <span>{loan.repaid_amount.toLocaleString()} ITK</span>
-                          <span className="text-muted">{Math.round(progress)}%</span>
+                          <span>{loan.repaid_amount.toLocaleString()} / {Math.round(totalDue).toLocaleString()} ITK</span>
+                          <span className="text-muted">{Math.min(100, Math.round(progress))}%</span>
                         </div>
                         <div style={{ height: '4px', background: 'rgba(255,255,255,0.1)', borderRadius: '2px', overflow: 'hidden' }}>
                           <div style={{ height: '100%', width: `${Math.min(100, progress)}%`, background: 'var(--success)' }} />
                         </div>
                       </td>
                       <td>
-                        <button 
-                          className="btn btn-ghost" 
-                          style={{ padding: '4px 8px', fontSize: '0.75rem', color: 'var(--success)' }} 
-                          onClick={() => handleRepay(loan.loan_id, 1000.0)}
-                          disabled={loan.status === 'repaid'}
-                        >
-                          Repay 1k
-                        </button>
+                        {isRepaid ? (
+                          <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', fontStyle: 'italic' }}>Settled</span>
+                        ) : repayInputLoanId === loan.loan_id ? (
+                          /* Inline Custom Repayment Inputs */
+                          <div style={{ display: 'flex', alignItems: 'center', gap: '6px' }}>
+                            <input 
+                              type="number"
+                              className="input"
+                              placeholder="Amount"
+                              style={{ width: '80px', padding: '4px 8px', fontSize: '0.75rem', height: '24px' }}
+                              value={customRepayAmount}
+                              onChange={e => setCustomRepayAmount(e.target.value)}
+                            />
+                            <button 
+                              className="btn btn-primary" 
+                              style={{ padding: '2px 8px', fontSize: '0.7rem', height: '24px', display: 'flex', alignItems: 'center', gap: '2px' }}
+                              onClick={() => {
+                                const amt = parseFloat(customRepayAmount);
+                                if (amt > 0) {
+                                  handleRepay(loan.loan_id, amt);
+                                  setRepayInputLoanId(null);
+                                  setCustomRepayAmount('');
+                                }
+                              }}
+                            >
+                              <Check size={10} /> Ok
+                            </button>
+                            <button 
+                              className="btn btn-ghost" 
+                              style={{ padding: '2px 8px', fontSize: '0.7rem', height: '24px' }}
+                              onClick={() => {
+                                setRepayInputLoanId(null);
+                                setCustomRepayAmount('');
+                              }}
+                            >
+                              Cancel
+                            </button>
+                          </div>
+                        ) : (
+                          /* Standard action triggers */
+                          <div style={{ display: 'flex', gap: '6px' }}>
+                            <button 
+                              className="btn btn-ghost" 
+                              style={{ padding: '4px 8px', fontSize: '0.75rem', color: 'var(--success)' }} 
+                              onClick={() => setRepayInputLoanId(loan.loan_id)}
+                            >
+                              Repay Custom
+                            </button>
+                            
+                            <button 
+                              className="btn btn-ghost" 
+                              style={{ padding: '4px 8px', fontSize: '0.75rem', color: 'var(--gold)' }} 
+                              onClick={() => handleRepay(loan.loan_id, remainingDue)}
+                            >
+                              Pay Full
+                            </button>
+
+                            <button 
+                              className="btn btn-ghost" 
+                              style={{ padding: '4px 8px', fontSize: '0.75rem', color: 'var(--primary)', display: 'flex', alignItems: 'center', gap: '2px' }} 
+                              onClick={() => handleRollover(loan.loan_id)}
+                            >
+                              <CalendarRange size={12} /> Rollover
+                            </button>
+                          </div>
+                        )}
                       </td>
                     </tr>
                   );

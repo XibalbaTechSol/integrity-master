@@ -46,11 +46,11 @@ const mockAgent = {
 describe('MarketsPanel', () => {
   beforeEach(() => {
     vi.clearAllMocks();
-    (api.getMarketTasks as any).mockResolvedValue(mockTasks);
+    (api.getMarketTasks as unknown).mockResolvedValue(mockTasks);
   });
 
   it('renders open marketplace tasks', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -65,13 +65,13 @@ describe('MarketsPanel', () => {
 
   it('creates a task successfully', async () => {
     const addToastMock = vi.fn();
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
       addToast: addToastMock,
     });
 
-    (api.createMarketTask as any).mockResolvedValue({ task_id: 'new-task-id' });
+    (api.createMarketTask as unknown).mockResolvedValue({ task_id: 'new-task-id' });
 
     render(<MarketsPanel />);
     
@@ -88,12 +88,12 @@ describe('MarketsPanel', () => {
   });
 
   it('creates a task with credit leverage', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
 
-    (api.fundTaskWithLoan as any).mockResolvedValue({ task_id: 'leveraged-task-id' });
+    (api.fundTaskWithLoan as unknown).mockResolvedValue({ task_id: 'leveraged-task-id' });
 
     render(<MarketsPanel />);
     
@@ -109,7 +109,7 @@ describe('MarketsPanel', () => {
   });
 
   it('places a bid on a task', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });
@@ -128,7 +128,7 @@ describe('MarketsPanel', () => {
   });
 
   it('renders agent equity holdings', async () => {
-    (useDashboard as any).mockReturnValue({
+    (useDashboard as unknown).mockReturnValue({
       ...mockDashboardContext,
       selectedAgent: mockAgent,
     });

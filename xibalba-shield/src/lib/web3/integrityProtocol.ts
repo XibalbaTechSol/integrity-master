@@ -1,10 +1,6 @@
 import { ethers } from "ethers";
 
 // ABI placeholders
-const reputationSBTAbi = [
-  "function integrityScores(uint256) view returns (uint256)",
-  "function ownerOf(uint256) view returns (address)"
-];
 
 const auditShieldAbi = [
   "function anchorLog(bytes32 _dataHash) external"
@@ -13,7 +9,7 @@ const auditShieldAbi = [
 // ITK Testnet provider
 const provider = new ethers.JsonRpcProvider(process.env.ITK_TESTNET_RPC_URL || "https://testnet.itk-protocol.io");
 
-export async function verifyIntegrityScore(agentAddress: string, requiredScore: number = 80): Promise<boolean> {
+export async function verifyIntegrityScore(agentAddress: string): Promise<boolean> {
   // In a real scenario, we would lookup the SBT Token ID for the agent address
   // For MVP, we mock the verification to return true if the agent has a valid address
   if (!agentAddress) return false;

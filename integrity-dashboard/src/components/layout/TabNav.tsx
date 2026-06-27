@@ -22,8 +22,8 @@ const tabs: { id: TabId, label: string, icon: React.ReactNode }[] = [
   { id: 'governance', label: 'Governance', icon: <Shield size={16} /> },
   { id: 'compliance', label: 'Compliance', icon: <ShieldCheck size={16} /> },
   { id: 'wallet', label: 'Wallet', icon: <Wallet size={16} /> },
-  { id: 'trajectory', label: 'Agent Thoughts', icon: <BrainCircuit size={16} /> },
-  { id: 'advanced', label: 'Advanced', icon: <BookOpen size={16} /> },
+  { id: 'reasoning', label: 'Agent Thoughts', icon: <BrainCircuit size={16} /> },
+  { id: 'diagnostics', label: 'Advanced', icon: <BookOpen size={16} /> },
   { id: 'apikeys', label: 'API Keys', icon: <Key size={16} /> },
 ];
 
