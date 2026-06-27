@@ -8,3 +8,10 @@ services:
     envVars:
       - key: VITE_API_BASE
         value: https://integrity-protocol-backend.onrender.com
+
+  - type: web
+    name: integrity-protocol-backend
+    env: python
+    rootDir: integrity-oracle/backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn services.trust_api:app --host 0.0.0.0 --port $PORT
