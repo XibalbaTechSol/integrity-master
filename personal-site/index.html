@@ -72,7 +72,7 @@
             <div class="hero-badges">
                 <a href="#contact" class="btn" style="text-decoration: none;">Join Developer Beta &rarr;</a>
                 <a href="https://www.youtube.com/watch?v=dQw4w9WgXcQ" target="_blank" class="btn-outline" style="text-decoration: none; border-color: var(--color-brand-secondary); color: var(--color-brand-secondary); display: inline-flex; align-items: center; justify-content: center; height: 50px;">Watch Demo (1 Min) &rarr;</a>
-                <a href="https://github.com/XibalbaTechSol/integrity-wiki" target="_blank" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; height: 50px;">
+                <a href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" target="_blank" class="btn-outline" style="text-decoration: none; display: inline-flex; align-items: center; gap: 0.5rem; justify-content: center; height: 50px;">
                     View Docs on GitHub
                     <span class="license-badge" style="background: var(--color-brand-primary-dim); border: 1px solid var(--border-accent); font-size: 0.7rem; padding: 0.2rem 0.5rem; border-radius: 4px; font-weight: 700; color: var(--color-brand-primary); margin-left: 0.25rem; font-family: var(--font-mono);">Apache-2.0</span>
                 </a>
@@ -799,7 +799,7 @@ result = <span class="code-kw">await</span> client.execute_with_integrity(
             <!-- CTA Buttons -->
             <div class="text-center" style="margin-top: 4rem; display: flex; justify-content: center; gap: 1rem; flex-wrap: wrap;">
                 <a href="https://xibalbatechsol.github.io/docs/xibalba_shield_proposal.pdf" target="_blank" class="btn">Read the Whitepaper &rarr;</a>
-                <a href="https://github.com/XibalbaTechSol/integrity-wiki" target="_blank" class="btn-outline">View Docs on GitHub &rarr;</a>
+                <a href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" target="_blank" class="btn-outline">View Docs on GitHub &rarr;</a>
             </div>
         </div>
     </section>
@@ -998,25 +998,74 @@ result = <span class="code-kw">await</span> client.execute_with_integrity(
     </section>
 
     <!-- Contact Section -->
-    <section id="contact" style="border-top: 1px solid var(--border-main);">
-        <div class="container animate-in">
-            <div class="text-center" style="max-width: 600px; margin: 0 auto;">
-                <span class="meta-label">Get in Touch</span>
-                <h2>Contact Xibalba Solutions</h2>
-                <p style="color: var(--text-secondary); margin: 1rem 0 2.5rem;">Interested in implementing verifiable execution and on-chain trust for your autonomous agents? Reach out to our team below to discuss partnerships, enterprise pricing, or developer access.</p>
+    <section id="contact" style="padding: var(--section-pad) 0; position: relative; background: var(--bg-body); overflow: hidden; border-top: 1px solid var(--border-main);">
+        <!-- Decorative Glow -->
+        <div style="position: absolute; top: -20%; left: 30%; width: 50%; height: 50%; background: var(--bg-radial); filter: blur(120px); border-radius: 50%; z-index: 0; pointer-events: none;"></div>
+        
+        <div class="container animate-in" style="position: relative; z-index: 1;">
+            <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 4rem; align-items: center;">
                 
-                <form id="contactForm" class="waitlist-form">
-                    <input type="hidden" name="inquiry_type" value="General Inquiry">
-                    <div style="display: flex; gap: 10px; margin-bottom: 10px;">
-                        <input type="text" id="contactName" name="name" placeholder="Your Name" required class="waitlist-input" style="flex: 1;">
-                        <input type="email" id="contactEmail" name="email" placeholder="Your Work Email" required class="waitlist-input" style="flex: 1;">
+                <!-- Left Side: Copy -->
+                <div>
+                    <span class="meta-label">Get in Touch</span>
+                    <h2 style="font-size: clamp(2rem, 4vw, 3rem); line-height: 1.1; margin-bottom: 1.5rem;">Partner with<br><span style="color: var(--color-brand-primary);">Xibalba Solutions</span></h2>
+                    <p style="color: var(--text-secondary); line-height: 1.7; font-size: 1.1rem; margin-bottom: 2.5rem;">
+                        Interested in implementing verifiable execution and on-chain trust for your autonomous agents? Reach out to discuss pilot programs, enterprise licensing, or early developer access.
+                    </p>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <div style="width: 48px; height: 48px; border-radius: 50%; background: var(--color-brand-primary-dim); display: flex; align-items: center; justify-content: center; color: var(--color-brand-primary); border: 1px solid var(--border-accent);">
+                            <svg width="20" height="20" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"></path></svg>
+                        </div>
+                        <div>
+                            <p style="margin: 0; color: var(--text-secondary); font-size: 0.85rem; font-weight: 500; text-transform: uppercase; letter-spacing: 0.05em;">Schedule a Call</p>
+                            <a href="#" style="color: var(--text-primary); text-decoration: none; font-weight: 600; font-size: 1.1rem; display: inline-flex; align-items: center; gap: 0.25rem;">Calendly <svg width="14" height="14" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17l9.2-9.2M17 17V7H7"/></svg></a>
+                        </div>
                     </div>
-                    <textarea id="contactMessage" name="message" placeholder="How can we help? (Provide any necessary context)" required class="waitlist-input" style="width: 100%; min-height: 100px; margin-bottom: 15px; resize: vertical; padding: 12px; border-radius: 4px; border: 1px solid var(--border-main); background: var(--bg-secondary); color: var(--text-main); font-family: inherit;"></textarea>
-                    <button type="submit" id="contactSubmit" class="btn waitlist-btn" style="width: 100%;">Send Message &rarr;</button>
-                </form>
-                <div id="waitlist-feedback" class="waitlist-feedback"></div>
+                </div>
+
+                <!-- Right Side: Form Card -->
+                <div style="background: var(--bg-card); border: 1px solid var(--border-bright); padding: 2.5rem; border-radius: 24px; box-shadow: var(--shadow-glow); backdrop-filter: var(--glass-blur);">
+                    <form id="contactForm" style="display: flex; flex-direction: column; gap: 1.5rem;">
+                        <input type="hidden" name="inquiry_type" value="General Inquiry">
+                        
+                        <div style="display: flex; gap: 1rem; flex-wrap: wrap;">
+                            <div style="flex: 1; min-width: 180px;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Name</label>
+                                <input type="text" id="contactName" name="name" placeholder="Ada Lovelace" required style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border-main); background: rgba(0,0,0,0.2); color: var(--text-primary); font-family: var(--font-body); outline: none; transition: var(--t-fast); font-size: 1rem;">
+                            </div>
+                            <div style="flex: 1; min-width: 180px;">
+                                <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Work Email</label>
+                                <input type="email" id="contactEmail" name="email" placeholder="ada@company.com" required style="width: 100%; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border-main); background: rgba(0,0,0,0.2); color: var(--text-primary); font-family: var(--font-body); outline: none; transition: var(--t-fast); font-size: 1rem;">
+                            </div>
+                        </div>
+                        
+                        <div>
+                            <label style="display: block; margin-bottom: 0.5rem; font-size: 0.85rem; color: var(--text-secondary); font-weight: 500;">Message</label>
+                            <textarea id="contactMessage" name="message" placeholder="How can we collaborate?" required style="width: 100%; min-height: 140px; padding: 14px 16px; border-radius: 12px; border: 1px solid var(--border-main); background: rgba(0,0,0,0.2); color: var(--text-primary); font-family: var(--font-body); outline: none; resize: vertical; transition: var(--t-fast); font-size: 1rem;"></textarea>
+                        </div>
+                        
+                        <button type="submit" id="contactSubmit" class="btn" style="width: 100%; padding: 16px; display: flex; justify-content: center; align-items: center; gap: 0.5rem; border: none; font-size: 1rem;">
+                            Send Message
+                            <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/></svg>
+                        </button>
+                    </form>
+                    <div id="waitlist-feedback" style="margin-top: 1rem; font-size: 0.95rem; text-align: center; font-weight: 500; opacity: 0; transition: var(--t-fast);"></div>
+                </div>
+                
             </div>
         </div>
+        
+        <style>
+            #contactForm input:focus, #contactForm textarea:focus {
+                border-color: var(--color-brand-primary) !important;
+                box-shadow: 0 0 0 3px var(--color-brand-primary-dim);
+                background: rgba(0,0,0,0.4) !important;
+            }
+            #contactForm input::placeholder, #contactForm textarea::placeholder {
+                color: var(--text-muted);
+            }
+        </style>
+    </section>
         
         <script>
             document.getElementById('contactForm').addEventListener('submit', async (e) => {
