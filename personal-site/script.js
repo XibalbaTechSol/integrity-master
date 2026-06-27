@@ -95,51 +95,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     sections.forEach(sec => scrollspyObserver.observe(sec));
 
-    // AJAX Form Submission
-    const waitlistForm = document.querySelector(".waitlist-form");
-    const waitlistFeedback = document.getElementById("waitlist-feedback");
-
-    if (waitlistForm && waitlistFeedback) {
-        waitlistForm.addEventListener("submit", async (e) => {
-            e.preventDefault();
-            
-            const submitBtn = waitlistForm.querySelector("button[type='submit']");
-            const emailInput = waitlistForm.querySelector("input[name='email']");
-            const originalBtnText = submitBtn.innerHTML;
-            
-            submitBtn.disabled = true;
-            submitBtn.innerHTML = "Sending...";
-            
-            waitlistFeedback.classList.remove("visible", "success", "error");
-            waitlistFeedback.innerHTML = "";
-
-            try {
-                const response = await fetch(waitlistForm.action, {
-                    method: "POST",
-                    body: new URLSearchParams(new FormData(waitlistForm)),
-                    headers: {
-                        "Content-Type": "application/x-www-form-urlencoded",
-                        "Accept": "application/json"
-                    }
-                });
-
-                if (response.ok) {
-                    waitlistFeedback.innerHTML = "✓ Success! Your message has been sent. We'll be in touch soon.";
-                    waitlistFeedback.classList.add("success", "visible");
-                    waitlistForm.reset();
-                } else {
-                    throw new Error("Form submission failed");
-                }
-            } catch (error) {
-                waitlistFeedback.innerHTML = "✗ Something went wrong. Please try again later.";
-                waitlistFeedback.classList.add("error", "visible");
-            } finally {
-                submitBtn.disabled = false;
-                submitBtn.innerHTML = originalBtnText;
-            }
-        });
-    }
-
     // FAQ Accordion Toggle Behavior
     const faqTriggers = document.querySelectorAll(".faq-trigger");
     faqTriggers.forEach(trigger => {

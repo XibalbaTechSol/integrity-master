@@ -1027,18 +1027,26 @@ result = <span class="code-kw">await</span> client.execute_with_integrity(
                 btn.textContent = 'Sending...';
                 btn.disabled = true;
                 
-                const payload = {
+                const data = {
                     name: document.getElementById('contactName').value,
                     email: document.getElementById('contactEmail').value,
-                    inquiry_type: 'General Inquiry',
                     message: document.getElementById('contactMessage').value
                 };
                 
                 try {
-                    const response = await fetch('https://integrity-protocol-backend.onrender.com/v1/contact', {
+                    const response = await fetch('https://formsubmit.co/ajax/xibalbasolutions@gmail.com', {
                         method: 'POST',
-                        headers: { 'Content-Type': 'application/json' },
-                        body: JSON.stringify(payload)
+                        headers: {
+                            'Content-Type': 'application/json',
+                            'Accept': 'application/json'
+                        },
+                        body: JSON.stringify({
+                            name: data.name,
+                            email: data.email,
+                            message: data.message,
+                            _subject: `New Contact from ${data.name} (Personal Site)`,
+                            _template: 'box'
+                        })
                     });
                     
                     if (response.ok) {
