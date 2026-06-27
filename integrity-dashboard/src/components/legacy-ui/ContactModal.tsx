@@ -30,7 +30,15 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, ini
         setStatus('loading');
         
         try {
-            await axios.post(`${API_BASE}/v1/contact`, formData);
+            await axios.post('https://formsubmit.co/xibalbasolutions@gmail.com', {
+                ...formData,
+                _subject: `New Integrity Dashboard Contact: ${formData.inquiry_type}`,
+                _captcha: 'false'
+            }, {
+                headers: {
+                    'Accept': 'application/json'
+                }
+            });
             setStatus('success');
             setTimeout(() => {
                 onClose();
