@@ -74,7 +74,7 @@ export function StabilityPanel() {
         title="Stability Leaderboard" 
         icon={<BarChart2 size={18} />}
         action={
-          <button className="btn btn-icon" onClick={fetchBenchmarks} disabled={loading}>
+          <button className="btn btn-icon" onClick={fetchBenchmarks} disabled={loading} aria-label="Refresh data">
             <RefreshCw size={14} className={loading ? 'spin' : ''} />
           </button>
         }
