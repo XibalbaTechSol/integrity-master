@@ -14,7 +14,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Agent Registration & Identity Binding",
         icon: <Fingerprint size={28} />,
         color: "#60a5fa",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/identity-architecture.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ? 
             "Agents register unique Ethereum addresses, initiating the creation of W3C-compliant DIDs that act as permanent, self-sovereign digital anchors." :
             "Every autonomous agent begins by registering a unique Ethereum address on the Integrity Protocol. This process initiates the creation of a W3C-compliant Decentralized Identifier (DID) using the did:intg method, which acts as the agent's permanent, self-sovereign digital anchor.",
@@ -31,7 +31,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Telemetry Ingestion & SDK Interception",
         icon: <Radio size={28} />,
         color: "var(--gold)",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/integration-guide.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "The Xibalba SDK intercepts performance data from AI frameworks like OpenAI and LangChain, capturing metadata without exposing sensitive prompts." :
             "The Xibalba Software Development Kit (SDK) acts as a high-fidelity interceptor, capturing granular performance data at the point of execution. By wrapping core AI frameworks like OpenAI and LangChain, the SDK captures metadata from every inference call, providing the raw material for the Tri-Metric Scoring Engine.",
@@ -48,7 +48,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Tri-Metric Scoring Engine",
         icon: <BarChart3 size={28} />,
         color: "#10b981",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "Raw telemetry is processed by the Tri-Metric Engine—evaluating behavioral stability (Entropy), human alignment (Grounding), and economic commitment (Sacrifice)." :
             "Raw telemetry is processed by the Tri-Metric Scoring Engine—a proprietary multiplicative correlation model designed to calculate stochastic trust. The engine evaluates agents across three orthogonal vectors: Entropy, Grounding, and Sacrifice.",
@@ -66,7 +66,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Zero-Knowledge Reputation Proof Generation",
         icon: <Lock size={28} />,
         color: "#a78bfa",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/zk-architecture.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "Noir-designed ZK circuits generate cryptographic reputation badges, proving an agent meets AIS thresholds without exposing underlying data." :
             "To resolve the paradox of transparency, the protocol utilizes Zero-Knowledge (ZK) circuits designed in Noir to generate cryptographic reputation badges. These proofs allow agents to mathematically demonstrate their Integrity Score meets a specific threshold without revealing underlying telemetry data.",
@@ -83,7 +83,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Dual-Witness Oracle Consensus",
         icon: <Globe size={28} />,
         color: "#f59e0b",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "A Dual-Witness model ensures decentralized audit integrity by comparing telemetry commitments from both performing agents and consuming counterparties." :
             "The protocol employs a decentralized Dual-Witness model to eliminate single points of failure. Both the performing agent and the consuming counterparty submit independent, cryptographically signed telemetry commitments for every transaction, maintaining the actuarial integrity of the network.",
@@ -100,7 +100,7 @@ const getSteps = (isMobile: boolean) => [
         title: "On-Chain Settlement (Base Layer 2)",
         icon: <Layers size={28} />,
         color: "#60a5fa",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/erc_8004.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "Validated state is anchored to Base L2 for immutable finality. Every event triggers a sovereign protocol tax and burns ITK supply." :
             "The validated reputational state is anchored to the ReputationRegistry smart contract on Base (Ethereum Layer 2). Settlement includes a sovereign protocol tax, with 0.25% of the transaction value burned from the ITK supply and 0.25% routed to the treasury.",
@@ -117,7 +117,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Actuarial Risk Classification",
         icon: <Landmark size={28} />,
         color: "#f43f5e",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/whitepaper.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "Mathematical reputation is converted into actionable actuarial profiles, allowing automated underwriting of agent failure risk." :
             "In the final stage, mathematical reputation is converted into actionable actuarial profiles. Insurance underwriters query the protocol's oracle to generate real-time risk ratings ranging from AAA to D, enabling automated failure risk underwriting.",
@@ -134,7 +134,7 @@ const getSteps = (isMobile: boolean) => [
         title: "Verifiable Credential Export",
         icon: <FileCheck size={28} />,
         color: "#10b981",
-        docLink: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/verifiable_credentials.md",
+        docLink: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
         description: isMobile ?
             "Certified reputation is exported as a portable W3C Verifiable Credential, bridged to other networks via Chainlink CCIP." :
             "The agent's certified reputation is exported as a W3C-standard Verifiable Credential. This portable, self-sovereign 'reputation passport' can be bridged across any enterprise system or blockchain using Chainlink CCIP.",

@@ -66,7 +66,7 @@ export const IdentityCeilingsSection = () => {
                                 desc: "Base L2 cryptographic key binding.",
                                 color: '#94a3b8',
                                 badgeName: "Sovereign Insignia",
-                                link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/tiers.md#tier-1-sovereign",
+                                link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
                                 explanation: "Sovereign agents represent the entry layer of the autonomous economy. By binding reputation to a cryptographic key-pair rather than a legal identity, we enable privacy-first automation. This tier is essential for agents performing low-risk tasks, research, or cross-chain arbitrage where speed and pseudonymity are prioritized over deep institutional trust.",
                                 requirements: [
                                     "Ownership proof via Ethereum signature (EIP-191)",
@@ -86,7 +86,7 @@ export const IdentityCeilingsSection = () => {
                                 desc: "Domain-verified accountability.",
                                 color: '#3b82f6',
                                 badgeName: "Verified Seal",
-                                link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/tiers.md#tier-2-linked",
+                                link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
                                 explanation: "Linked verification bridges the gap between the blockchain and the traditional web. By verifying domain ownership (DNS) or social presence (GitHub), agents prove they are managed by established entities. This level of accountability is critical for B2B services, where counterparty risk must be mitigated through verifiable standing.",
                                 requirements: [
                                     "DNS TXT record verification or Well-Known URL binding",
@@ -107,7 +107,7 @@ export const IdentityCeilingsSection = () => {
                                 desc: "Full legal entity accountability.",
                                 color: 'var(--gold)',
                                 badgeName: "Institutional Crest",
-                                link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/tiers.md#tier-3-institutional",
+                                link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki",
                                 explanation: "Institutional verification is the gold standard for mission-critical autonomous systems. It binds an agent directly to a legal corporation through rigorous KYC/KYB audits. This tier is mandatory for large-scale commerce, ensuring that every on-chain action is backed by enforceable real-world legal and financial liability.",
                                 requirements: [
                                     "Institutional KYC/KYB audit by Xibalba Identity Oracle",
@@ -259,7 +259,7 @@ export const ZeroKnowledgeSection = () => {
                                 READ ZK-SPECS
                             </button>
                             <a 
-                                href="https://github.com/XibalbaTechSol/integrity-protocol/tree/main/circuits" 
+                                href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="btn btn-outline" 
@@ -289,7 +289,7 @@ export const SmartContractSection = () => {
                         </p>
                         <div style={{ display: 'flex', gap: '20px' }}>
                             <a 
-                                href="https://github.com/XibalbaTechSol/integrity-protocol/blob/main/contracts/ReputationRegistry.sol" 
+                                href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="btn btn-secondary"
@@ -298,7 +298,7 @@ export const SmartContractSection = () => {
                                 <GitBranch size={18} /> View on GitHub
                             </a>
                             <a 
-                                href="https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/protocol_specs.md" 
+                                href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="btn btn-outline" 

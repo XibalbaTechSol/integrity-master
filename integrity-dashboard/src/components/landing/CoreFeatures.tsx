@@ -66,7 +66,7 @@ export const DevQuickstartSection = ({ setContactType, setIsContactOpen }: { set
                             <button onClick={() => { setContactType('developer'); setIsContactOpen(true); }} className="btn btn-primary" style={{ padding: '16px 32px', fontSize: '1rem', boxShadow: '0 10px 30px rgba(212,175,55,0.2)' }}>
                                 Request API Key
                             </button>
-                            <a href="https://github.com/XibalbaTechSol/integrity-protocol/tree/main/docs" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '16px 32px', border: '1px solid rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', fontSize: '1rem' }}>
+                            <a href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ padding: '16px 32px', border: '1px solid rgba(255,255,255,0.15)', color: 'white', textDecoration: 'none', fontSize: '1rem' }}>
                                 Read the Docs
                             </a>
                         </div>
@@ -161,7 +161,7 @@ export const ProgrammableEscrowsSection = () => {
                                 OPEN ESCROWS
                             </button>
                             <a 
-                                href="https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/actuarial-automation-factory.md" 
+                                href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" 
                                 target="_blank" 
                                 rel="noopener noreferrer"
                                 className="btn btn-outline" 
@@ -369,14 +369,3 @@ export const PrivacyArchitectureSection = () => {
     );
 };
 
-export const CoreFeatures = () => {
-    return (
-        <>
-            <TrustGapSection />
-            <PrivacyArchitectureSection />
-            <DevQuickstartSection />
-            <ProgrammableEscrowsSection />
-            <EconomicUseCasesSection />
-        </>
-    );
-};

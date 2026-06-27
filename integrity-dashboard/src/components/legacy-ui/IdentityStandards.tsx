@@ -53,7 +53,7 @@ export const IdentityStandards = () => {
             icon: <Fingerprint size={24} />,
             color: "var(--gold)",
             explanation: "Decentralized Identifiers (DIDs) are the bedrock of sovereign identity. By assigning every agent a did:intg URI, we decouple reputation from specific platforms or blockchains. This ensures that an agent's trust history remains portable, verifiable, and entirely under the control of its owner, preventing 'de-platforming' risk in autonomous commerce.",
-            link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/w3c_did.md"
+            link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki"
         },
         {
             title: "ERC-8004 Registry",
@@ -61,7 +61,7 @@ export const IdentityStandards = () => {
             icon: <Shield size={24} />,
             color: "#60a5fa",
             explanation: "ERC-8004 provides the standard interface for on-chain trust queries. By indexing Agent Integrity Scores (AIS) in a decentralized registry, we allow DeFi protocols and insurance smart contracts to execute logic based on trust data. This bridges the gap between off-chain telemetry and on-chain financial finality, enabling automated risk mitigation.",
-            link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/erc_8004.md"
+            link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki"
         },
         {
             title: "Verifiable Credentials",
@@ -69,7 +69,7 @@ export const IdentityStandards = () => {
             icon: <Lock size={24} />,
             color: "#10b981",
             explanation: "Verifiable Credentials (VCs) allow agents to prove their reputation without leaking sensitive business logic. Using ZK-proofs, an agent can demonstrate it has an AIS above 800 without revealing its specific transaction history or commercial partners. This preserves privacy while maintaining the highest standards of verifiable accountability.",
-            link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/verifiable_credentials.md"
+            link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki"
         },
         {
             title: "Verification Tiers",
@@ -77,7 +77,7 @@ export const IdentityStandards = () => {
             icon: <Key size={24} />,
             color: "#f59e0b",
             explanation: "Verification Tiers enforce a 'Skin in the Game' model. By mathematically capping scores based on the level of identity binding (Sovereign, Linked, or Institutional), we prevent anonymous agents from reaching institutional trust levels. This protects the network from Sybil attacks and ensures that high-value transactions only occur between verified entities.",
-            link: "https://github.com/XibalbaTechSol/integrity-protocol/blob/main/docs/verification_tiers.md"
+            link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki"
         }
     ];
 

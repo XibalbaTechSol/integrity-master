@@ -46,7 +46,7 @@ export const SdkIntegrationSection = () => {
                     </code>
                     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
                         <button onClick={() => navigate('/sdk-docs')} className="btn btn-primary">Full SDK Documentation</button>
-                        <a href="https://github.com/XibalbaTechSol/integrity-protocol" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'white', textDecoration: 'none' }}>View Repository</a>
+                        <a href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'white', textDecoration: 'none' }}>View Repository</a>
                     </div>
                 </div>
             </div>
@@ -340,7 +340,7 @@ export const FooterSection = ({ setIsContactOpen, setContactType }) => {
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? '16px 24px' : '32px 48px', marginBottom: '48px', padding: isMobile ? '0 20px' : '0' }}>
                 {[
                     { label: 'Launch Dashboard', link: "/dashboard" },
-                    { label: 'Github', link: "https://github.com/XibalbaTechSol/integrity-protocol" },
+                    { label: 'Github', link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" },
                     { label: 'Contact Us', link: "contact" }
                 ].map(link => (
                     <a 
