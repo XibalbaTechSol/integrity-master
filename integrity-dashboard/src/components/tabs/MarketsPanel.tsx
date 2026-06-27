@@ -227,7 +227,7 @@ export function MarketsPanel() {
         title="Open Marketplace Tasks" 
         icon={<Handshake size={18} />}
         action={
-          <button className="btn btn-icon" onClick={fetchTasks} disabled={loading}>
+          <button className="btn btn-icon" onClick={fetchTasks} disabled={loading} aria-label="Refresh data">
             <RefreshCw size={14} className={loading ? 'spin' : ''} />
           </button>
         }
