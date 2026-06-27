@@ -1,3 +1,6 @@
+import pytest
+import os
+from pathlib import Path
 from integrity_sdk import did
 
 def test_did(mocker, tmp_path):
@@ -40,5 +43,21 @@ def test_did(mocker, tmp_path):
     mock_dir.__truediv__.return_value.exists.return_value = True
     mock_dir.__truediv__.return_value.read_text.return_value = '{"id":"did:xibalba:fg:test_agent"}'
     did.load_did_document("test_agent")
-    
-    did.derive_evm_address(b"seed"*8)
+
+def test_derive_evm_address_success():
+    seed = b"seed"*8
+    address = did.derive_evm_address(seed)
+    assert address.startswith("0x")
+    assert len(address) == 42
+    # We know the expected address for this seed
+    assert address.lower() == "0x57db5bcbb79ae281f3fac4e25f1bb42b54c98dfc".lower()
+
+def test_derive_evm_address_fallback(mocker):
+    import sys
+    mocker.patch.dict("sys.modules", {"eth_account": None})
+    seed = b"seed"*8
+    address = did.derive_evm_address(seed)
+    assert address.startswith("0x")
+    assert len(address) == 42
+    # We know the fallback address uses sha256
+    assert address == "0xd2b502275d39734b2059ef10ae2e180ecd164b7f"
