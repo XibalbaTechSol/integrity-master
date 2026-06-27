@@ -1,0 +1,10 @@
+services:
+  - type: web
+    name: integrity-dashboard
+    env: static
+    rootDir: integrity-dashboard
+    buildCommand: npm install && npm run build
+    staticPublishPath: dist
+    envVars:
+      - key: VITE_API_BASE
+        value: https://integrity-protocol-backend.onrender.com
