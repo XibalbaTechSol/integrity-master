@@ -165,7 +165,7 @@ export function OracleRegistryPanel() {
             title="World Awareness: Oracle Registry" 
             icon={<Globe size={18} />}
             action={
-              <button className="btn btn-icon" onClick={fetchSources} disabled={loading}>
+              <button className="btn btn-icon" onClick={fetchSources} disabled={loading} aria-label="Refresh sources">
                 <RefreshCw size={14} className={loading ? 'spin' : ''} />
               </button>
             }
