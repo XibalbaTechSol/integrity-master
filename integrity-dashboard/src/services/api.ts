@@ -146,6 +146,22 @@ class ApiService {
     return this.fetch('/protocol/stats');
   }
 
+  subscribeToMetrics(callback: (data: any) => void): () => void {
+    const eventSource = new EventSource(`${BASE_URL}/metrics/stream`);
+    eventSource.onmessage = (event) => {
+      try {
+        const data = JSON.parse(event.data);
+        callback(data);
+      } catch (err) {
+        console.error('Failed to parse SSE data', err);
+      }
+    };
+    eventSource.onerror = (err) => {
+      console.error('SSE Error', err);
+    };
+    return () => eventSource.close();
+  }
+
   // --- Contracts ---
   async getAgentContracts(address: string): Promise<OwnedContract[]> {
     return this.fetch(`/agent/${address}/contracts`);

@@ -233,6 +233,23 @@ const server = http.createServer((req, res) => {
     sendJSON({ status: 'proposed', baaId: `baa_${Date.now()}` });
   } else if (req.url === '/v1/contracts/ledger' || req.url === '/v1/ledger/history') {
     sendJSON({ logs: [] });
+  } else if (req.url === '/v1/metrics/stream') {
+    res.writeHead(200, {
+      'Content-Type': 'text/event-stream',
+      'Cache-Control': 'no-cache',
+      'Connection': 'keep-alive'
+    });
+    const interval = setInterval(() => {
+      const liveData = {
+        timestamp: new Date().toISOString(),
+        total_agents: stats.total_agents,
+        active_deals: stats.active_deals + Math.floor(Math.random() * 5),
+        global_ais_average: stats.global_ais_average + (Math.random() > 0.5 ? 1 : -1)
+      };
+      res.write(`data: ${JSON.stringify(liveData)}\n\n`);
+    }, 2000);
+    req.on('close', () => clearInterval(interval));
+    return;
   } else {
     sendJSON({ status: 'success', message: 'Mock response' });
   }

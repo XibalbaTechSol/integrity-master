@@ -120,10 +120,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
 
   const fetchData = useCallback(async () => {
     try {
-      const [fetchedAgents, fetchedStats] = await Promise.all([
-        api.getAgents(),
-        api.getProtocolStats()
-      ]);
+      const fetchedAgents = await api.getAgents();
       
       let allAgents = (fetchedAgents || []).map((a: any) => ({
         ...a,
@@ -154,7 +151,6 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       }
 
       setAgents(allAgents);
-      setStats(fetchedStats || null);
       setIsBackendOffline(false);
       
       if (!selectedAgentAddr && allAgents.length > 0) {
@@ -178,6 +174,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     load();
     const interval = setInterval(fetchData, 15000);
     
+    // Set up SSE for real-time telemetry stats
+    const unsubscribeStats = api.subscribeToMetrics((data) => {
+      setStats(data);
+    });
+    
     const handleHashChange = () => {
       const hash = window.location.hash.replace('#', '') as TabId;
       const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'reasoning', 'diagnostics', 'staking', 'stability', 'wallet'];
@@ -188,6 +189,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
     return () => {
       mounted = false;
       clearInterval(interval);
+      unsubscribeStats();
       window.removeEventListener('hashchange', handleHashChange);
     };
   }, [fetchData]);
