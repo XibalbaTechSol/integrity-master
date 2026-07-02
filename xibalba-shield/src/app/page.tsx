@@ -512,8 +512,7 @@ export default function Home() {
               {/* SDK Download Actions */}
               <div className="pt-6 flex flex-col sm:flex-row gap-4">
                 <a
-                  href="/sdk/xibalba-shield-sdk.ts"
-                  download="xibalba-shield-sdk.ts"
+                  href="https://github.com/XibalbaTechSol/integrity-master/tree/master/integrity-sdk"
                   id="download-ts-sdk"
                   className="inline-flex items-center justify-center gap-2 px-5 py-3 bg-teal-600 hover:bg-teal-700 text-white rounded-lg font-bold text-xs shadow-md transition-all cursor-pointer"
                 >
