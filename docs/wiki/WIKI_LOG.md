@@ -112,3 +112,8 @@
 ## [2026-07-01] update | Refined Tri-Metric Weights
 - `integrity-oracle/scoring-core`: Removed artificial sum-to-1.0 constraint and updated default weights to exact optimal targets (w_E=0.30, w_G=0.40, w_S=0.35) achieving zero distance error.
 - Updated `concepts/tri-metric-protocol.md` to reflect the new exact default weight targets.
+
+## [2026-07-02] fix | Render Backend and UI Integration
+- Fixed Render deployment crash by correcting SQLAlchemy ForeignKey column mapping in `database.py`.
+- Enforced `IS_PRODUCTION = true` in `integrity-dashboard` constants to ensure production builds point to the correct `integrity-protocol-backend.onrender.com` backend.
+- Validated that the Render API is functional and correctly handles requests.
