@@ -7,7 +7,7 @@ export const NO_CODE_FACTORY_ADDRESS = "0x6afe85f7B3EfA26D2848555fC657a6EC070DFD
 export const BASE_SEPOLIA_CHAIN_ID = 84532;
 export const RPC_URL = "https://sepolia.base.org";
 
-export const IS_PRODUCTION = false; // Set to false for Local / Playwright testing
+export const IS_PRODUCTION = true; // Set to false for Local / Playwright testing
 
 const envApiBase = import.meta.env.VITE_API_BASE;
 export const API_BASE = (envApiBase && envApiBase.startsWith('http'))
