@@ -41,3 +41,4 @@ jobs:
           external_repository: XibalbaTechSol/XibalbaTechSol.github.io
           publish_branch: main
           destination_dir: shield
+          keep_files: true

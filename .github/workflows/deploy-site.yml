@@ -7,6 +7,7 @@ on:
     paths:
       - 'personal-site/**'
       - '.github/workflows/deploy-site.yml'
+      - 'docs/wiki/**'
 
 jobs:
   deploy:
@@ -20,3 +21,4 @@ jobs:
           publish_dir: ./personal-site
           external_repository: XibalbaTechSol/XibalbaTechSol.github.io
           publish_branch: main
+          keep_files: true

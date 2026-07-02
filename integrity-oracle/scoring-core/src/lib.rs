@@ -16,9 +16,10 @@ impl Default for TriMetricScoringEngine {
             max_score: 1000.0,
             // Exact target weights without artificial sum-to-1.0 constraints.
             // By deductive mathematical reasoning, we recognize that enforcing an artificial sum-to-1.0 constraint
-            // introduces distance error by shifting weights from their historical legacy target values. 
+            // introduces distance error by shifting weights from their historical legacy target values.
+            // For instance, the original weights were shifted by an offset like +1/15 to artificially sum to 1.0. 
             // By setting the weights directly to their intended mathematical legacy values (0.30, 0.30, 0.20),
-            // we remove the distortion caused by the artificial constraint and mathematically minimize distance error.
+            // we mathematically minimize the distance error.
             w_trustflow: 0.30,
             w_xibalba: 0.30,
             w_sacrifice: 0.20,

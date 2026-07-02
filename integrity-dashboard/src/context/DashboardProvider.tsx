@@ -20,16 +20,7 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
   
   const toastCounter = useRef(0);
   
-  const [activeTab, setActiveTabState] = useState<TabId>(() => {
-    const hash = window.location.hash.replace('#', '') as TabId;
-    const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'reasoning', 'diagnostics', 'staking', 'stability', 'wallet'];
-    return validTabs.includes(hash) ? hash : 'telemetry';
-  });
-
-  const setActiveTab = (tab: TabId) => {
-    setActiveTabState(tab);
-    window.location.hash = tab;
-  };
+  const [activeTab, setActiveTab] = useState<TabId>('telemetry');
 
   const removeToast = useCallback((id: string) => {
     setToasts(prev => prev.filter(t => t.id !== id));
@@ -179,18 +170,11 @@ export function DashboardProvider({ children }: { children: ReactNode }) {
       setStats(data);
     });
     
-    const handleHashChange = () => {
-      const hash = window.location.hash.replace('#', '') as TabId;
-      const validTabs: TabId[] = ['telemetry', 'identity', 'ledger', 'zk', 'factory', 'compliance', 'shield', 'oracle', 'credit', 'governance', 'markets', 'reasoning', 'diagnostics', 'staking', 'stability', 'wallet'];
-      if (validTabs.includes(hash)) setActiveTabState(hash);
-    };
-    
-    window.addEventListener('hashchange', handleHashChange);
+
     return () => {
       mounted = false;
       clearInterval(interval);
       unsubscribeStats();
-      window.removeEventListener('hashchange', handleHashChange);
     };
   }, [fetchData]);
 
