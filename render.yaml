@@ -3,7 +3,7 @@ services:
     name: integrity-dashboard
     env: static
     rootDir: integrity-dashboard
-    buildCommand: npm install && npx vite build
+    buildCommand: npm install && npm run build
     staticPublishPath: dist
     envVars:
       - key: VITE_API_BASE
@@ -16,9 +16,3 @@ services:
     buildCommand: pip install -r requirements.txt
     startCommand: uvicorn services.trust_api:app --host 0.0.0.0 --port $PORT
 
-  - type: web
-    name: xibalba-shield
-    env: node
-    rootDir: xibalba-shield
-    buildCommand: npm install && npm run build
-    startCommand: npm start
