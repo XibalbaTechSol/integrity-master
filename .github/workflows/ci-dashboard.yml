@@ -34,12 +34,12 @@ jobs:
         working-directory: integrity-dashboard
         run: npm run build
       
-      # - name: Deploy to Vercel (Production)
-      #   uses: amondnet/vercel-action@v20
-      #   if: github.ref == 'refs/heads/main'
-      #   with:
-      #     vercel-token: ${{ secrets.VERCEL_TOKEN }}
-      #     vercel-org-id: ${{ secrets.VERCEL_ORG_ID }}
-      #     vercel-project-id: ${{ secrets.VERCEL_PROJECT_ID }}
-      #     working-directory: ./integrity-dashboard
-      #     vercel-args: '--prod'
+      - name: Deploy to GitHub Pages
+        uses: peaceiris/actions-gh-pages@v3
+        if: github.ref == 'refs/heads/main' || github.ref == 'refs/heads/master'
+        with:
+          deploy_key: ${{ secrets.ACTIONS_DEPLOY_KEY }}
+          publish_dir: ./integrity-dashboard/dist
+          external_repository: XibalbaTechSol/XibalbaTechSol.github.io
+          publish_branch: main
+          destination_dir: dashboard
