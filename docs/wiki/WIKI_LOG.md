@@ -117,3 +117,4 @@
 - Fixed Render deployment crash by correcting SQLAlchemy ForeignKey column mapping in `database.py`.
 - Enforced `IS_PRODUCTION = true` in `integrity-dashboard` constants to ensure production builds point to the correct `integrity-protocol-backend.onrender.com` backend.
 - Validated that the Render API is functional and correctly handles requests.
+- 2026-07-02: Added /v1/contact endpoint to trust_api.py and updated Personal Site & Dashboard to use Render backend.

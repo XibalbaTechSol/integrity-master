@@ -302,45 +302,6 @@ async def home():
     """Returns basic API info."""
     return {"message": "Xibalba Solutions Trust Oracle API v1.0"}
 
-@app.post("/v1/contact")
-async def contact_form(request: ContactFormRequest, db: Session = Depends(get_db)):
-    """
-    Handles contact form submissions from the dashboard and personal site.
-    Sends an email via SMTP and stores the inquiry in the database.
-    """
-    # 1. Store in database
-    inquiry = ContactInquiry(
-        name=request.name,
-        email=request.email,
-        organization=request.organization,
-        inquiry_type=request.inquiry_type,
-        message=request.message,
-        status="NEW"
-    )
-    db.add(inquiry)
-    db.commit()
-    
-    # 2. Send Email
-    gmail_user = os.getenv("GMAIL_USER")
-    gmail_pass = os.getenv("GMAIL_APP_PASSWORD")
-    
-    if gmail_user and gmail_pass:
-        try:
-            msg = MIMEText(f"Name: {request.name}\nEmail: {request.email}\nOrg: {request.organization}\nType: {request.inquiry_type}\n\nMessage:\n{request.message}")
-            msg['Subject'] = f"New Inquiry: {request.inquiry_type} from {request.name}"
-            msg['From'] = gmail_user
-            msg['To'] = gmail_user
-            msg['Reply-To'] = request.email
-            
-            with smtplib.SMTP_SSL('smtp.gmail.com', 465) as server:
-                server.login(gmail_user, gmail_pass)
-                server.send_message(msg)
-                
-        except Exception as e:
-            print(f"[CONTACT] Failed to send email: {e}")
-            # We don't fail the request if email fails, since it's saved in DB
-            
-    return {"status": "success", "message": "Contact inquiry received successfully."}
 
 def verify_agent_signature(payload_dict: Dict[str, Any], agent_eth_address: str) -> bool:
     """
