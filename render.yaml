@@ -1,6 +1,7 @@
 services:
   - type: web
     name: integrity-protocol-backend
+    plan: free
     env: python
     rootDir: integrity-oracle/backend
     buildCommand: pip install -r requirements.txt
