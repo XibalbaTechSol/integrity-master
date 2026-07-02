@@ -287,7 +287,7 @@ export const EconomicUseCasesSection = () => {
 
                 <div style={{ marginTop: '80px', textAlign: 'center' }}>
                     <button 
-                        onClick={() => navigate('/blog/autonomous-insurance-markets')}
+                        onClick={() => window.open('https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki', '_blank')}
                         className="btn btn-outline" 
                         style={{ padding: '16px 40px', fontSize: '0.8rem', fontWeight: 800 }}
                     >

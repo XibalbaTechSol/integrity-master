@@ -45,7 +45,7 @@ export const SdkIntegrationSection = () => {
                         </button>
                     </code>
                     <div style={{ display: 'flex', gap: '16px', flexWrap: 'wrap', justifyContent: 'center' }}>
-                        <button onClick={() => navigate('/sdk-docs')} className="btn btn-primary">Full SDK Documentation</button>
+                        <button onClick={() => window.open('https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki', '_blank')} className="btn btn-primary">Full SDK Documentation</button>
                         <a href="https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" target="_blank" rel="noopener noreferrer" className="btn btn-outline" style={{ border: '1px solid rgba(255,255,255,0.1)', color: 'white', textDecoration: 'none' }}>View Repository</a>
                     </div>
                 </div>
@@ -154,7 +154,7 @@ export const DaoGovernanceSection = () => {
                             <div style={{ fontSize: '1rem', fontWeight: 800, marginBottom: '4px' }}>Shadow Governance Phase (Pilot)</div>
                             <div style={{ fontSize: '0.85rem', color: 'rgba(255,255,255,0.4)' }}>Guardian votes are non-binding and used to train the protocol's stability model. Full DAO activation follows the Decentralization Roadmap.</div>
                         </div>
-                        <a href="/docs/whitepaper.md" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ background: '#8b5cf6', color: 'white', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
+                        <a href="https://xibalbatechsol.github.io/docs/xibalba_shield_proposal.pdf" target="_blank" rel="noopener noreferrer" className="btn btn-primary" style={{ background: '#8b5cf6', color: 'white', textDecoration: 'none', display: 'inline-flex', alignItems: 'center', gap: '8px' }}>
                             <Vote size={16} /> Read Governance Specs
                         </a>
                     </div>

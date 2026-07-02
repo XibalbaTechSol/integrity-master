@@ -48,7 +48,7 @@ export const CinematicHeader = ({ setIsContactOpen, setContactType }) => {
                 ) : (
                     <div style={{ display: 'flex', gap: '32px', alignItems: 'center' }}>
                         <button onClick={() => { setContactType('investor'); setIsContactOpen(true); }} className="btn btn-secondary" style={{ fontSize: '0.75rem', padding: '10px 24px' }}>Partner Gateway</button>
-                        <button onClick={() => navigate('/login')} className="btn btn-primary" style={{ fontSize: '0.75rem', padding: '10px 24px' }}>Launch Dashboard</button>
+                        <button onClick={() => navigate('/dashboard')} className="btn btn-primary" style={{ fontSize: '0.75rem', padding: '10px 24px' }}>Launch Dashboard</button>
                     </div>
                 )}
             </div>
@@ -70,8 +70,8 @@ export const CinematicHeader = ({ setIsContactOpen, setContactType }) => {
                     >
                         <div style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
                             <button onClick={() => { setContactType('investor'); setIsContactOpen(true); setIsMobileMenuOpen(false); }} className="btn btn-secondary">Partner Gateway</button>
-                            <button onClick={() => { navigate('/login'); setIsMobileMenuOpen(false); }} className="btn btn-primary">Launch Dashboard</button>
-                            <button onClick={() => { navigate('/blog'); setIsMobileMenuOpen(false); }} className="btn btn-outline" style={{ color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>Protocol Blog</button>
+                            <button onClick={() => { navigate('/dashboard'); setIsMobileMenuOpen(false); }} className="btn btn-primary">Launch Dashboard</button>
+                            <button onClick={() => { window.open('https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki', '_blank'); setIsMobileMenuOpen(false); }} className="btn btn-outline" style={{ color: 'white', borderColor: 'rgba(255,255,255,0.2)' }}>Protocol Blog</button>
                         </div>
                     </motion.div>
                 )}

@@ -252,7 +252,7 @@ export const ZeroKnowledgeSection = () => {
 
                         <div style={{ display: 'flex', gap: '20px' }}>
                             <button 
-                                onClick={() => navigate('/blog/the-noir-standard-cryptographic-privacy')}
+                                onClick={() => window.open('https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki', '_blank')}
                                 className="btn btn-primary" 
                                 style={{ background: '#a78bfa', color: 'black' }}
                             >
