@@ -51,6 +51,7 @@ export default function Dashboard() {
         
         // Fetch historical AccessLogged events
         const logEvents = await ehrGate.queryFilter(ehrGate.filters.AccessLogged(), -1000, "latest");
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         const realLogs = logEvents.map((evt: any) => ({
           hash: evt.args[1].substring(0, 18) + '...', // recordHash
           time: new Date().toLocaleTimeString(),
@@ -64,6 +65,7 @@ export default function Dashboard() {
         
         const gateMap = new Map<string, EHRGateData>();
         
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         for (const evt of grantEvents as any[]) {
           const patient = evt.args[0];
           const recordHash = evt.args[1];
