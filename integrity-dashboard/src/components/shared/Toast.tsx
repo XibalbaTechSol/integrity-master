@@ -9,14 +9,23 @@ export function ToastManager() {
   return (
     <div className="toast-container">
       {toasts.map(toast => (
-        <div key={toast.id} className={`toast toast-${toast.type}`}>
+        <div
+          key={toast.id}
+          className={`toast toast-${toast.type}`}
+          role={toast.type === 'error' ? 'alert' : 'status'}
+        >
           {toast.type === 'success' && <CheckCircle size={18} color="var(--success)" />}
           {toast.type === 'error' && <AlertCircle size={18} color="var(--danger)" />}
           {toast.type === 'info' && <Info size={18} color="var(--primary)" />}
           
           <div style={{ flex: 1, fontSize: '0.875rem' }}>{toast.message}</div>
           
-          <button onClick={() => removeToast(toast.id)} className="btn-ghost" style={{ padding: '4px' }}>
+          <button
+            onClick={() => removeToast(toast.id)}
+            className="btn-ghost"
+            style={{ padding: '4px' }}
+            aria-label="Dismiss notification"
+          >
             <X size={14} />
           </button>
         </div>
