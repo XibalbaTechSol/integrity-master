@@ -30,7 +30,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, ini
         setStatus('loading');
         
         try {
-            const response = await fetch('https://formsubmit.co/ajax/xibalbasolutions@gmail.com', {
+            const response = await fetch('https://integrity-protocol-backend.onrender.com/v1/contact', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
@@ -41,9 +41,7 @@ export const ContactModal: React.FC<ContactModalProps> = ({ isOpen, onClose, ini
                     email: formData.email,
                     organization: formData.organization,
                     inquiry_type: formData.inquiry_type,
-                    message: formData.message,
-                    _subject: `New Inquiry: ${formData.inquiry_type} from ${formData.name}`,
-                    _template: 'box'
+                    message: formData.message
                 })
             });
             
