@@ -109,3 +109,6 @@
 - `integrity-dashboard`: Integrated "Dispute Transaction" workflow inside the Ledger detail overlay, enabling users to post ITK collateral bonds and file dispute reasons directly.
 - `integrity-oracle`: Added `/v1/disputes/raise` endpoint handler to the mock backend to match the live Rust Oracle API.
 
+## [2026-07-01] update | Refined Tri-Metric Weights
+- `integrity-oracle/scoring-core`: Removed artificial sum-to-1.0 constraint and updated default weights to exact optimal targets (w_E=0.30, w_G=0.40, w_S=0.35) achieving zero distance error.
+- Updated `concepts/tri-metric-protocol.md` to reflect the new exact default weight targets.

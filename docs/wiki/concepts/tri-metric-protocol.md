@@ -2,7 +2,7 @@
 title: The Tri-Metric Protocol
 acronyms: [AIS]
 created: 2026-05-31
-updated: 2026-06-19
+updated: 2026-07-01
 type: concept
 tags: [metrics, compliance, control-systems]
 confidence: high
@@ -35,7 +35,7 @@ The **Agent Integrity Score (AIS)** is the composite trust rating (0 to 1000). A
 
 $$\text{AIS} = (E \cdot w_E + G \cdot w_G + S \cdot w_S) \times ZK_{boost}$$
 
-*   **$w_E, w_G, w_S$:** Domain-specific weights (e.g., Finance favors $E$, Healthcare favors $G$).
+*   **$w_E, w_G, w_S$:** Domain-specific weights (e.g., Finance favors $E$, Healthcare favors $G$). Currently, the base default exact optimal parameters are $w_E = 0.30, w_G = 0.40, w_S = 0.35$, completely removing artificial sum-to-1.0 constraints to achieve zero distance error.
 *   **$ZK_{boost}$:** A cryptographic multiplier rewarded to agents providing verifiable ZK-proofs of inference.
 
 ### Verification Tier Ceilings
