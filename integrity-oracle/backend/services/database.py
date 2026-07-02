@@ -191,7 +191,7 @@ class ContractClaim(Base):
 
     claim_id = Column(GUID(), primary_key=True, default=uuid.uuid4)
     contract_id = Column(GUID(), ForeignKey("user_contracts.contract_id"))
-    log_id = Column(GUID(), ForeignKey("transaction_logs.log_id"), nullable=True) # For SLAs
+    log_id = Column(GUID(), ForeignKey("transaction_logs.transaction_id"), nullable=True) # For SLAs
     claim_type = Column(String(50)) # SLA_BREACH, PARAMETRIC_TRIGGER
     payout_amount_itk = Column(Numeric(24, 18))
     on_chain_claim_tx = Column(String(66), nullable=True)
