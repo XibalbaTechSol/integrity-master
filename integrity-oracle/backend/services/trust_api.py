@@ -789,6 +789,41 @@ async def verify_hermes_signature(request: dict, user: dict = Depends(verify_fir
     except Exception as e:
         raise HTTPException(status_code=400, detail=f"Cryptographic error: {str(e)}")
 
+@app.post("/v1/inference")
+async def perform_secure_inference(request: Request):
+    body = await request.json()
+    agentAddress = body.get("agentAddress")
+    clinicalData = body.get("clinicalData")
+    prompt = body.get("prompt")
+    complianceMetadata = body.get("complianceMetadata", {})
+    
+    if not agentAddress or not clinicalData or not prompt:
+        raise HTTPException(status_code=400, detail="Missing required fields")
+        
+    data_string = json.dumps(clinicalData, separators=(',', ':')) + prompt
+    data_hash = "0x" + hashlib.sha256(data_string.encode('utf-8')).hexdigest()
+    
+    clearanceFlags = 0
+    if complianceMetadata.get("hipaaEligible"): clearanceFlags |= (1 << 0)
+    if complianceMetadata.get("zdrEnabled"): clearanceFlags |= (1 << 1)
+    if not complianceMetadata.get("externalWebAccess"): clearanceFlags |= (1 << 2)
+    
+    inferenceResult = {
+        "summary": "Patient presents with symptoms consistent with acute pharyngitis.",
+        "suggestedBillingCode": "J02.9",
+        "confidence": 0.95
+    }
+    
+    return {
+        "success": True,
+        "inference": inferenceResult,
+        "audit": {
+            "dataHash": data_hash,
+            "transactionHash": "0xMockTransactionHash1234567890abcdef",
+            "clearanceFlags": clearanceFlags
+        }
+    }
+
 @app.post("/v1/agent/bind-controller")
 async def bind_agent_controller(request: dict, db: Session = Depends(get_db), user: dict = Depends(verify_firebase_token)):
     """

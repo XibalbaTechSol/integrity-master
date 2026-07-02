@@ -93,7 +93,8 @@ export default function Dashboard() {
     setInferenceAudit(null);
 
     try {
-      const res = await fetch('/api/inference', {
+      const backendUrl = process.env.NEXT_PUBLIC_API_BASE || 'https://integrity-protocol-backend.onrender.com';
+      const res = await fetch(`${backendUrl}/v1/inference`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify({
