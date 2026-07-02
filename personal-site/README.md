@@ -25,14 +25,14 @@ YC reviewers heavily prioritize 1-minute video walkthroughs.
 YC partners will click documentation and protocol links. Ensure the following paths are active:
 * **GitHub Org:** `https://github.com/XibalbaTechSol` must be active.
 * **Repositories:** Create public repos (or redirect placeholders) for:
-  * `https://github.com/XibalbaTechSol/integrity-wiki` (Docs)
-  * `https://github.com/XibalbaTechSol/integrity-protocol` (Protocol core)
-  * `https://github.com/XibalbaTechSol/integrity-sdk` (SDK wrapper)
-  * `https://github.com/XibalbaTechSol/integrity-oracle` (Axum backend telemetry)
+  * `https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki` (Docs)
+  * `https://github.com/XibalbaTechSol/integrity-master/tree/master/contracts` (Protocol core)
+  * `https://github.com/XibalbaTechSol/integrity-master/tree/master/integrity-sdk` (SDK wrapper)
+  * `https://github.com/XibalbaTechSol/integrity-master/tree/master/integrity-oracle` (Axum backend telemetry)
 
 ### 3. Upload the Whitepaper PDF
 * Ensure your whitepaper is compiled and saved as `whitepaper.pdf`.
-* Place it in the correct public directory matching your deployment (e.g., `/docs/whitepaper.pdf` or host it via GitHub Pages at `https://xibalbatechsol.github.io/docs/whitepaper.pdf`).
+* Place it in the correct public directory matching your deployment (e.g., `/docs/xibalba_shield_proposal.pdf` or host it via GitHub Pages at `https://xibalbatechsol.github.io/docs/xibalba_shield_proposal.pdf`).
 
 ### 4. Warm Up the Waitlist Backend (Render)
 * The waitlist form uses AJAX to send data to `https://xibalba-api.onrender.com/contact`.
