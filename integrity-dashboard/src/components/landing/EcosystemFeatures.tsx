@@ -339,7 +339,7 @@ export const FooterSection = ({ setIsContactOpen, setContactType }) => {
             />
             <div style={{ display: 'flex', flexWrap: 'wrap', justifyContent: 'center', gap: isMobile ? '16px 24px' : '32px 48px', marginBottom: '48px', padding: isMobile ? '0 20px' : '0' }}>
                 {[
-                    { label: 'Launch Dashboard', link: "/dashboard" },
+                    { label: 'Launch Dashboard', link: "/integrity" },
                     { label: 'Github', link: "https://github.com/XibalbaTechSol/integrity-master/tree/master/docs/wiki" },
                     { label: 'Contact Us', link: "contact" }
                 ].map(link => (

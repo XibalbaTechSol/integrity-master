@@ -3,6 +3,7 @@ name: Deploy Personal Site
 on:
   push:
     branches:
+      - master
       - main
     paths:
       - 'personal-site/**'

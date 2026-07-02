@@ -42,7 +42,7 @@ export const HeroSection = ({ setContactType, setIsContactOpen, setIsRegistryOpe
                         <button 
                             onClick={() => { 
                                 alert("Google Sign-In flow initiated. 1,000,000 ITK reward pending.");
-                                navigate('/dashboard');
+                                navigate('/integrity');
                             }} 
                             className="btn" 
                             style={{ 

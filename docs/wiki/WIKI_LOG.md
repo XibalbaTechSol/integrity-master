@@ -121,3 +121,5 @@
 ## [2026-07-02] fix | Route and Link Audit
 - Audited and fixed all links on the personal site and dashboard landing pages.
 - Mapped dashboard generic nav routes to absolute github wiki pages and /dashboard application.
+## [2026-07-02] refactor | Rename Dashboard to Integrity
+- Renamed the dashboard app deployment path from /dashboard/ to /integrity/ to avoid conflicts with old repository naming.

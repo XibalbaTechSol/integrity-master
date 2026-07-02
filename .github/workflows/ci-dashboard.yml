@@ -42,5 +42,5 @@ jobs:
           publish_dir: ./integrity-dashboard/dist
           external_repository: XibalbaTechSol/XibalbaTechSol.github.io
           publish_branch: main
-          destination_dir: dashboard
+          destination_dir: integrity
           keep_files: true
