@@ -225,10 +225,10 @@ async def initialize_database():
                     db.add(p)
                 db.commit()
 
+            db.close()
             # Seed Hermes Fleet Configs (Master, Alpha, Omega)
             hermes.seed_hermes_fleet()
 
-            db.close()
             print("Database initialized successfully with historical snapshots.")
             return True
         except Exception as e:
