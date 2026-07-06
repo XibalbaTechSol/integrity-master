@@ -123,3 +123,93 @@
 - Mapped dashboard generic nav routes to absolute github wiki pages and /dashboard application.
 ## [2026-07-02] refactor | Rename Dashboard to Integrity
 - Renamed the dashboard app deployment path from /dashboard/ to /integrity/ to avoid conflicts with old repository naming.
+
+## [2026-07-02] update | Xibalba Shield Features
+- Implemented Audit Log Viewer, RBAC UI, Secure Document Vault, and Compliance Dashboard tabs directly into `xibalba-shield` using responsive UI components and Tailwind.
+
+## [2026-07-02] create | Healthcare Value Proposition
+- Added `concepts/healthcare-value-proposition.md` to articulate the real measured value of Integrity Protocol (Insurance + Smart BAAs).
+- Linked in `WIKI_INDEX.md` and updated page count.
+
+## [2026-07-02] update | BCC Middleware Circuit Breaker
+- Implemented stateful `AgentCircuitBreaker` in `bcc_middleware/main.py`.
+- Enforces an automated lockout (default 15 mins) on any agent that violates HIPAA policies or attempts actions without an active Smart BAA.
+- Updated `bcc_middleware` tests and wiki documentation.
+
+## [2026-07-02] create | Aztec Noir Circuit Scaffold (ZK-PHI)
+- Created `integrity-zkp/Nargo.toml` and `integrity-zkp/src/main.nr`.
+- Implemented mathematical scaffolding for the Private Attestation Engine (PAE) that calculates a deterministic zero-knowledge hash of PHI and the agent's action payload, allowing downstream verification without revealing the raw inputs on-chain.
+- Updated `ShieldPage.tsx` in `integrity-dashboard` to include a "Quarantine Zone" visualizing locked-out agents.
+
+## [2026-07-05] update | Contract Factory and Token Wallet Enhancements
+- `integrity-dashboard`: Added an "AI Contract Copilot" to `FactoryPanel.tsx` enabling SDK telemetry-driven code refactoring and smart contract generation.
+- `integrity-dashboard`: Updated `TokenWallet.tsx` to prominently display and support transfers using the active dedicated agent's wallet address alongside the connected MetaMask account.
+
+## [2026-07-05] update | Connect Dashboard to Live Production Backend
+- `integrity-dashboard`: Disabled local mock environment by setting `IS_PRODUCTION = true` in `constants.ts` to route all dashboard components, metrics, and streams directly to the live Render production backend (`https://integrity-protocol-backend.onrender.com`).
+- `integrity-oracle`: Updated mock backend configuration to load agents, transactions, audits, and benchmarks from local JSON databases on startup.
+
+## [2026-07-05] lint | Wiki and Dashboard Quality Sync Pass
+- `docs/wiki`: Updated validation paths inside `validate_static.py` and `validate_project_mds.py` to point to `/home/xibalba/Projects/INTEGRITY/docs/wiki`.
+- `docs/wiki`: Ingested and indexed 30 missing markdown pages, updating `WIKI_INDEX.md` (Total pages: 105). Running static validations results in 0 broken links and 100% project file alignment.
+- `integrity-dashboard`: Fixed all 34 ESLint errors and resolved nested React component layout bugs and impure renders.
+
+## [2026-07-05] test | Closed-Loop Telemetry & Wallet Integration Verification
+- `integrity-sdk`: Added `capture_thought` method to `TrajectoryEvaluator` for intermediate trace streaming.
+- `integrity-oracle`: Integrated dynamic score recalculation logic and compliance violation endpoints into the mock backend schema.
+- `integrity-dashboard`: Successfully ran full-loop E2E Playwright validation workflows, passing all transactional steps (Registration, Loans, Transfers, and Market creation) against mock telemetry feeds.
+- `integrity-dashboard`: Set `IS_PRODUCTION = false` in `constants.ts` to route all dashboard components to the local mock backend and ensure data and reasoning trace visibility.
+
+## [2026-07-05] update | Closed-Loop Integrity: All Three Architectural Gaps Resolved
+- `bcc_middleware/main.py`: Extracted `_report_violation_to_oracle()` helper. All 6 rejection paths (circuit breaker, BAA, expiration, entropy, AIS threshold, policy) now report violations to Oracle `/v1/ingest` with tiered severity (critical/medium/low).
+- `integrity-sdk/client.py`: Added `query_ais()` and `guarded_execute()` methods implementing the dynamic feedback loop (Gap 3). SDK now self-constrains high-privilege actions when AIS drops below configurable threshold.
+- `integrity-oracle/mock-backend-seeded.js`: Enhanced `/v1/ingest` handler with tiered AIS penalties (critical=-250, medium=-150, low=-50), violation telemetry logging to dashboard stream, and console audit trail.
+- `integrity-oracle/mock-backend-seeded.js`: Wrapped local agent autodiscovery in `ENABLE_MOCK_SEEDS` toggle. Dashboard now shows only organic session data.
+- `integrity-dashboard`: Fixed duplicate import block in `IntegrityRadar.tsx`. ESLint: 0 errors. Unit tests: 42/42 passed.
+- `bcc_middleware`: 24/24 tests passed. `integrity-sdk`: 44/44 tests passed.
+
+## [2026-07-05] test | Meticulous UI State Validation
+- `integrity-dashboard`: Spawned autonomous subagents to meticulously write and verify unit tests for all UI states and components.
+- Validated components include `AgentModal`, `TokenWallet`, `MatchService`, `AgentOnboarding`, `DIDExplorer`, `IdentityPanel`, `CreditPanel`, `ActuarialHub`, `FactoryPanel`, `StakingPanel`, `APIKeyPanel`, `GovernancePanel`, and `api.ts`.
+- Status: 100% line coverage and UI state validation achieved across all requested dashboard components via parallel subagent UI testers.
+
+## [2026-07-05] update | Interactive Cognition & Telemetry Enhancements
+- `integrity-dashboard`: Refactored `COTPlatform.tsx` to build a highly interactive platform for AI agent researchers looking at agent intent using COT traces. Features timeline replay controls, OPA policy compliance logs, step searches, and detailed trace inspector sub-tabs (thoughts, metrics, diffs, policies).
+- `integrity-dashboard`: Overhauled `TelemetryStream.tsx` to support interactive row expansions to view cryptographic provenance, policy checks, and raw ingestion payloads, and added filters.
+- `integrity-dashboard`: Deduplicated fetched agents list in `DashboardProvider.tsx` case-insensitively.
+- `integrity-oracle`: Fixed case-sensitivity bug in mock backend agent find methods preventing duplicate agent insertions.
+
+## [2026-07-05] update | Contract Editor Full-Window Layout Fix
+- `integrity-dashboard`: Fixed `FactoryPanel.tsx` IDE grid height from a fixed `620px` to `calc(100vh - 480px)` with a `minHeight: 500px` fallback, making the editor fill the available window height.
+- `integrity-dashboard`: Removed redundant `<Panel>` wrappers from `ContractsPage.tsx` around `<FactoryPanel />` in both the `editor` and `protocol` views.
+- Source files: `src/components/tabs/FactoryPanel.tsx`, `src/pages/ContractsPage.tsx`.
+
+## [2026-07-05] test | Xibalba Agent Visibility and Playwright E2E Fixes
+- `integrity-dashboard`: Fixed agent sidebar deduplication bug in `DashboardProvider.tsx` that filtered out active session agents sharing the same alias ("Xibalba Hermes Master").
+- `integrity-oracle`: Fixed missing `eth_address` field in telemetry and violation log entries within `mock-backend-seeded.js`, enabling the dashboard's `COTPlatform` to correctly match and display reasoning trace timelines for selected agents.
+- `integrity-dashboard`: Fixed E2E test suite by changing the default `baseURL` in `playwright.config.ts` from `localhost` to `127.0.0.1` to prevent IPv6 connection errors, and changed `waitUntil` strategy from `networkidle` to `domcontentloaded` in `validate_dashboard_e2e.cjs` to prevent timing out on persistent Server-Sent Events (SSE) streams.
+- `integrity-dashboard`: Corrected status badge selector from `.status-badge` to `.badge` in `validate_dashboard_e2e.cjs` to match CSS class definitions and eliminate timeout delays.
+- Status: All targeted telemetry graphs, COT evals, and trajectory panel Playwright E2E tests are passing successfully.
+
+## [2026-07-05] update | Observability Hub (LangSmith integration)
+- `integrity-dashboard`: Created `ObservabilityHub.tsx` within the Cognition tab. Implemented an advanced tracing platform inspired by LangSmith featuring Trace Explorer, Waterfall Diagnostics (hierarchical span breakdown), Comparison Engine, and Evaluator Datasets.
+- `docs/wiki`: Updated `integrity-dashboard.md` to reflect the new feature.
+
+## [2026-07-05] update | Telemetry, Diagnostics & Identity Management Upgrades
+- `integrity-dashboard`: Refactored `TelemetryGraphs.tsx` to support plotting multiple selected agents simultaneously on multi-metric telemetry graphs using checkbox selectors.
+- `integrity-dashboard`: Enhanced `DiagnosticsPanel.tsx` with dynamic log search filtering, interactive real-time SHA-256 state hash calculations, and a simulated manual verification sweep.
+- `integrity-dashboard`: Updated `IntegrityRadar.tsx` with an interactive toggle switching between standard Integrity Vectors (blue/green) and Tri-Metric Risk Scores (Entropy Behavioral Drift, Grounding Hallucination Risk, and Sacrifice Sybil Exposure in crimson/amber colorways).
+- `integrity-dashboard`: Upgraded `DIDExplorer.tsx` with a manual "Download DID Document (.json)" file export action in both the structured Explorer and raw text views.
+- `integrity-dashboard`: Updated `ClaimAgentModal.tsx` to support prefilling selected agent addresses from the left pane (Sovereign Fleet sidebar) and simulated an EVM transaction anchoring the agent's identity to the user via the `SovereignAgent` smart contract's `rotateController` interface.
+- `integrity-dashboard`: Refactored `TokenWallet.tsx` transfer form to replace the manual address helper with an interactive select dropdown listing all registered agents alongside their unique anchored wallet addresses.
+- `integrity-dashboard`: Enhanced `DiagnosticsPanel.tsx` with dynamic log search filtering, interactive real-time SHA-256 state hash calculations, a simulated manual verification sweep, and an expanded interactive **System Status Alerts** panel featuring live alarm simulation, status category badges, individual and batch acknowledgment controls, and status filtering (All, Active, Acknowledged).
+- `integrity-dashboard`: Created `e2e/diagnostics_panel.spec.ts` validating all new Diagnostics tab features, and resolved strict mode element lookup and timeout errors. All Playwright E2E suites passing cleanly.
+
+## [2026-07-06] update | Direct Base Sepolia Deployment Configuration
+- `integrity-dashboard`: Set `IS_PRODUCTION = true` in `constants.ts` to disable mock routing and direct all dashboard metrics, telemetry streams, and transaction actions to the live Base Sepolia production backend.
+- `docs/wiki`: Updated `integrity-dashboard.md` and indexed logs to document the lock configuration.
+
+## [2026-07-06] update | Local Session Telemetry Routing Setup
+- `integrity-dashboard`: Reverted `IS_PRODUCTION = false` in `constants.ts` to route dashboard queries to the local Docker backend on port 8080. This enables real-time visual telemetry tracking and COT trace displays for the active pair programming session, while preserving direct Base Sepolia L2 contract integrations.
+- `docs/wiki`: Updated `integrity-dashboard.md` to document the local backend routing setup.
+

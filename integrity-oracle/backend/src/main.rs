@@ -608,7 +608,7 @@ async fn flush_telemetry_batch(pool: &PgPool, buffer: &mut Vec<TelemetryWriteTas
             task.agent_id_str
         );
         let bidded_task = sqlx::query(
-            "SELECT task_id::text, reward_itk::float8 FROM market_tasks WHERE assigned_agent_id::text = $1 AND status = 'BIDDED' LIMIT 1"
+            "SELECT task_id::text, reward_itk::float8 FROM market_tasks WHERE creator_agent_id::text = $1 AND status = 'BIDDED' LIMIT 1"
         )
         .bind(&task.agent_id_str)
         .fetch_optional(&mut *tx)
@@ -810,6 +810,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
             get(|| async { "Xibalba Oracle API is operational." }),
         )
         // --- Agent Registry ---
+        .route("/v1/agents", get(list_agents))
         .route("/v1/agent/register", post(register_agent))
         .route("/v1/identity/register", post(register_agent))
         .route("/v1/user/agents", get(list_agents))
