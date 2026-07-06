@@ -1,4 +1,16 @@
 
-> integrity-dashboard@0.0.0 dev
-> vite --port 5173
+> integrity-dashboard@0.0.0 predev /app/integrity-dashboard
+> node scripts/sync-wiki.js
 
+[Wiki Sync] Successfully synced 73 wiki pages to src/assets/wiki.json
+[Deployments Sync] Copied deployments.json to src/assets/deployments.json
+
+> integrity-dashboard@0.0.0 dev /app/integrity-dashboard
+> vite
+
+
+  VITE v8.0.16  ready in 386 ms
+
+  ➜  Local:   http://localhost:5173/integrity/
+  ➜  Network: use --host to expose
+1:05:29 PM [vite] (client) [optimizer] bundling dependencies...
