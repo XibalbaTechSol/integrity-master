@@ -41,6 +41,9 @@ export function TabNav() {
           className="tab-btn active" 
           style={{ width: '100%', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}
           onClick={() => setIsOpen(!isOpen)}
+          aria-expanded={isOpen}
+          aria-haspopup="listbox"
+          aria-label="Toggle tabs navigation"
         >
           <div style={{ display: 'flex', alignItems: 'center', gap: '8px' }}>
             {activeTabData.icon}
@@ -50,21 +53,26 @@ export function TabNav() {
         </button>
 
         {isOpen && (
-          <div style={{ 
-            position: 'absolute', top: '100%', left: 0, right: 0, 
-            background: 'var(--bg-secondary)', 
-            border: '1px solid var(--glass-border)', 
-            borderRadius: 'var(--radius-sm)', 
-            marginTop: '4px',
-            maxHeight: '300px',
-            overflowY: 'auto',
-            display: 'flex',
-            flexDirection: 'column',
-            padding: '4px'
-          }}>
+          <div
+            role="listbox"
+            style={{
+              position: 'absolute', top: '100%', left: 0, right: 0,
+              background: 'var(--bg-secondary)',
+              border: '1px solid var(--glass-border)',
+              borderRadius: 'var(--radius-sm)',
+              marginTop: '4px',
+              maxHeight: '300px',
+              overflowY: 'auto',
+              display: 'flex',
+              flexDirection: 'column',
+              padding: '4px'
+            }}
+          >
             {tabs.map(tab => (
               <button
                 key={tab.id}
+                role="option"
+                aria-selected={activeTab === tab.id}
                 className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
                 style={{ justifyContent: 'flex-start', padding: '12px' }}
                 onClick={() => {
@@ -83,10 +91,12 @@ export function TabNav() {
   }
 
   return (
-    <nav className="tab-nav">
+    <nav className="tab-nav" role="tablist" aria-label="Dashboard views">
       {tabs.map(tab => (
         <button
           key={tab.id}
+          role="tab"
+          aria-selected={activeTab === tab.id}
           className={`tab-btn ${activeTab === tab.id ? 'active' : ''}`}
           onClick={() => setActiveTab(tab.id)}
         >
