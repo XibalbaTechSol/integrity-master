@@ -1,0 +1,13 @@
+--- integrity-dashboard/src/components/layout/Topbar.tsx
++++ integrity-dashboard/src/components/layout/Topbar.tsx
+@@ -43,6 +43,11 @@
+           <RefreshCw size={16} className={isRefreshing ? 'animate-spin' : ''} /> Sync
+         </button>
+
++        <button className="btn btn-ghost" onClick={() => window.dispatchEvent(new CustomEvent('test-toast', { detail: { type: 'success', message: 'Test success toast for a11y verification' } }))}>
++          Test Toast
++        </button>
++
+         {user ? (
+           <div style={{ display: 'flex', alignItems: 'center', gap: '8px', background: 'rgba(255,255,255,0.05)', padding: '4px 12px', borderRadius: 'var(--radius-sm)', border: '1px solid var(--glass-border)' }}>
+             <span style={{ fontSize: '0.75rem', fontWeight: 600, color: 'var(--gold)', maxWidth: '120px', overflow: 'hidden', textOverflow: 'ellipsis', whiteSpace: 'nowrap' }}>

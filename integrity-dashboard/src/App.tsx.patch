@@ -1,0 +1,26 @@
+--- integrity-dashboard/src/App.tsx
++++ integrity-dashboard/src/App.tsx
+@@ -4,6 +4,7 @@
+ import { Topbar } from './components/layout/Topbar';
+ import { GlobalNav } from './components/layout/GlobalNav';
+ import { ToastManager } from './components/shared/Toast';
++import { useEffect } from 'react';
+ import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
+ import { LandingPage } from './pages/LandingPage';
+
+@@ -37,6 +38,15 @@
+ import { CommandPalette } from './components/shared/CommandPalette';
+
+ function DashboardShell() {
++  const { addToast } = useDashboard();
++
++  useEffect(() => {
++    const handleTestToast = (e: any) => {
++      addToast(e.detail.type, e.detail.message);
++    };
++    window.addEventListener('test-toast', handleTestToast);
++    return () => window.removeEventListener('test-toast', handleTestToast);
++  }, [addToast]);
+   const { activeTab } = useDashboard();
+
+   const isIntelligence = ['telemetry', 'reasoning', 'diagnostics'].includes(activeTab);

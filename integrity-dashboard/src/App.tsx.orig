@@ -4,7 +4,6 @@ import { Sidebar } from './components/layout/Sidebar';
 import { Topbar } from './components/layout/Topbar';
 import { GlobalNav } from './components/layout/GlobalNav';
 import { ToastManager } from './components/shared/Toast';
-import { useEffect } from 'react';
 import { HashRouter, Routes, Route, Navigate } from 'react-router-dom';
 import { LandingPage } from './pages/LandingPage';
 
@@ -54,15 +53,6 @@ import { useDashboard } from './context/useDashboard';
 import { CommandPalette } from './components/shared/CommandPalette';
 
 function DashboardShell() {
-  const { addToast } = useDashboard();
-
-  useEffect(() => {
-    const handleTestToast = (e: any) => {
-      addToast(e.detail.type, e.detail.message);
-    };
-    window.addEventListener('test-toast', handleTestToast);
-    return () => window.removeEventListener('test-toast', handleTestToast);
-  }, [addToast]);
   const { activeTab } = useDashboard();
 
   const isIntelligence = ['telemetry', 'reasoning', 'diagnostics'].includes(activeTab);

@@ -79,7 +79,7 @@ export function ShieldPage() {
   const [activeTab, setActiveTab] = useState<ShieldSubTab>('PHI Access Gates');
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect
+
     if (globalActiveTab === 'compliance') {
       setActiveTab('Audit & Compliance');
     } else if (globalActiveTab === 'shield') {
@@ -142,7 +142,7 @@ export function ShieldPage() {
   };
 
   useEffect(() => {
-    // eslint-disable-next-line react-hooks/set-state-in-effect, react-hooks/exhaustive-deps
+
     loadDefaultData();
   }, [selectedAgent]);
 
