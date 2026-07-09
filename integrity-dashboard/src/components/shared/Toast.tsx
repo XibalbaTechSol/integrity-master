@@ -16,7 +16,7 @@ export function ToastManager() {
           
           <div style={{ flex: 1, fontSize: '0.875rem' }}>{toast.message}</div>
           
-          <button onClick={() => removeToast(toast.id)} className="btn-ghost" style={{ padding: '4px' }}>
+          <button onClick={() => removeToast(toast.id)} className="btn-ghost" style={{ padding: '4px' }} aria-label="Dismiss notification">
             <X size={14} />
           </button>
         </div>
