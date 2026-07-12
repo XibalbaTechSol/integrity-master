@@ -168,6 +168,7 @@ export function APIKeyPanel() {
                         className="btn btn-ghost btn-sm" 
                         onClick={() => copyToClipboard(key.api_key)}
                         title="Copy Key"
+                        aria-label="Copy Key"
                       >
                         {copiedKey === key.api_key ? 'Copied' : <Copy size={14} />}
                       </button>
@@ -177,6 +178,7 @@ export function APIKeyPanel() {
                         disabled={isDeleting === key.api_key}
                         style={{ color: 'var(--danger)' }}
                         title="Delete Key"
+                        aria-label="Delete Key"
                       >
                         <Trash2 size={14} />
                       </button>
