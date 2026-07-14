@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Panel } from '../shared/Panel';
-import { Key, Copy, CheckCircle, AlertTriangle, Trash2, Clock, Plus } from 'lucide-react';
+import { Key, Copy, CheckCircle, AlertTriangle, Trash2, Clock, Plus, Loader2 } from 'lucide-react';
 import { useDashboard } from '../../context/useDashboard';
 import { api } from '../../services/api';
 
@@ -103,7 +103,7 @@ export function APIKeyPanel() {
                 disabled={isGenerating}
                 style={{ marginTop: 'auto' }}
               >
-                {isGenerating ? 'Generating...' : <><Plus size={16} style={{ marginRight: '8px' }} /> Generate Key</>}
+                {isGenerating ? <><Loader2 className="animate-spin" size={16} style={{ marginRight: '8px' }} /> Generating...</> : <><Plus size={16} style={{ marginRight: '8px' }} /> Generate Key</>}
               </button>
             </div>
           </div>
@@ -168,6 +168,7 @@ export function APIKeyPanel() {
                         className="btn btn-ghost btn-sm" 
                         onClick={() => copyToClipboard(key.api_key)}
                         title="Copy Key"
+                        aria-label="Copy Key"
                       >
                         {copiedKey === key.api_key ? 'Copied' : <Copy size={14} />}
                       </button>
@@ -177,8 +178,9 @@ export function APIKeyPanel() {
                         disabled={isDeleting === key.api_key}
                         style={{ color: 'var(--danger)' }}
                         title="Delete Key"
+                        aria-label="Delete Key"
                       >
-                        <Trash2 size={14} />
+                        {isDeleting === key.api_key ? <Loader2 className="animate-spin" size={14} /> : <Trash2 size={14} />}
                       </button>
                     </div>
                   </div>
