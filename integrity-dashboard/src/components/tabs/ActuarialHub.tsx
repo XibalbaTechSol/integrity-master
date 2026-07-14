@@ -609,8 +609,9 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
               {/* Form */}
               <div style={{ padding: 'var(--space-6)', display: 'flex', flexDirection: 'column', gap: '16px' }}>
                 <div className="form-group">
-                  <label className="form-label">Specialized Task Title</label>
+                  <label className="form-label" htmlFor="hire-task-title">Specialized Task Title</label>
                   <input 
+                    id="hire-task-title"
                     type="text" 
                     className="input" 
                     placeholder="e.g. Audit historical ledger block 10452"
@@ -621,8 +622,9 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
 
                 <div className="grid-cols-2" style={{ gap: '12px' }}>
                   <div className="form-group">
-                    <label className="form-label">Escrow Collateral (ITK)</label>
+                    <label className="form-label" htmlFor="hire-reward">Escrow Collateral (ITK)</label>
                     <input 
+                      id="hire-reward"
                       type="number" 
                       className="input" 
                       value={hireReward}
@@ -630,8 +632,9 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
                     />
                   </div>
                   <div className="form-group">
-                    <label className="form-label">Release Condition</label>
+                    <label className="form-label" htmlFor="hire-condition">Release Condition</label>
                     <select 
+                      id="hire-condition"
                       className="select"
                       value={hireCondition}
                       onChange={e => setHireCondition(e.target.value)}
