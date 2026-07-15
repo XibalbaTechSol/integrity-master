@@ -203,7 +203,7 @@ export function ProposeBAAModal({ isOpen, onClose, onSuccess }: ProposeBAAModalP
             className="btn btn-primary" 
             disabled={isSubmitting || !coveredEntity || !pdfFile}
           >
-            {isSubmitting ? <><Loader2 className="spin" size={18} /> Submitting Proposal...</> : 'Propose & Stake ITK'}
+            {isSubmitting ? <><Loader2 className="animate-spin" size={18} /> Submitting Proposal...</> : 'Propose & Stake ITK'}
           </button>
         </form>
 
