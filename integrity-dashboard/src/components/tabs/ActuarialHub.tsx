@@ -364,7 +364,7 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
           title="Open Marketplace Tasks" 
           icon={<Handshake size={18} />}
           action={
-            <button className="btn btn-icon" onClick={fetchTasks} disabled={loadingTasks} aria-label="Refresh tasks">
+            <button className="btn btn-icon" onClick={fetchTasks} disabled={loadingTasks}>
               <RefreshCw size={14} className={loadingTasks ? 'spin' : ''} />
             </button>
           }
@@ -603,7 +603,7 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
                   <UserCheck size={20} color="var(--primary)" />
                   <h3 style={{ margin: 0, fontSize: '1.1rem', fontWeight: 700, color: 'white' }}>Hire {selectedAgentForHire.alias}</h3>
                 </div>
-                <button onClick={() => setSelectedAgentForHire(null)} className="btn btn-icon" style={{ border: 'none', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer' }} aria-label="Close modal"><X size={20} /></button>
+                <button onClick={() => setSelectedAgentForHire(null)} className="btn btn-icon" style={{ border: 'none', background: 'transparent', color: 'var(--text-muted)', cursor: 'pointer' }}><X size={20} /></button>
               </div>
 
               {/* Form */}
@@ -702,7 +702,7 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
         title="Stability Leaderboard" 
         icon={<BarChart2 size={18} />}
         action={
-          <button className="btn btn-icon" onClick={fetchBenchmarks} disabled={loadingBenchmarks} aria-label="Refresh benchmarks">
+          <button className="btn btn-icon" onClick={fetchBenchmarks} disabled={loadingBenchmarks}>
             <RefreshCw size={14} className={loadingBenchmarks ? 'spin' : ''} />
           </button>
         }

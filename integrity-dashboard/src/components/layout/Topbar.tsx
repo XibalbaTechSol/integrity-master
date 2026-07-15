@@ -50,7 +50,6 @@ export function Topbar() {
             <button 
               onClick={signOut}
               title="Sign Out"
-              aria-label="Sign Out"
               style={{ background: 'transparent', border: 'none', color: 'var(--danger)', cursor: 'pointer', display: 'flex', alignItems: 'center', padding: '2px' }}
             >
               <LogOut size={14} />
