@@ -197,7 +197,7 @@ export function PrivacyPanel() {
           disabled={isSaving}
           style={{ alignSelf: 'flex-end', display: 'flex', alignItems: 'center', gap: '8px' }}
         >
-          {isSaving ? <Loader2 size={16} className="spin" /> : <Save size={16} />}
+          {isSaving ? <Loader2 size={16} className="animate-spin" /> : <Save size={16} />}
           Save Privacy Configurations
         </button>
       </div>

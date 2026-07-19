@@ -138,7 +138,7 @@ export function ClaimAgentModal({ isOpen, onClose, onSuccess }: ClaimAgentModalP
                   onClick={handleGenerateChallenge}
                   disabled={isGenerating || !agentAddress}
                 >
-                  {isGenerating ? <><Loader2 className="spin" size={18} /> Generating...</> : 'Generate Ownership Challenge'}
+                  {isGenerating ? <><Loader2 className="animate-spin" size={18} /> Generating...</> : 'Generate Ownership Challenge'}
                 </button>
               </motion.div>
             ) : (
@@ -167,7 +167,7 @@ export function ClaimAgentModal({ isOpen, onClose, onSuccess }: ClaimAgentModalP
                       onClick={handleClaimOwnership}
                       disabled={isClaiming}
                     >
-                      {isClaiming ? <><Loader2 className="spin" size={18} /> Submitting...</> : 'Claim Agent Ownership'}
+                      {isClaiming ? <><Loader2 className="animate-spin" size={18} /> Submitting...</> : 'Claim Agent Ownership'}
                     </button>
                   </div>
                 )}
