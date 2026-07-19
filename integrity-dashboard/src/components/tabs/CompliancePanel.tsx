@@ -42,8 +42,8 @@ export function CompliancePanel() {
         title="Compliance Scorecard" 
         icon={<ShieldCheck size={18} />}
         action={
-          <button className="btn btn-icon" onClick={fetchComplianceData} disabled={loading}>
-            <RefreshCw size={14} className={loading ? 'spin' : ''} />
+          <button className="btn btn-icon" onClick={fetchComplianceData} disabled={loading} aria-label="Refresh compliance data">
+            <RefreshCw size={14} className={loading ? 'animate-spin' : ''} />
           </button>
         }
       >
