@@ -342,7 +342,7 @@ export function ActuarialHub({ mode }: { mode: 'markets' | 'stability' }) {
                   <div className="flex items-center gap-2" style={{ color: 'var(--text-muted)', fontSize: '0.75rem' }}>
                     <Terminal size={14} /> Protocol Logs
                   </div>
-                  <button onClick={() => setLogs([])} className="text-muted" style={{ fontSize: '0.65rem', background: 'none', border: 'none', cursor: 'pointer' }}>Clear</button>
+                  <button onClick={() => setLogs([])} className="text-muted" style={{ fontSize: '0.65rem', background: 'none', border: 'none', cursor: 'pointer' }} aria-label="Clear protocol logs">Clear</button>
                 </div>
                 {logs.length === 0 ? (
                   <div style={{ color: 'var(--text-muted)', fontSize: '0.75rem', fontStyle: 'italic', marginTop: 'var(--space-2)' }}>
