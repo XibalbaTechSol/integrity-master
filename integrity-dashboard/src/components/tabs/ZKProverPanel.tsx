@@ -102,7 +102,7 @@ export function ZKProverPanel() {
           )}
 
           <button type="submit" className="btn btn-primary" disabled={isProving || !selectedAgent}>
-            {isProving ? <RefreshCw className="spin" size={16} /> : 'Generate Proof'}
+            {isProving ? <RefreshCw className="animate-spin" size={16} /> : 'Generate Proof'}
           </button>
         </form>
       </Panel>

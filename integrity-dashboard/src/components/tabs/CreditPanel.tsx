@@ -173,7 +173,7 @@ export function CreditPanel() {
                 </div>
 
                 <button type="submit" className="btn btn-primary" style={{ width: '100%', marginTop: 'var(--space-4)' }} disabled={!selectedAgent || isOverLimit || isSubmitting}>
-                  {isSubmitting ? <RefreshCw className="spin" size={16} /> : 'Submit Loan Application'}
+                  {isSubmitting ? <RefreshCw className="animate-spin" size={16} /> : 'Submit Loan Application'}
                 </button>
               </div>
             </div>
