@@ -997,7 +997,11 @@ export function ContractsListAndDetails() {
                       </div>
                       <div style={{ display: 'flex', alignItems: 'center', gap: '6px', fontSize: '0.75rem', color: 'var(--text-muted)' }}>
                         <span style={{ fontFamily: 'monospace' }}>{contract.address}</span>
-                        <button onClick={(e) => handleCopy(contract.address, e)} style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}>
+                        <button
+                          onClick={(e) => handleCopy(contract.address, e)}
+                          style={{ background: 'transparent', border: 'none', cursor: 'pointer', color: 'var(--text-muted)' }}
+                          aria-label="Copy contract address"
+                        >
                           {copiedAddress === contract.address ? <Check size={12} style={{ color: 'var(--success)' }} /> : <Copy size={12} />}
                         </button>
                       </div>
